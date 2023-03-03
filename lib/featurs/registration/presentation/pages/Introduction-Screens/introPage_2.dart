@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
+import '../../../../../core/global/global.dart';
+
 class introPage2 extends StatelessWidget {
   const introPage2({Key? key}) : super(key: key);
 
@@ -8,7 +10,7 @@ class introPage2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
-      backgroundColor: Color.fromRGBO(208, 231, 239, 1),
+      backgroundColor: AppConst.skyBlue,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

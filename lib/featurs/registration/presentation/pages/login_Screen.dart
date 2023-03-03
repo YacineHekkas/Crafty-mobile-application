@@ -35,6 +35,7 @@ class _LoginScreenState extends State<LoginScreen> {
   bodyWidget(){
     return Scaffold(
       body: SingleChildScrollView(
+
           child: TheUi(),
       ),
     );
@@ -57,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Text(
                   AppConst.appName,
                   style: TextStyle(
-                    color: AppConst.bleudark,
+                    color: AppConst.darkBlue,
                     fontSize: 38,
                     fontWeight: FontWeight.bold,
                   ),
@@ -69,7 +70,7 @@ class _LoginScreenState extends State<LoginScreen> {
               const Text(
                 'Login to your account',
                 style: TextStyle(
-                  color: AppConst.texrColor,
+                  color: AppConst.textColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                 ),
@@ -155,14 +156,14 @@ class _LoginScreenState extends State<LoginScreen> {
                             text:'Don\'t have account? ',
                             style: TextStyle(
                               fontWeight: FontWeight.w500,
-                              color: AppConst.texrColor,
+                              color: AppConst.textColor,
                             ),
                           ),
                           TextSpan(
                               text:'Sing up',
                               style: TextStyle(
                                 fontWeight: FontWeight.w500,
-                                color: AppConst.bleudark,
+                                color: AppConst.darkBlue,
                               )
                           ),
                         ]
