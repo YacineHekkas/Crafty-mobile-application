@@ -27,6 +27,15 @@ dependencies:
   lottie: ^2.2.0
   animated_text_kit: ^4.2.2
   google_fonts: ^4.0.3
+  anim_search_bar: ^2.0.3
+  google_nav_bar: ^5.0.6
+  dartz: ^0.10.1
+
+
+ # grahpQl
+  http: ^0.13.5
+  graphql_flutter: ^5.1.2
+  sliver_tools: ^0.2.9
 
 dev_dependencies:
   flutter_test:
@@ -51,7 +60,10 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
 
- 
+  fonts:
+    - family: Kumbh_Sans
+      fonts:
+        - asset: assets/fonts/KumbhSans.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:
