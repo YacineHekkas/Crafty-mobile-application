@@ -36,6 +36,8 @@ dependencies:
   http: ^0.13.5
   graphql_flutter: ^5.1.2
   sliver_tools: ^0.2.9
+  firebase_messaging: ^14.3.0
+  firebase_core: ^2.8.0
 
 dev_dependencies:
   flutter_test:

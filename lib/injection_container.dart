@@ -1,3 +1,4 @@
+import 'package:cp_project/core/util/server.dart';
 import 'package:cp_project/featurs/home/data/data_sources/remot_data_source/data_source.dart';
 import 'package:cp_project/featurs/home/data/data_sources/remot_data_source/data_source_impl.dart';
 import 'package:cp_project/featurs/home/data/repositories/get_data_repo_impl.dart';
@@ -38,5 +39,9 @@ Future<void> setupLocator() async {
   // data source
   locator.registerLazySingleton<DataSource>(
           () => DataSourceImpl()
+  );
+  // util
+  locator.registerLazySingleton(
+          () => Server()
   );
 }

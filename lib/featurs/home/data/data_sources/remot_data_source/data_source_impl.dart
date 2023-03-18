@@ -1,13 +1,15 @@
-
+import 'package:cp_project/core/error/exceptions.dart';
 import 'package:cp_project/featurs/home/data/models/Services_model.dart';
 import 'package:cp_project/featurs/home/data/models/account_model.dart';
 import 'package:cp_project/featurs/home/domain/entities/account_entitie.dart';
 import 'package:cp_project/featurs/home/domain/entities/service_entitie.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:cp_project/core/util/server.dart';
+import 'package:cp_project/injection_container.dart';
 import 'data_source.dart';
 
 class DataSourceImpl implements DataSource {
-
+  final server = locator<Server>();
+  
   @override
   Future<UserModel> getUsersData(String filterSubCategory) {
     // TODO: implement getDataUsers
@@ -21,20 +23,9 @@ class DataSourceImpl implements DataSource {
   }
 
   @override
-  Future<ServicesModel> getServicesData(String filterSubCategory) async{
-
-    try{
-      GraphQLClient qlClient = GraphQLClient(
-        link: _apiLink(),
-        cache: GraphQLCache(),
-      );
-      QueryResult queryResult = await qlClient.query(
-          QueryOptions(
-              variables: {
-                "filter": checkFilter(filterSubCategory)
-              },
-              document: gql(
-                  """
+  Future<ServicesModel> getServicesData(String filterSubCategory) async {
+    try {
+      final res = await server.fetchData('''
                     query Items(\$filter: FilterFindManyServiceInput) {
                           paginateServices(filter: \$filter) {
                             items {
@@ -91,15 +82,11 @@ class DataSourceImpl implements DataSource {
                             }
                           }
                         }
-                  """
-              ),
-          )
-      );
-      print('--------->query data :${queryResult}');
-      final result = ServicesModel.fromJson(queryResult.data!);
+                  ''', { 'filter': checkFilter(filterSubCategory) });
+      print('--------->query data :${res}');
+      final result = ServicesModel.fromJson(res.data!);
       return Future.value(result);
-
-    }catch(e,stackTrace) {
+    } catch (e, stackTrace) {
       print('---->$e/////////////$stackTrace');
       throw ServerException();
     }
@@ -107,40 +94,30 @@ class DataSourceImpl implements DataSource {
 
   @override
   Future<List<ServiceEntity>> getServices(String subCategory) async {
-    return await getServicesData(subCategory).then(
-            (value) => value.paginateServices.items.map(
-                    (e) => ServiceEntity(
-                        id: e.id,
-                        author: e.author,
-                        category: e.category,
-                        subcategory: e.subcategory,
-                       // images: e.images,
-                        description: e.description,
-                        reviewCount: e.reviewCount,
-                        reviews: e.reviews,
-                        hasReviewd: e.hasReviewd,
-                        user: e.user,
-                    ),
-            ).toList()
-    );
+    return await getServicesData(subCategory)
+        .then((value) => value.paginateServices.items
+            .map(
+              (e) => ServiceEntity(
+                id: e.id,
+                author: e.author,
+                category: e.category,
+                subcategory: e.subcategory,
+                // images: e.images,
+                description: e.description,
+                reviewCount: e.reviewCount,
+                reviews: e.reviews,
+                hasReviewd: e.hasReviewd,
+                user: e.user,
+              ),
+            )
+            .toList());
   }
 
-  // this to be placed in the injection container
-  HttpLink _apiLink() {
-    return HttpLink("https://crafty-server.azurewebsites.net/api/v1",
-        defaultHeaders: {
-          "Authorization":
-          "ggg eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMmIxMTM4YzFhYTJkOWQ5OGVkMzdhMyIsImlhdCI6MTY3ODM3OTg1NSwiZXhwIjoxNzA5OTM3NDU1fQ.DLtg_AfthnCyTOnHnTNCj1k-yzhTnoErLOpXnUnXucw"
-        });
-  }
-
-  Map<String,dynamic> checkFilter(dynamic value) {
+  Map<String, dynamic> checkFilter(dynamic value) {
     Map<String, dynamic> myMap = {};
     if (value != '') {
       myMap.putIfAbsent("subcategory", () => value);
     }
     return myMap;
   }
-
 }
-
