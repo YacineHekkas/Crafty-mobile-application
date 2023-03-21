@@ -1,84 +1,50 @@
-
+import 'package:cp_project/core/global/global.dart';
+import 'package:cp_project/core/util/app.dart';
+import 'package:cp_project/core/util/notification.dart';
 import 'package:cp_project/core/util/server.dart';
-import 'package:cp_project/featurs/home/presentation/bloc/get_data_bloc.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:cp_project/features/home/presentation/bloc/get_data_bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'firebase_options.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'featurs/home/domain/entities/service_entitie.dart';
-import 'featurs/home/presentation/pages/nav_screen.dart';
+import 'features/home/presentation/pages/navigation_screen.dart';
 import 'injection_container.dart';
 
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  // TODO: why is this needed?
+  /*await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);*/
+  Notificaion.showNotification(message);
+}
+
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   await setupLocator();
-  await Firebase.initializeApp(
-   options: DefaultFirebaseOptions.currentPlatform,
-  );
-  // init fcmToken
-  final fcmToken = await FirebaseMessaging.instance.getToken();
-  final server = locator<Server>();
+  await locator<Server>().initialize();
+  await locator<App>().initialize();
+  await Notificaion.setupNotificaion();
 
-  // TODO: move this to block when internet is checked and handle errors
-  try {
-    final res = await server.postData(
-      '''
-        mutation UpdateFCM(\$token: String!) {
-          updateFCM(token: \$token)
-        }
-      ''', {
-        'token': fcmToken
-    });
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-    print(res);
-  } catch (e) {
-    print(e);
-  }
-
-  // TODO: move this from here and customize notification style
-  // * handle data messages 
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    print('Got a message whilst in the foreground!');
-    print('Message data: ${message.data}');
-
-    if (message.notification != null) {
-      print('Message also contained a notification: ${message.notification}');
-   }
-  });
-
-  runApp(MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget  {
+  const MyApp({super.key});
 
-  late List<ServiceEntity> gg;
-  MyApp({super.key});
-
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
         create: (_)=> locator<GetDataBloc>()..add(CallServerEvent(subCategory: '')),
-        child: MaterialApp(
-          debugShowCheckedModeBanner: false,
-          home:NavScreen() ,
-        )
+        child: const MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: AppConst.appName,
+        /* TODO: add themeing options */
+        //theme: ThemeData.light(useMaterial3: true),
+        //darkTheme: ThemeData.dark(useMaterial3: true),
+        home: NavigationScreen(),
+      )
     );
-      
-
   }
-
-  // getdata() async{
-  //   final serviceUsecase = await GetServicesUseCase(repo: locator()).call('climat');
-  //   serviceUsecase.fold(
-  //           (l) =>null,
-  //           (r){
-  //             print(serviceUsecase);
-  //           }
-  //   );
-  //
-  // }
 }
