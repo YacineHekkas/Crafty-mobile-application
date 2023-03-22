@@ -15,7 +15,7 @@ class Server {
     )
   );
 
-  Future<QueryResult> fetchData(String doc, Map<String, dynamic> vars, { bool cacheFetch = true }) async => await qlClient.query(QueryOptions(document: gql(doc), variables: vars, fetchPolicy: cacheFetch ? FetchPolicy.cacheFirst : FetchPolicy.cacheAndNetwork));
+  Future<QueryResult> fetchData(String doc, Map<String, dynamic> vars, { bool cacheFetch = true, bool forceNetworkFetch = false }) async => await qlClient.query(QueryOptions(document: gql(doc), variables: vars, fetchPolicy: cacheFetch ? FetchPolicy.cacheFirst : forceNetworkFetch ? FetchPolicy.networkOnly : FetchPolicy.cacheAndNetwork));
   Future<QueryResult> postData(String doc, Map<String, dynamic> vars) async => await qlClient.mutate(MutationOptions(document: gql(doc), variables: vars));
 
   Future<void> initialize() async {

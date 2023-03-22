@@ -30,20 +30,16 @@ class Conversation extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        BlocProvider.of<ChatBloc>(context).add(LoadMessagesEvent(id: id));
+        locator<ChatBloc>().add(LoadMessagesEvent(id: id));
         Navigator.of(context).push(MaterialPageRoute(
-            builder: (_) => BlocProvider.value(
-                  value: BlocProvider.of<ChatBloc>(context),
-                  child: ConversationMessages(
-                      id: id, receiver: receiver, name: name, avatar: avatar),
-                )));
+            builder: (_) =>  ConversationMessages(
+                      id: id, receiver: receiver, name: name, avatar: avatar)));
         if (!isRead) {
           locator<ChatSource>().seenMessage(lastMessage.id);
         }
       },
       child: Container(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           children: <Widget>[
             Expanded(
@@ -103,7 +99,7 @@ class Conversation extends StatelessWidget {
                 smallSize: 12,
                 backgroundColor: AppConst.orong,
               ),
-              const SizedBox(width: 5),
+            const SizedBox(width: 5),
             Text(
               time,
               style: TextStyle(

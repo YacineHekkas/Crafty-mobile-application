@@ -10,7 +10,7 @@ class ChatSourceImpl implements ChatSource {
   ChatSourceImpl({required this.server});
 
   @override
-  Future<List<Conversation>> getConversations() async {
+  Future<List<Conversation>> getConversations({ bool forceNetworkFetch = false }) async {
     final res = await server.fetchData(
       '''query FetchUser(\$limit: Int, \$sort: SortFindManyConversationInput) {
           fetchUser {
@@ -32,7 +32,7 @@ class ChatSourceImpl implements ChatSource {
             }
           }
         }
-      ''', { 'limit': 100, 'sort': 'UPDATEDAT_DESC' }, cacheFetch: false);
+      ''', { 'limit': 100, 'sort': 'UPDATEDAT_DESC' }, cacheFetch: false, forceNetworkFetch: forceNetworkFetch);
 
     if (res.data == null || res.exception != null || res.data!['fetchUser'] == null) {
       throw ServerException;
@@ -42,7 +42,7 @@ class ChatSourceImpl implements ChatSource {
   }
 
   @override
-  Future<List<Message>> getMessages(String id) async {
+  Future<List<Message>> getMessages(String id, { bool forceNetworkFetch = false }) async {
     final res = await server.fetchData(
       '''query FetchMessages(\$id: MongoID!, \$limit: Int, \$skip: Int) {
           fetchMessages(id: \$id, limit: \$limit, skip: \$skip) {
@@ -54,7 +54,7 @@ class ChatSourceImpl implements ChatSource {
             updatedAt
           }
         }
-      ''', { 'id': id, 'limit': 1000}, cacheFetch: false);
+      ''', { 'id': id, 'limit': 1000}, cacheFetch: false, forceNetworkFetch: forceNetworkFetch);
 
     if (res.data == null || res.exception != null || res.data!['fetchMessages'] == null) {
       throw ServerException;

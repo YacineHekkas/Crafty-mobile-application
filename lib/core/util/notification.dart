@@ -1,4 +1,5 @@
 import 'package:cp_project/core/util/app.dart';
+import 'package:cp_project/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:cp_project/firebase_options.dart';
 import 'package:cp_project/injection_container.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -11,10 +12,10 @@ class Notificaion {
   static final messaging = FirebaseMessaging.instance;
 
   static const channel = AndroidNotificationChannel(
-    'high_importance_channel',
-    'High importance notifications',
-    description: 'This channel is used for important notifications.',
-    importance: Importance.high,
+    'messages_channel',
+    'Messages',
+    description: 'Recieved messages notifications',
+    importance: Importance.max,
   );
   static bool notifSetup = false;
 
@@ -55,8 +56,17 @@ class Notificaion {
       sound: true,
     );
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      showNotification(message);
+    // TODO: refactor this to handle data messages with notification
+    FirebaseMessaging.onMessage.listen((message) {
+      final String? id = message.data['conversation'];
+      final bloc = locator<ChatBloc>();
+
+      if (id == null) {
+        return;
+      }
+
+      bloc.add(LoadConversationsEvent(forceNetworkFetch: true));
+      bloc.add(LoadMessagesEvent(id: id, forceNetworkFetch: true));
     });
 
     notifSetup = true;
@@ -66,7 +76,6 @@ class Notificaion {
     RemoteNotification? notification = message.notification;
     AndroidNotification? android = message.notification?.android;
     if (notification != null && android != null) {
-      print('show notif');
       flutterLocalNotificationsPlugin.show(
         notification.hashCode,
         notification.title,
@@ -76,7 +85,7 @@ class Notificaion {
             channel.id,
             channel.name,
             channelDescription: channel.description,
-            icon: 'launch_background',
+            //icon: 'ic_launcher',
           ),
         ),
       );

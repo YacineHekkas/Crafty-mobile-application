@@ -2,6 +2,7 @@ import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/core/util/app.dart';
 import 'package:cp_project/core/util/notification.dart';
 import 'package:cp_project/core/util/server.dart';
+import 'package:cp_project/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:cp_project/features/home/presentation/bloc/get_data_bloc.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -13,9 +14,7 @@ import 'injection_container.dart';
 
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  // TODO: why is this needed?
-  /*await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);*/
-  Notificaion.showNotification(message);
+  // TODO: handle background messages
 }
 
 void main() async {

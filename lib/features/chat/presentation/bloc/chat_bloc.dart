@@ -13,10 +13,9 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
   ChatBloc() : super(LoadingConversationsState()) {
     on<ChatEvent>((event, emit) async {
       final src = locator<ChatSource>();
-
       if (event is LoadConversationsEvent) {
         try {
-          final list = await src.getConversations();
+          final list = await src.getConversations(forceNetworkFetch: event.forceNetworkFetch);
 
           emit(LoadConversationsCompletedState(convs: list));
         } catch (e) {
@@ -24,12 +23,14 @@ class ChatBloc extends Bloc<ChatEvent, ChatState> {
         }
       } else if (event is LoadMessagesEvent) {
         try {
-          final list = await src.getMessages(event.id);
+          final list = await src.getMessages(event.id, forceNetworkFetch: event.forceNetworkFetch);
 
           emit(LoadMessagesCompletedState(msgs: list));
         } catch (e) {
           log('$e');
         }
+      } else if (event is LoadConversationsCompletedEvent) {
+        emit(LoadConversationsCompletedState(convs: event.convs));
       }
     });
   }

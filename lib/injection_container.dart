@@ -24,7 +24,8 @@ Future<void> setupLocator() async {
               getServicesUseCase: locator()
           )
   );
-  locator.registerFactory(
+  // atm, use registerLazySingleton
+  locator.registerLazySingleton(
           () => ChatBloc()
   );
 
