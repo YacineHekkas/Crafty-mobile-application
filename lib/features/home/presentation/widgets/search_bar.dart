@@ -1,4 +1,5 @@
 import 'package:cp_project/core/global/global.dart';
+import 'package:cp_project/features/home/presentation/pages/search_page/search_page.dart';
 import 'package:flutter/material.dart';
 
 class searchBar extends StatelessWidget {
@@ -9,7 +10,9 @@ class searchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        // navigate to search page
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => const SearchScreen())
+        );
       },
       child:Container(
         width: MediaQuery.of(context).size.width/1.1,
@@ -17,10 +20,10 @@ class searchBar extends StatelessWidget {
         decoration: BoxDecoration(
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              blurRadius: 5.0,
-              spreadRadius: 1.0,
-              offset: Offset(0,5),
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 2.0,
+              spreadRadius: 0.7,
+              offset: const Offset(0,5),
             ),
             const BoxShadow(
               color: Colors.white,
@@ -31,29 +34,26 @@ class searchBar extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(30),
         ),
-        child: Stack(
-          children:  const [
-            Align(
-              alignment: Alignment(-1, 0),
-              child: Icon(
-                color: Colors.black87,
-                Icons.search,
-                size: 35.0,
-              ),
-            ),
-            Align(
-              alignment: Alignment(-0.7, 0),
-              child: Text(
-                'Search',
-                style: TextStyle(
-                  fontFamily: AppConst.font,
-                  fontSize: 20,
-                  color: AppConst.textColor
-                ),
-              ),
-            ),
 
-          ],
+        child:
+            Row(
+              children: [
+                Icon(
+                  color: Colors.black87.withOpacity(0.5),
+                  Icons.search,
+                  size: 30.0,
+                ),
+                const SizedBox(width: 5,),
+                Text(
+                  'Search',
+                  style: TextStyle(
+                      fontFamily: AppConst.font,
+                      fontSize: 18,
+                      color: AppConst.textColor.withOpacity(0.7)
+                  ),
+                ),
+              ],
+
         ),
 
       ),
