@@ -3,7 +3,6 @@ import 'package:cp_project/features/chat/presentation/pages/chat_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
-
 import 'add_service_pages/add_service_page.dart';
 import 'home_page/home_screen.dart';
 
