@@ -5,27 +5,23 @@ abstract class GetDataState {}
 
 class GetDataInitial extends GetDataState {}
 
-class LoadingState  extends GetDataState{}
-class SubCategorychange extends GetDataState{}
+class LoadingState extends GetDataState {}
 
-class DataIsHereState extends GetDataState{
+class OperationDoneState extends GetDataState {}
+
+class DataIsHereState extends GetDataState {
   final List<ServiceEntity> servicedata;
 
-  DataIsHereState({
-    required this.servicedata
-  });
+  DataIsHereState({required this.servicedata});
 }
 
-class ErrorState extends GetDataState{
-  final String message;
-  ErrorState({
-    required this.message
-  });
+class ErrorState extends GetDataState {
+  final dynamic message;
+  ErrorState({required this.message});
 }
-class SuccessState extends GetDataState{
-  final String mesg;
 
-  SuccessState({
-    required this.mesg
-  });
+class SuccessState extends GetDataState {
+  final dynamic message;
+
+  SuccessState({required this.message});
 }

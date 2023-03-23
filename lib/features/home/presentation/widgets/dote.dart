@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 
 Container DoteContainer (){
   return Container(
-    height: 30,
-    width: 13,
+    height: 25,
+    width: 10,
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(10),
       color: AppConst.orong,

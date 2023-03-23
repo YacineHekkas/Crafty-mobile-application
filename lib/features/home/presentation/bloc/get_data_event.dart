@@ -1,13 +1,24 @@
 part of 'get_data_bloc.dart';
 
 @immutable
-abstract class GetDataEvent {}
+abstract class DataEvent {}
 
-class CallServerEvent extends GetDataEvent{
-  final String subCategory ;
+class CallServerEvent extends DataEvent {
+  final String subCategory;
+  final String category;
 
-  CallServerEvent({
-    required this.subCategory
-  });
+  CallServerEvent( {required this.subCategory,required this.category,});
+}
 
+class CreateServiceEvent extends DataEvent {
+  final List<XFile> imagesList;
+  final String category;
+  final String subCategory;
+  final String description;
+
+  CreateServiceEvent({
+      required this.imagesList,
+      required this.category,
+      required this.subCategory,
+      required this.description});
 }

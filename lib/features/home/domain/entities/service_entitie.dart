@@ -1,7 +1,5 @@
 
-
 import 'package:cp_project/features/home/data/models/Services_model.dart';
-import 'package:cp_project/features/home/data/models/account_model.dart';
 
 class ServiceEntity{
   ServiceEntity({

@@ -14,8 +14,8 @@ class CardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return  Padding(
         padding: EdgeInsets.only(top: 10,right: 20),
-      child: Container(
-        decoration: BoxDecoration(
+        child: Container(
+          decoration: BoxDecoration(
             color:AppConst.gray,
             boxShadow: [
               BoxShadow(

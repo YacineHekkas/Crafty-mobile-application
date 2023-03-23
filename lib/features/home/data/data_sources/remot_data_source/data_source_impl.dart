@@ -1,31 +1,30 @@
-import 'package:cp_project/core/error/exceptions.dart';
+import 'dart:io';
+
+import 'package:cp_project/core/error/Messages.dart';
+import 'package:cp_project/core/error/failurs.dart';
+import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/features/home/data/models/Services_model.dart';
-import 'package:cp_project/features/home/data/models/account_model.dart';
-import 'package:cp_project/features/home/domain/entities/account_entitie.dart';
 import 'package:cp_project/features/home/domain/entities/service_entitie.dart';
+import 'package:http_parser/http_parser.dart';
 import 'package:cp_project/core/util/server.dart';
 import 'package:cp_project/injection_container.dart';
+import 'package:http/http.dart' as http;
+
 import 'data_source.dart';
 
 class DataSourceImpl implements DataSource {
+  final token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMmIxMTM4YzFhYTJkOWQ5OGVkMzdiMCIsImlhdCI6MTY3OTIyNTM0NiwiZXhwIjoxNzEwNzgyOTQ2fQ.wsa4ZZfuf2ygO4VMpTfk8nFPXQzkSHjo2psiWKlOP5A';
   final server = locator<Server>();
-  
-  @override
-  Future<UserModel> getUsersData(String filterSubCategory) {
-    // TODO: implement getDataUsers
-    throw UnimplementedError();
-  }
+  Map<String, dynamic> myMap = {};
+  bool status = true;
 
   @override
-  Future<List<AccountEntity>> getUsers(String userId) {
-    // TODO: implement getAccount
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<ServicesModel> getServicesData(String filterSubCategory) async {
+  Future<ServicesModel> getServicesData(String filterCategory,String filterSubCategory) async {
     try {
-      final res = await server.fetchData('''
+      checkFilter('category',filterCategory);
+      checkFilter('subcategory',filterSubCategory);
+      final res = await server.fetchData(
+          '''
                     query Items(\$filter: FilterFindManyServiceInput) {
                           paginateServices(filter: \$filter) {
                             items {
@@ -82,42 +81,112 @@ class DataSourceImpl implements DataSource {
                             }
                           }
                         }
-                  ''', { 'filter': checkFilter(filterSubCategory) });
+                  ''',
+          { 'filter':
+              myMap
+          }
+      );
       print('--------->query data :${res}');
       final result = ServicesModel.fromJson(res.data!);
       return Future.value(result);
     } catch (e, stackTrace) {
       print('---->$e/////////////$stackTrace');
-      throw ServerException();
+      throw ServerFailure();
+    }
+  }
+  @override
+  Future<List<ServiceEntity>> servicesList(String category,String subCategory) async {
+    return await getServicesData(category,subCategory)
+        .then((value) => value.paginateServices.items
+        .map(
+          (e) => ServiceEntity(
+        id: e.id,
+        author: e.author,
+        category: e.category,
+        subcategory: e.subcategory,
+        // images: e.images,
+        description: e.description,
+        reviewCount: e.reviewCount,
+        reviews: e.reviews,
+        hasReviewd: e.hasReviewd,
+        user: e.user,
+      ),
+    ).toList());
+  }
+  @override
+  Future<String> createService(String category, String subCategory, String description,List<dynamic> imagesList) async {
+
+    try{
+      final res = await server.fetchData(
+          '''
+                  mutation Mutation(\$record: CreateOneServiceInput!) {
+                        createService(record: \$record) {
+                            recordId
+                        }
+                  }
+                ''',
+        {
+          'record': {
+            'category': category,
+            'description': subCategory,
+            'subcategory': description
+          }
+        }
+      );
+
+      print('--------->query data :${res}');
+
+      if (res.data != null ) {
+        final id = CreateServiceModel.fromJson(res.data!);
+
+        for (dynamic image in imagesList) {
+
+          await uploadData(image.path, id.createService.recordId);
+          if (!status){
+            return Future.value(Messages.imagesDidentUpload);
+          }
+
+        }
+
+      }else{
+        return Future.value(Messages.serviceDidntCreated);
+      }
+
+
+      return Future.value(Messages.uploadSuccess);
+
+    }catch(e,stackTrace) {
+      print('---->$e/////////////$stackTrace');
+      throw ServerFailure();
     }
   }
 
-  @override
-  Future<List<ServiceEntity>> getServices(String subCategory) async {
-    return await getServicesData(subCategory)
-        .then((value) => value.paginateServices.items
-            .map(
-              (e) => ServiceEntity(
-                id: e.id,
-                author: e.author,
-                category: e.category,
-                subcategory: e.subcategory,
-                // images: e.images,
-                description: e.description,
-                reviewCount: e.reviewCount,
-                reviews: e.reviews,
-                hasReviewd: e.hasReviewd,
-                user: e.user,
-              ),
-            )
-            .toList());
+  Future  uploadData(imageFilePath, ServiceId) async {
+    var request = http.MultipartRequest('POST', Uri.parse('https://crafty-server.azurewebsites.net/api/upload/${ServiceId}'),);
+    request.headers.addAll({
+      HttpHeaders.authorizationHeader: 'Bearer $token',
+    });
+
+    request.files.add(
+        await http.MultipartFile.fromPath(
+      'gallery',
+      imageFilePath,
+          contentType: MediaType('image', 'png'),
+    ));
+
+    var response = await request.send();
+    print(response.statusCode);
+    if (response.statusCode != 200){
+      status = false;
+    }
   }
 
-  Map<String, dynamic> checkFilter(dynamic value) {
-    Map<String, dynamic> myMap = {};
+  Map<String, dynamic> checkFilter(String chosenFilter,dynamic value) {
+
     if (value != '') {
-      myMap.putIfAbsent("subcategory", () => value);
+      myMap.putIfAbsent(chosenFilter, () => value);
     }
     return myMap;
   }
+
 }

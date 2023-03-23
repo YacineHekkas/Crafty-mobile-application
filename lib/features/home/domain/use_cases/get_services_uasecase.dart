@@ -3,14 +3,14 @@ import 'package:cp_project/features/home/domain/entities/service_entitie.dart';
 import 'package:cp_project/features/home/domain/repositories/get_data_repo.dart';
 import 'package:dartz/dartz.dart';
 
-class GetServicesUseCase{
+class GetServicesUsecase{
   final GetDataRepo repo;
 
-  GetServicesUseCase({
+  GetServicesUsecase({
     required this.repo
   });
 
-  Future<Either<Failure,List<ServiceEntity>>> call(String subCategory) async{
-    return await repo.getServices(subCategory);
+  Future<Either<Failure,List<ServiceEntity>>> call(String category,String subCategory) async{
+    return await repo.getServices(category,subCategory);
   }
 }

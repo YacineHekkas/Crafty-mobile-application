@@ -1,4 +1,3 @@
-import 'package:cp_project/features/home/data/models/account_model.dart';
 
 class ServicesModel {
   ServicesModel({
@@ -16,7 +15,6 @@ class ServicesModel {
     return _data;
   }
 }
-
 
 class PaginateServices {
   PaginateServices({
@@ -255,6 +253,66 @@ class ReviewUser {
     _data['_id'] = id;
     _data['avatar'] = avatar.toJson();
     return _data;
+  }
+}
+
+class Avatar {
+  Avatar({
+    required this.url,
+  });
+  late final String url;
+
+  Avatar.fromJson(Map<String, dynamic> json){
+    url = json['url']??"assets/images/placeholder.webp";
+  }
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['url'] = url;
+    return _data;
+  }
+}
+class Location {
+  Location({
+    required this.type,
+    required this.coordinates,
+  });
+  late final String type;
+  late final List<double> coordinates;
+
+  Location.fromJson(Map<String, dynamic> json){
+    type = json['type'];
+    coordinates = List.castFrom<dynamic, double>(json['coordinates']);
+  }
+
+  Map<String, dynamic> toJson() {
+    final _data = <String, dynamic>{};
+    _data['type'] = type;
+    _data['coordinates'] = coordinates;
+    return _data;
+  }
+}
+
+class CreateServiceModel {
+  CreateServiceModel({
+    required this.createService,
+  });
+  late final CreateService createService;
+
+  CreateServiceModel.fromJson(Map<String, dynamic> json){
+    createService = CreateService.fromJson(json['createService']);
+  }
+
+}
+
+class CreateService {
+  CreateService({
+    required this.recordId,
+  });
+  late final String recordId;
+
+  CreateService.fromJson(Map<String, dynamic> json){
+    recordId = json['recordId'];
   }
 }
 

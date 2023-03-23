@@ -1,25 +1,18 @@
-
-
 import 'package:cp_project/core/global/global.dart';
 import 'package:flutter/material.dart';
 
-AppBar CustomAppBar(){
+AppBar customAppBar(){
   return AppBar(
     backgroundColor: Colors.transparent,
-
     flexibleSpace: Container(
       height: 65,
       decoration:  BoxDecoration(
           boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.5),
-              blurRadius: 5.0,
-              spreadRadius: 2.0,
-            ),
+
           ],
           borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(5),
-              bottomRight: Radius.circular(5)
+              bottomLeft: Radius.circular(3),
+              bottomRight: Radius.circular(3)
           ),
           gradient: LinearGradient(
               begin: Alignment.bottomCenter,
