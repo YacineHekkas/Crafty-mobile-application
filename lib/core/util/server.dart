@@ -6,9 +6,7 @@ class Server {
     'https://crafty-server.azurewebsites.net/api/v1',
     defaultHeaders: {
       'Authorization':
-
-     'ggg eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMmIxMTM4YzFhYTJkOWQ5OGVkMzdiMCIsImlhdCI6MTY3OTIyNTM0NiwiZXhwIjoxNzEwNzgyOTQ2fQ.wsa4ZZfuf2ygO4VMpTfk8nFPXQzkSHjo2psiWKlOP5A'
-
+     'gg eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMzMTJkYmJjYTRlNGFhOTdkZDMxYWVhMiIsImlhdCI6MTY3OTY2ODE2NywiZXhwIjoxNzExMjI1NzY3fQ.R3CAE1dEbYKCAvRr2Ayzt9DM5klpuSkPSZeoqoehlyo'
     });
   static final qlClient = GraphQLClient(
     link: apiLink,

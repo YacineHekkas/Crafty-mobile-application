@@ -17,13 +17,8 @@ class Notificaion {
     description: 'Recieved messages notifications',
     importance: Importance.max,
   );
-  static bool notifSetup = false;
 
   static Future<void> setupNotificaion() async {
-    if (notifSetup) {
-      return;
-    }
-
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
@@ -68,8 +63,6 @@ class Notificaion {
       bloc.add(LoadConversationsEvent(forceNetworkFetch: true));
       bloc.add(LoadMessagesEvent(id: id, forceNetworkFetch: true));
     });
-
-    notifSetup = true;
   }
 
   static void showNotification(RemoteMessage message) {

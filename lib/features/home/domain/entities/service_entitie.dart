@@ -7,7 +7,7 @@ class ServiceEntity{
     required this.author,
     required this.category,
     required this.subcategory,
-   // required this.images,
+    required this.images,
     required this.description,
     required this.reviewCount,
     required this.reviews,
@@ -18,7 +18,7 @@ class ServiceEntity{
    final String author;
    final String category;
    final String subcategory;
-  // final Images images;
+   final Images images;
    final String description;
    final int reviewCount;
    final Reviews reviews;

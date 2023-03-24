@@ -21,8 +21,10 @@ class DataSourceImpl implements DataSource {
   @override
   Future<ServicesModel> getServicesData(String filterCategory,String filterSubCategory) async {
     try {
+      myMap = {};
       checkFilter('category',filterCategory);
       checkFilter('subcategory',filterSubCategory);
+      print(myMap.entries);
       final res = await server.fetchData(
           '''
                     query Items(\$filter: FilterFindManyServiceInput) {
@@ -104,7 +106,7 @@ class DataSourceImpl implements DataSource {
         author: e.author,
         category: e.category,
         subcategory: e.subcategory,
-        // images: e.images,
+        images: e.images,
         description: e.description,
         reviewCount: e.reviewCount,
         reviews: e.reviews,

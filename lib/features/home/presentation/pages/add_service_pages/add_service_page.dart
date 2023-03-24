@@ -26,26 +26,6 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
   bool showMessg = false;
   List<XFile> images = [];
 
-
-  // this is tempo shiiti
-  List<String> categoryList = [
-    'mechanic',
-    'plumber',
-    'electrician',
-    'painter',
-    'you know',
-    'you also know',
-    'it is what is it',
-    'koko'
-  ];
-  List<String> subCategoryList = [
-    'car painter',
-    'general',
-    'motors',
-    'liquid',
-    'body'
-  ];
-
   final _focusNode = FocusNode();
   bool _isKeyboardVisible = false;
 
@@ -394,19 +374,19 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                 setState(() {
                   if (itsCategory) {
                     categoryTag = value;
-                    category = categoryList[categoryTag].toString();
+                    category = AppConst.categories[categoryTag].name;
                     if (category != '') {
                       showMessg = false;
                     }
                   } else {
                     subCategoryTag = value;
-                    subCategory = subCategoryList[subCategoryTag].toString();
+                    subCategory = AppConst.categories[categoryTag].subcategories[subCategoryTag];
                   }
                   Navigator.pop(context);
                 });
               },
               choiceItems: C2Choice.listFrom(
-                source: itsCategory ? categoryList : subCategoryList,
+                source: itsCategory ? AppConst.categories.map((e) => e.name).toList() : AppConst.categories[categoryTag].subcategories.sublist(1),
                 value: (i, v) => i,
                 label: (i, v) => v,
               ),

@@ -1,18 +1,11 @@
-
 class ServicesModel {
   ServicesModel({
     required this.paginateServices,
   });
   late final PaginateServices paginateServices;
 
-  ServicesModel.fromJson(Map<String, dynamic> json){
+  ServicesModel.fromJson(Map<String, dynamic> json) {
     paginateServices = PaginateServices.fromJson(json['paginateServices']);
-  }
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['paginateServices'] = paginateServices.toJson();
-    return _data;
   }
 }
 
@@ -22,14 +15,8 @@ class PaginateServices {
   });
   late final List<Service> items;
 
-  PaginateServices.fromJson(Map<String, dynamic> json){
-    items = List.from(json['items']).map((e)=>Service.fromJson(e)).toList();
-  }
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['items'] = items.map((e)=>e.toJson()).toList();
-    return _data;
+  PaginateServices.fromJson(Map<String, dynamic> json) {
+    items = List.from(json['items']).map((e) => Service.fromJson(e)).toList();
   }
 }
 
@@ -57,32 +44,17 @@ class Service {
   late final bool hasReviewd;
   late final User user;
 
-  Service.fromJson(Map<String, dynamic> json){
+  Service.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
     author = json['author'];
     category = json['category'];
     subcategory = json['subcategory'];
-    //images = Images.fromJson(json['images']);
+    images = Images.fromJson(json['images']);
     description = json['description'];
     reviewCount = json['reviewCount'];
     reviews = Reviews.fromJson(json['reviews']);
     hasReviewd = json['hasReviewd'];
     user = User.fromJson(json['user']);
-  }
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['_id'] = id;
-    _data['author'] = author;
-    _data['category'] = category;
-    _data['subcategory'] = subcategory;
-    _data['images'] = images.toJson();
-    _data['description'] = description;
-    _data['reviewCount'] = reviewCount;
-    _data['reviews'] = reviews.toJson();
-    _data['hasReviewd'] = hasReviewd;
-    _data['user'] = user.toJson();
-    return _data;
   }
 }
 
@@ -110,32 +82,18 @@ class User {
   late final int rateCount;
   late final String username;
 
-  User.fromJson(Map<String, dynamic> json){
+  User.fromJson(Map<String, dynamic> json) {
     id = json['_id'];
     avatar = Avatar.fromJson(json['avatar']);
     gender = json['gender'];
     location = Location.fromJson(json['location']);
     name = json['name'];
-    phone = json['phone'];
+    
+    phone =  json['phone'];
     provider = json['provider'];
     rate = json['rate'];
     rateCount = json['rateCount'];
     username = json['username'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['_id'] = id;
-    _data['avatar'] = avatar.toJson();
-    _data['gender'] = gender;
-    _data['location'] = location.toJson();
-    _data['name'] = name;
-    _data['phone'] = phone;
-    _data['provider'] = provider;
-    _data['rate'] = rate;
-    _data['rateCount'] = rateCount;
-    _data['username'] = username;
-    return _data;
   }
 }
 
@@ -144,36 +102,25 @@ class Images {
     required this.displayImage,
     required this.images,
   });
-  late final DisplayImage displayImage;
-  late final List<Images> images;
+  late final Image displayImage;
+  late final List<Image>? images;
 
-  Images.fromJson(Map<String, dynamic> json){
-    displayImage = DisplayImage.fromJson(json['displayImage']);
-    images = List.from(json['images']).map((e)=>Images.fromJson(e)).toList();
-  }
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['displayImage'] = displayImage.toJson();
-    _data['images'] = images.map((e)=>e.toJson()).toList();
-    return _data;
+  Images.fromJson(Map<String, dynamic> json) {
+    displayImage = Image.fromJson(json['displayImage']);
+    images = json['images'] != null
+        ? List.from(json['images']).map((e) => Image.fromJson(e)).toList()
+        : null;
   }
 }
 
-class DisplayImage {
-  DisplayImage({
+class Image {
+  Image({
     required this.url,
   });
   late final String url;
 
-  DisplayImage.fromJson(Map<String, dynamic> json){
+  Image.fromJson(Map<String, dynamic> json) {
     url = json['url'];
-  }
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['url'] = url;
-    return _data;
   }
 }
 
@@ -183,13 +130,13 @@ class Reviews {
   });
   late final List<Items> items;
 
-  Reviews.fromJson(Map<String, dynamic> json){
-    items = List.from(json['items']).map((e)=>Items.fromJson(e)).toList();
+  Reviews.fromJson(Map<String, dynamic> json) {
+    items = List.from(json['items']).map((e) => Items.fromJson(e)).toList();
   }
 
   Map<String, dynamic> toJson() {
     final _data = <String, dynamic>{};
-    _data['items'] = items.map((e)=>e.toJson()).toList();
+    _data['items'] = items.map((e) => e.toJson()).toList();
     return _data;
   }
 }
@@ -210,7 +157,7 @@ class Items {
   late final String createdAt;
   late final String updatedAt;
 
-  Items.fromJson(Map<String, dynamic> json){
+  Items.fromJson(Map<String, dynamic> json) {
     author = json['author'];
     description = json['description'];
     reviewUser = ReviewUser.fromJson(json['reviewUser']);
@@ -241,7 +188,7 @@ class ReviewUser {
   late final String id;
   late final Avatar avatar;
 
-  ReviewUser.fromJson(Map<String, dynamic> json){
+  ReviewUser.fromJson(Map<String, dynamic> json) {
     username = json['username'];
     id = json['_id'];
     avatar = Avatar.fromJson(json['avatar']);
@@ -262,8 +209,8 @@ class Avatar {
   });
   late final String url;
 
-  Avatar.fromJson(Map<String, dynamic> json){
-    url = json['url']??"assets/images/placeholder.webp";
+  Avatar.fromJson(Map<String, dynamic> json) {
+    url = json['url'] ?? "assets/images/placeholder.webp";
   }
 
   Map<String, dynamic> toJson() {
@@ -272,16 +219,24 @@ class Avatar {
     return _data;
   }
 }
+
 class Location {
-  Location({
-    required this.type,
-    required this.coordinates,
-  });
+  Location(
+      {required this.type,
+      required this.coordinates,
+      required this.state,
+      required this.district});
+  late final String state;
+  late final String district;
   late final String type;
   late final List<double> coordinates;
 
-  Location.fromJson(Map<String, dynamic> json){
+  Location.fromJson(Map<String, dynamic> json) {
     type = json['type'];
+    state = json['state'];
+
+    district = json['district'];
+
     coordinates = List.castFrom<dynamic, double>(json['coordinates']);
   }
 
@@ -299,10 +254,9 @@ class CreateServiceModel {
   });
   late final CreateService createService;
 
-  CreateServiceModel.fromJson(Map<String, dynamic> json){
+  CreateServiceModel.fromJson(Map<String, dynamic> json) {
     createService = CreateService.fromJson(json['createService']);
   }
-
 }
 
 class CreateService {
@@ -311,10 +265,7 @@ class CreateService {
   });
   late final String recordId;
 
-  CreateService.fromJson(Map<String, dynamic> json){
+  CreateService.fromJson(Map<String, dynamic> json) {
     recordId = json['recordId'];
   }
 }
-
-
-

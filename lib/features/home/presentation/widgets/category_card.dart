@@ -48,11 +48,8 @@ class CategoryCard extends StatelessWidget {
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(10),
                       bottomLeft: Radius.circular(10)),
-                  child: Image.asset(
-                    'assets/images/feed_home_page.png',
-                    width: MediaQuery.of(context).size.width / 2.5,
-                    height: MediaQuery.of(context).size.height / 6,
-                    fit: BoxFit.fill,
+                  child: Image.network(
+                   serviceInfo!.images.displayImage.url
                   ),
                 ),
                 const SizedBox(
@@ -105,7 +102,7 @@ class CategoryCard extends StatelessWidget {
                           Container(
                             width: MediaQuery.of(context).size.width /4,
                             child: Text(
-                              'wilaya,comun', // i need to handel location somewher
+                              '${serviceInfo!.user.location.state}, ${serviceInfo!.user.location.district}', // i need to handel location somewher
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: const TextStyle(

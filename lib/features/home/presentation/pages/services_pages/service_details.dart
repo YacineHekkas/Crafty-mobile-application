@@ -10,21 +10,7 @@ import 'photo_Gallery_screen.dart';
 
 class ServiceDetails extends StatelessWidget {
   final ServiceEntity? serviceInfo;
-  ServiceDetails({Key? key, required this.serviceInfo}) : super(key: key);
-
-  final List<String> imgList = [
-    'https://picsum.photos/250?image=9',
-    'https://picsum.photos/250?image=9',
-    'https://picsum.photos/250?image=9',
-    'https://picsum.photos/250?image=9',
-    'https://picsum.photos/250?image=9',
-    'https://picsum.photos/250?image=9',
-    'https://picsum.photos/250?image=9',
-    'https://picsum.photos/250?image=9',
-    'https://images.unsplash.com/photo-1678769705659-eeebc4b2bddb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw1fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60',
-    'https://images.unsplash.com/photo-1678737176644-99fdb97795cf?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw2fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60',
-    'https://images.unsplash.com/photo-1678750267387-f15742256ba0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHw5fHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60',
-  ];
+  const ServiceDetails({Key? key, required this.serviceInfo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +31,9 @@ class ServiceDetails extends StatelessWidget {
                       pinned: true,
                       stretch: true,
                       flexibleSpace: FlexibleSpaceBar(
-                        background: Image.asset(
-                          'assets/images/placeholder.webp',
-                          fit: BoxFit.cover,
-                        ),
-                        stretchModes: const [
-                          StretchMode.zoomBackground,
-                        ],
+                        background: Image.network(
+                          serviceInfo!.images.displayImage.url
+                        )
                       ),
                       bottom: PreferredSize(
                         preferredSize: const Size.fromHeight(0.0),
@@ -113,8 +95,8 @@ class ServiceDetails extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                const Text('Setif, setif',
-                                    style: TextStyle(
+                                Text('${serviceInfo!.user.location.state} ${serviceInfo!.user.location.district}',
+                                    style: const TextStyle(
                                         color: AppConst.textColor,
                                         fontFamily: AppConst.font,
                                         fontSize: 18,
@@ -257,13 +239,13 @@ class ServiceDetails extends StatelessWidget {
                                         crossAxisCount: 3,
                                         crossAxisSpacing: 10,
                                         mainAxisSpacing: 10),
-                                itemCount: imgList.length,
+                                itemCount: serviceInfo!.images.images!.length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return InkWell(
                                     onTap: () {
                                       Navigator.of(context).push(
                                           MaterialPageRoute(builder: (context) {
-                                        return PhotoGallery(imgList: imgList, initialPage: index,);
+                                        return PhotoGallery(imgList: serviceInfo!.images.images!.map((e) => e.url).toList(), initialPage: index,);
                                       }));
                                     },
                                     child: Container(
@@ -273,7 +255,7 @@ class ServiceDetails extends StatelessWidget {
                                               BorderRadius.circular(15),
                                           image: DecorationImage(
                                             image: NetworkImage(
-                                              imgList[index],
+                                              serviceInfo!.images.images![index].url,
                                             ),
                                             fit: BoxFit.cover,
                                           )),

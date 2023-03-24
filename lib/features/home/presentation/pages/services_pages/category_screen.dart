@@ -1,5 +1,4 @@
 import 'package:anim_search_bar/anim_search_bar.dart';
-import 'package:cp_project/core/global/Category.dart';
 import 'package:cp_project/core/global/Screens.dart';
 import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/features/home/domain/entities/service_entitie.dart';
@@ -128,16 +127,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 child: ListView.separated(
                   padding: EdgeInsets.only(left: 6, right: 6),
                   scrollDirection: Axis.horizontal,
-                  itemCount: checkCategory().length,
+                  itemCount: AppConst.categories.firstWhere((element) => element.name == widget.categoryName).subcategories.length,
                   itemBuilder: (context, index) => RawChipWidget(
-                      label: checkCategory()[index] == ''
-                          ? 'all'
-                          : checkCategory()[index],
+                      label: AppConst.categories.firstWhere((element) => element.name == widget.categoryName).subcategories[index],
                       isSelected: isSelected == index,
                       onSelected: (value, label) {
                         setState(() {
                           context.read<DataBloc>().add(CallServerEvent(
-                              subCategory: checkCategory()[index]!,
+                              subCategory: index == 0 ? '' : AppConst.categories.firstWhere((element) => element.name == widget.categoryName).subcategories[index],
                               category: widget.categoryName
                           ));
                           isSelected = index;
@@ -187,16 +184,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
         },
       ),
     );
-  }
-
-  Map<int, String> checkCategory() {
-    Map<int, String> myMap = {};
-    if (widget.categoryName == 'mecanicien') {
-      myMap = Mechanique().MechaniqueSubCategory;
-    } else if (widget.categoryName == 'plombier') {
-      myMap = Plombier().PlombierSubCategory;
-    }
-    return myMap;
   }
 
   void addSearchedFOrItemsToSearchedList(String searchedCharacter) {

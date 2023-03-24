@@ -54,29 +54,18 @@ class HomeScreen extends StatelessWidget {
                           SizedBox(
                             height: 210,
                             child:
-                            ListView(
+                            ListView.builder(
+                              itemCount: AppConst.categories.length,
+                              itemBuilder: (context, index) =>                                 GestureDetector(
+                                  onTap: () {
+                                    callData(AppConst.categories[index].name,context);
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
+                                        CategoryScreen(categoryName: AppConst.categories[index].name,)));
+                                  },
+                                  child: CardWidget(categoryName: AppConst.categories[index].name, imgPath: 'assets/images/img1.png',),
+                                ),
                               scrollDirection: Axis.horizontal,
                               padding: const EdgeInsets.all(8),
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    callData('mecanicien',context);
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                        CategoryScreen(categoryName: 'mecanicien',)));
-                                  },
-                                  child: const CardWidget(categoryName: 'Mechanique', imgPath: 'assets/images/img1.png',),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    callData('plombier',context);
-                                    Navigator.push(context, MaterialPageRoute(builder: (context)
-                                    => CategoryScreen(categoryName: 'plombier',)));
-                                  },
-                                  child:const CardWidget(categoryName: 'Plombier', imgPath: 'assets/images/img1.png',),
-                                ),
-                                const CardWidget(categoryName: 'Electrician', imgPath: 'assets/images/img1.png',),
-                                const CardWidget(categoryName: 'carpenter', imgPath: 'assets/images/img1.png',),
-                              ],
                             ),
                           ),
                           space(),
