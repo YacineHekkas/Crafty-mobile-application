@@ -56,7 +56,7 @@ class HomeScreen extends StatelessWidget {
                             child:
                             ListView.builder(
                               itemCount: AppConst.categories.length,
-                              itemBuilder: (context, index) =>                                 GestureDetector(
+                              itemBuilder: (context, index) =>GestureDetector(
                                   onTap: () {
                                     callData(AppConst.categories[index].name,context);
                                     Navigator.push(context, MaterialPageRoute(builder: (context) =>
@@ -68,12 +68,12 @@ class HomeScreen extends StatelessWidget {
                               padding: const EdgeInsets.all(8),
                             ),
                           ),
-                          space(),
+                          space,
                           // Align(
                           //   alignment: const Alignment(0,0.35),
                           //   child: addSpace(),
                           // ), /// -----> addSpace
-                          space(),
+                          space,
                           const Align(
                             alignment: Alignment(-1,0.9),
                             child: feedCard(),
@@ -87,8 +87,6 @@ class HomeScreen extends StatelessWidget {
             )
         )
     );
-
-
   }
 
   void callData(String category, cntx) {
@@ -98,11 +96,8 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-SizedBox space() {
-  return const SizedBox(
-    height: 20,
-  );
-}
+SizedBox space = const SizedBox(height: 20);
+
 
 class MySliverAppBar extends SliverPersistentHeaderDelegate {
   final double expandedHeight;

@@ -19,6 +19,7 @@ class AppConst {
   static const Color orong = Color(0xffff842B);
   static const Color gray = Color(0x64dedbdb);
   static const Color textColor = Color(0xff4F4F4F);
+
   static List<Category> categories = [
     Category(
       name: 'Plumbing',
@@ -146,7 +147,7 @@ class ConstStrings {
       'Lorem Ipsum is simply dummy text of the printing and typesetting industry';
 }
 
-class TimeagoSettings implements LookupMessages {
+class TimeAgoSettings implements LookupMessages {
   final dayData = {
     "1": "Mon",
     "2": "Tue",

@@ -75,8 +75,8 @@ class _NavScreenState extends State<NavScreen> {
                                   text: 'Likes',
                                 ),
                                 GButton(
-                                  icon: Icons.search,
-                                  text: 'Search',
+                                  icon: Icons.message,
+                                  text: 'messages',
                                 ),
                                 GButton(
                                   icon: Icons.account_circle_sharp,

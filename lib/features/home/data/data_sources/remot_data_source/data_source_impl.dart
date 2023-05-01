@@ -18,7 +18,6 @@ class DataSourceImpl implements DataSource {
   Map<String, dynamic> myMap = {};
   bool status = true;
 
-  @override
   Future<ServicesModel> getServicesData(String filterCategory,String filterSubCategory) async {
     try {
       myMap = {};
@@ -97,6 +96,7 @@ class DataSourceImpl implements DataSource {
     }
   }
   @override
+
   Future<List<ServiceEntity>> servicesList(String category,String subCategory) async {
     return await getServicesData(category,subCategory)
         .then((value) => value.paginateServices.items
@@ -116,6 +116,7 @@ class DataSourceImpl implements DataSource {
     ).toList());
   }
   @override
+
   Future<String> createService(String category, String subCategory, String description,List<dynamic> imagesList) async {
 
     try{
@@ -136,7 +137,7 @@ class DataSourceImpl implements DataSource {
         }
       );
 
-      print('--------->query data :${res}');
+      print('--------->query data :$res');
 
       if (res.data != null ) {
         final id = CreateServiceModel.fromJson(res.data!);
@@ -163,8 +164,8 @@ class DataSourceImpl implements DataSource {
     }
   }
 
-  Future  uploadData(imageFilePath, ServiceId) async {
-    var request = http.MultipartRequest('POST', Uri.parse('https://crafty-server.azurewebsites.net/api/upload/${ServiceId}'),);
+  Future  uploadData(imageFilePath, serviceId) async {
+    var request = http.MultipartRequest('POST', Uri.parse('https://crafty-server.azurewebsites.net/api/upload/$serviceId'),);
     request.headers.addAll({
       HttpHeaders.authorizationHeader: 'Bearer $token',
     });
@@ -177,7 +178,8 @@ class DataSourceImpl implements DataSource {
     ));
 
     var response = await request.send();
-    print(response.statusCode);
+    print('-------------------->>${response.statusCode}');
+    print(response.stream.bytesToString());
     if (response.statusCode != 200){
       status = false;
     }

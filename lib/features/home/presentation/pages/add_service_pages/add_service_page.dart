@@ -25,6 +25,8 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
   String description = '';
   bool showMessg = false;
   List<XFile> images = [];
+  List<XFile> displayImage = [];
+  bool isItDisplay = false;
 
   final _focusNode = FocusNode();
   bool _isKeyboardVisible = false;
@@ -48,8 +50,6 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
     super.dispose();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -67,12 +67,12 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                 }else if (state is ErrorState ){
                   return EitherSuccessOrError( etate: false, message: state.message,);
                 }else if (state is OperationDoneState){
-                  categoryTag = 0;
-                  subCategoryTag = 0;
-                   category = '';
-                   subCategory = '';
-                   description = '';
-                  images = [];
+                  // categoryTag = 0;
+                  // subCategoryTag = 0;
+                  //  category = '';
+                  //  subCategory = '';
+                  //  description = '';
+                  // images = [];
                   return theUI();
                 }
                 else {
@@ -183,7 +183,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                           ),
                           const SizedBox(height: 15.0),
 
-                          //////////////////////////////////////////////////////////////////////////////-=-=-=
+                          /////////////////////////////////////////////////////////////////////////
                           Row(
                             mainAxisAlignment:
                             MainAxisAlignment.spaceBetween,
@@ -235,7 +235,35 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                             ),
                           ),
                           lineDivider,
-                          /////////////////////////////////////////////////////////////////////////-=--=-=-
+                          /////////////////////////////////////////////////////////////////////////
+                          Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Display image', style: headerStyle),
+                              InkWell(
+                                onTap: () {
+                                  isItDisplay = true;
+                                  print(displayImage);
+                                  selectImage();
+                                },
+                                child: const Icon(Icons.add),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 30,
+                          ),
+                          displayImage.isEmpty?
+                            const SizedBox(height: 90,):
+                              SizedBox(
+                                height: 90,
+                                width: 90,
+                                child: photoShower(0,displayImage),
+                              ),
+
+                          lineDivider,
+                          /////////////////////////////////////////////////////////////////////////
                           Row(
                             mainAxisAlignment:
                             MainAxisAlignment.spaceBetween,
@@ -258,25 +286,19 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                                 crossAxisCount: 3,
                                 crossAxisSpacing: 10,
                                 mainAxisSpacing: 10),
-                            itemCount: images.length,
+                            itemCount: images.length<=12? images.length : 0,
                             itemBuilder:
                                 (BuildContext context, int index) {
                               return InkWell(
-                                onTap: () {},
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.black,
-                                    borderRadius:
-                                    BorderRadius.circular(15),
-                                  ),
-                                  child: Image.file(
-                                      File(images[index].path)),
-                                ),
+                                onTap: () {
+                                  //TODO : add see the whole image
+                                },
+                                child: photoShower(index, images)
                               );
                             },
                           ),
                           lineDivider,
-                          //////////////////////////////////////////////////////////////////////////-+_+_+_
+                          /////////////////////////////////////////////////////////////////////////
                           Text(
                             'Description',
                             style: headerStyle,
@@ -361,7 +383,6 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
     );
   }
 
-
   selectCategory(bool itsCategory) {
     return showDialog(
         context: context,
@@ -380,7 +401,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                     }
                   } else {
                     subCategoryTag = value;
-                    subCategory = AppConst.categories[categoryTag].subcategories[subCategoryTag];
+                    subCategory = AppConst.categories[categoryTag].subcategories[subCategoryTag+1];
                   }
                   Navigator.pop(context);
                 });
@@ -427,16 +448,15 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                         GestureDetector(
                           onTap: () async {
                             Fluttertoast.showToast(
-                                msg: 'you can chose 12 photo as a maximum',
+                                msg: isItDisplay ?'you can chose just one photo':'you can chose 12 photo as a maximum',
                                 toastLength: Toast.LENGTH_LONG,
-                                gravity: ToastGravity.CENTER,
-                                timeInSecForIosWeb: 1,
-                                fontSize: 16.0
+
                             );
                             await selectImageFromGallery();
-                            if (images.isNotEmpty) {
+                            if (images.isNotEmpty || displayImage.isNotEmpty) {
                               Navigator.pop(context);
-                            } else {
+                            }
+                            else {
                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                 content: Text('No Image Selected !'),
                               ));
@@ -457,8 +477,12 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                               var selectedImage = await selectImageFromCamera();
                               if (selectedImage.path != '') {
                                 images.add(selectedImage);
+                                setState(() {
+
+                                });
                                 Navigator.pop(context);
                               } else {
+
                                 ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
                                       content: Text('No Image Captured !'),
@@ -489,8 +513,16 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
     try {
       final List<XFile> pickedImages  = await ImagePicker().pickMultiImage();
       if (pickedImages.isNotEmpty) {
-        images.addAll(pickedImages);
-        images = images.take(12).toList();
+        if(isItDisplay){
+          displayImage.clear();
+          displayImage.addAll(pickedImages);
+          displayImage = displayImage.take(1).toList();
+          isItDisplay= false;
+        }
+        else{
+          images.addAll(pickedImages);
+          images = images.take(12).toList();
+        }
         setState(() {});
       }
     } on Exception catch (e) {
@@ -507,11 +539,40 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
     }
   }
 
+  Widget photoShower(int index,List<XFile> imgs){
+    return Stack(
+      children: [
+        ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(15)),
+          child: Image.file(
+            File(imgs[index].path),
+            height: 300,
+            width: 300,
+            fit: BoxFit.fitWidth,
+          ),
+        ),
+        Align(
+            alignment:Alignment.topRight,
+            child:InkWell(
+              onTap: (){
+                imgs.removeAt(index);
+                setState(() {
+                });
+              },
+              child:  Icon(
+                Icons.remove_circle,
+                color: Colors.white,
+              ),
+            )
+        )
+      ],
+    );
+  }
+
   Column lineDivider = Column(
     children: const [
       SizedBox(height: 10.0),
       Center(
-        /// this is divider
         child: Divider(
           color: Colors.black,
           height: 1.0,

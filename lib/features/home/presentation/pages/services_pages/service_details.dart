@@ -32,7 +32,8 @@ class ServiceDetails extends StatelessWidget {
                       stretch: true,
                       flexibleSpace: FlexibleSpaceBar(
                         background: Image.network(
-                          serviceInfo!.images.displayImage.url
+                          serviceInfo!.images.displayImage.url,
+                          fit: BoxFit.cover,
                         )
                       ),
                       bottom: PreferredSize(
@@ -264,6 +265,7 @@ class ServiceDetails extends StatelessWidget {
                                 },
                               ),
                             ),
+
 
                             const SizedBox(height: 16.0),
 

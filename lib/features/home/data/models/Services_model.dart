@@ -76,7 +76,7 @@ class User {
   late final String gender;
   late final Location location;
   late final String name;
-  late final int phone;
+  late final dynamic phone;
   late final bool provider;
   late final int rate;
   late final int rateCount;

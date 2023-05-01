@@ -34,10 +34,10 @@ class searchBar extends StatelessWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(30),
         ),
-
         child:
             Row(
               children: [
+                const SizedBox(width: 5,),
                 Icon(
                   color: Colors.black87.withOpacity(0.5),
                   Icons.search,
@@ -53,9 +53,7 @@ class searchBar extends StatelessWidget {
                   ),
                 ),
               ],
-
         ),
-
       ),
     );
   }

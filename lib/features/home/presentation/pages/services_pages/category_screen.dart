@@ -14,7 +14,6 @@ import 'service_details.dart';
 class CategoryScreen extends StatefulWidget {
   final String categoryName;
 
-
   CategoryScreen({Key? key, required this.categoryName}) : super(key: key);
 
   @override
@@ -23,8 +22,8 @@ class CategoryScreen extends StatefulWidget {
 
 class _CategoryScreenState extends State<CategoryScreen> {
   late List<ServiceEntity>? allDataList;
-  late List<ServiceEntity>? searchlist;
-
+  late List<ServiceEntity>? searchList;
+  int isSelected = 0;
   final textSearchController = TextEditingController();
 
   @override
@@ -38,7 +37,6 @@ class _CategoryScreenState extends State<CategoryScreen> {
     super.dispose();
   }
 
-  int isSelected = 0;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -58,7 +56,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
             },
             onSubmitted: (value) {
               addSearchedFOrItemsToSearchedList(value);
-              context.read<DataBloc>().emit(DataIsHereState(servicedata: searchlist!));
+              context
+                  .read<DataBloc>()
+                  .emit(DataIsHereState(servicedata: searchList!));
             },
           ),
           IconButton(
@@ -68,6 +68,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
         ],
       ),
       body: CustomScrollView(
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
               floating: false,
@@ -122,21 +125,32 @@ class _CategoryScreenState extends State<CategoryScreen> {
             floating: true,
             bottom: PreferredSize(
               preferredSize: Size(MediaQuery.of(context).size.width, 0),
-              child: Container(
+              child: SizedBox(
                 height: 50,
                 child: ListView.separated(
-                  padding: EdgeInsets.only(left: 6, right: 6),
+                  padding: const EdgeInsets.only(left: 6, right: 6),
                   scrollDirection: Axis.horizontal,
-                  itemCount: AppConst.categories.firstWhere((element) => element.name == widget.categoryName).subcategories.length,
+                  itemCount: AppConst.categories
+                      .firstWhere(
+                          (element) => element.name == widget.categoryName)
+                      .subcategories
+                      .length,
                   itemBuilder: (context, index) => RawChipWidget(
-                      label: AppConst.categories.firstWhere((element) => element.name == widget.categoryName).subcategories[index],
+                      label: AppConst.categories
+                          .firstWhere(
+                              (element) => element.name == widget.categoryName)
+                          .subcategories[index],
                       isSelected: isSelected == index,
                       onSelected: (value, label) {
                         setState(() {
                           context.read<DataBloc>().add(CallServerEvent(
-                              subCategory: index == 0 ? '' : AppConst.categories.firstWhere((element) => element.name == widget.categoryName).subcategories[index],
-                              category: widget.categoryName
-                          ));
+                              subCategory: index == 0
+                                  ? ''
+                                  : AppConst.categories
+                                      .firstWhere((element) =>
+                                          element.name == widget.categoryName)
+                                      .subcategories[index],
+                              category: widget.categoryName));
                           isSelected = index;
                         });
                       }),
@@ -148,17 +162,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
           ),
           SliverPadding(
             padding: const EdgeInsets.all(6),
-            sliver: BlocBuilder<DataBloc, GetDataState>(
-                builder: (context, state) {
+            sliver:
+                BlocBuilder<DataBloc, GetDataState>(builder: (context, state) {//TODO manage state error and chow some UI
               if (state is LoadingState) {
-                return const SliverToBoxAdapter(
-                  child: LoadingWidget()
-                );
+                return const SliverToBoxAdapter(child: LoadingWidget());
               } else if (state is DataIsHereState) {
                 getdata();
                 return _dataList(state.servicedata);
               } else {
-                return SliverToBoxAdapter(
+                return const SliverToBoxAdapter(
                   child: LoadingWidget(),
                 );
               }
@@ -178,7 +190,11 @@ class _CategoryScreenState extends State<CategoryScreen> {
             serviceInfo: dataValue[index],
             onSelected: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => ServiceDetails( serviceInfo: dataValue[index],)));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ServiceDetails(
+                            serviceInfo: dataValue[index],
+                          )));
             },
           );
         },
@@ -187,21 +203,19 @@ class _CategoryScreenState extends State<CategoryScreen> {
   }
 
   void addSearchedFOrItemsToSearchedList(String searchedCharacter) {
-
     setState(() {
-      searchlist = allDataList!
+      searchList = allDataList!
           .where((character) =>
-          character.user.name.toLowerCase().startsWith(searchedCharacter))
+              character.user.name.toLowerCase().startsWith(searchedCharacter))
           .toList();
     });
-    print(searchlist);
   }
 
-  void getdata() async{
-    dynamic tempo = await BlocProvider.of<DataBloc>(context).getServicesUseCase(widget.categoryName,'');
+  void getdata() async {
+    dynamic tempo = await BlocProvider.of<DataBloc>(context)
+        .getServicesUseCase(widget.categoryName, '');
     tempo.fold(
-            (l) => print('-----------------ggbloc--->$l'),
-            (r) => allDataList = r
-    );
+        (l) => print('-----------------ggbloc--->$l'),
+            (r) => allDataList = r);
   }
 }

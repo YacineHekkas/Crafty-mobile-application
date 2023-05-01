@@ -14,7 +14,7 @@ class ChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: place this where it blong
     locator<ChatBloc>().add(LoadConversationsEvent());
-    timeago.setLocaleMessages('en', TimeagoSettings());
+    timeago.setLocaleMessages('en', TimeAgoSettings());
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppConst.darkBlue,

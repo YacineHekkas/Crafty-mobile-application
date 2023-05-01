@@ -1,6 +1,5 @@
 import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/features/home/domain/entities/service_entitie.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CategoryCard extends StatelessWidget {
@@ -10,7 +9,7 @@ class CategoryCard extends StatelessWidget {
   // im gonna add all of this in user entity and use it directly
 
 
-  CategoryCard(
+  const CategoryCard(
       {Key? key,
       required this.onSelected, required this.serviceInfo})
       : super(key: key);
@@ -18,7 +17,7 @@ class CategoryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.only(bottom: 10),
         child: InkWell(
           onTap: () {
             onSelected();
@@ -55,8 +54,8 @@ class CategoryCard extends StatelessWidget {
                 const SizedBox(
                   width: 8,
                 ),
-                Container(
-                  width: MediaQuery.of(context).size.width / 1.9,
+                SizedBox(
+                  width: MediaQuery.of(context).size.width / 1.7,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -67,7 +66,7 @@ class CategoryCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            '${serviceInfo!.user.name}',
+                            serviceInfo!.user.name,
                             style: const TextStyle(
                                 fontFamily: AppConst.font,
                                 color: AppConst.textColor,
@@ -79,10 +78,9 @@ class CategoryCard extends StatelessWidget {
                       const SizedBox(
                         height: 8,
                       ),
-                      Container(
-                        width: MediaQuery.of(context).size.width / 2,
+                      SizedBox(
                         child: Text(
-                          '${serviceInfo!.description}',
+                          serviceInfo!.description,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
@@ -95,12 +93,12 @@ class CategoryCard extends StatelessWidget {
                       const SizedBox(
                         height: 15,
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Container(
-                            width: MediaQuery.of(context).size.width /4,
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width /3,
                             child: Text(
                               '${serviceInfo!.user.location.state}, ${serviceInfo!.user.location.district}', // i need to handel location somewher
                               maxLines: 1,
@@ -134,7 +132,7 @@ class CategoryCard extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       )
                     ],
