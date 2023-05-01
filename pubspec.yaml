@@ -32,8 +32,10 @@ dependencies:
   dartz: ^0.10.1
   flutter_local_notifications: ^13.0.0
   shared_preferences: ^2.0.18
-
- # grahpQl
+  geolocator: ^9.0.2
+  intl_phone_number_input: ^3.0.1
+  
+  # grahpQl
   http: ^0.13.5
   graphql_flutter: ^5.1.2
   sliver_tools: ^0.2.9
