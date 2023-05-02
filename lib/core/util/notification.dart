@@ -9,7 +9,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class Notificaion {
   static final flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  static final messaging = FirebaseMessaging.instance;
 
   static const channel = AndroidNotificationChannel(
     'messages_channel',
@@ -18,10 +17,39 @@ class Notificaion {
     importance: Importance.max,
   );
 
+  static const initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+
+  static const initializationSettingsIOS = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true);
+
+  static const initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
+
   static Future<void> setupNotificaion() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+
+    try {
+      final app = locator<App>();
+      final ts = app.getFCMTokenTimestamp();
+
+      messaging.onTokenRefresh.listen(app.setFCMToken);
+
+      if (ts == null ||
+          DateTime.now().difference(DateTime.parse(ts)).inHours > 3) {
+        // TODO: this should be in weeks as the docs say...
+        await messaging.deleteToken();
+
+        app.setFCMTokenTimestamp();
+      }
+      await messaging.getToken();
+    } catch (_) {}
 
     // TODO: check premissions
     await messaging.requestPermission(
@@ -34,11 +62,7 @@ class Notificaion {
       sound: true,
     );
 
-    final app = locator<App>();
-    try {
-      await messaging.getToken();
-    } catch (_) {}
-    messaging.onTokenRefresh.listen(app.setFCMToken);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
@@ -53,22 +77,65 @@ class Notificaion {
 
     // TODO: refactor this to handle data messages with notification
     FirebaseMessaging.onMessage.listen((message) {
-      final String? id = message.data['conversation'];
+      final String event = message.data['event'];
+      final String? conversation = message.data['conversation'];
+      final String? id = message.data['id'];
+      final String? typing = message.data['typing'];
       final bloc = locator<ChatBloc>();
 
-      if (id == null) {
+      print('fore $event');
+
+      print('fore $conversation');
+      print('fore $id');
+      print('fore $typing');
+
+      if (conversation != null && event == 'MESSAGE_TYPING') {
+        locatorMessagesBloc(instanceName: conversation).add(
+          UpdateMessage(
+            typing == 'true' ? MessageStatus.typing : MessageStatus.none,
+          ),
+        );
+
         return;
       }
 
-      bloc.add(LoadConversationsEvent(forceNetworkFetch: true));
-      bloc.add(LoadMessagesEvent(id: id, forceNetworkFetch: true));
+      if (conversation != null || typing == null) {
+        bloc.add(
+          const FetchConversations(forceRefresh: true, forceNetworkFetch: true),
+        );
+      }
+
+      if (id != null && conversation != null) {
+        locatorMessagesBloc(instanceName: conversation).add(
+          UpdateMessage(
+            event == 'MESSAGE_SEEN'
+                ? MessageStatus.seen
+                : event == 'MESSAGE_EDITED'
+                    ? MessageStatus.edit
+                    : event == 'MESSAGE_DELETED'
+                        ? MessageStatus.remove
+                        : MessageStatus.none,
+            id: id,
+          ),
+        );
+
+        return;
+      }
+
+      if (message.notification != null) {
+        showNotification(message.notification!);
+      }
+
+      if (conversation != null) {
+        locatorMessagesBloc(instanceName: conversation).add(
+          FetchMessages(conversation,
+              forceRefresh: true, forceNetworkFetch: true),
+        );
+      }
     });
   }
 
-  static void showNotification(RemoteMessage message) {
-    RemoteNotification? notification = message.notification;
-    AndroidNotification? android = message.notification?.android;
-    if (notification != null && android != null) {
+  static void showNotification(RemoteNotification notification) =>
       flutterLocalNotificationsPlugin.show(
         notification.hashCode,
         notification.title,
@@ -78,10 +145,7 @@ class Notificaion {
             channel.id,
             channel.name,
             channelDescription: channel.description,
-            //icon: 'ic_launcher',
           ),
         ),
       );
-    }
-  }
 }

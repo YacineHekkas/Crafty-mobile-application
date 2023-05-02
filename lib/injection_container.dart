@@ -1,3 +1,4 @@
+import 'package:cp_project/core/network/network_info.dart';
 import 'package:cp_project/core/util/app.dart';
 import 'package:cp_project/core/util/notification.dart';
 import 'package:cp_project/core/util/server.dart';
@@ -15,7 +16,6 @@ import 'package:cp_project/features/registration/domain/use_cases/SignUp_Usecase
 import 'package:cp_project/features/registration/domain/use_cases/is_verified_usecase.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
-import 'core/network/network_info.dart';
 import 'features/registration/data/data_sources/dataSource.dart';
 import 'features/registration/data/data_sources/data_impl.dart';
 import 'features/registration/data/repositories/data_repo.dart';
@@ -29,6 +29,20 @@ import 'features/home/domain/use_cases/create_service_usecase.dart';
 import 'features/home/presentation/bloc/get_data_bloc.dart';
 
 final locator = GetIt.instance;
+
+T locatorOndemand<T extends Object>(T Function() factoryFunc,
+    {String? instanceName}) {
+  if (!locator.isRegistered<T>(instanceName: instanceName)) {
+    locator.registerSingleton<T>(factoryFunc(), instanceName: instanceName);
+  }
+  return locator<T>(instanceName: instanceName);
+}
+
+ChatMessagesBloc locatorMessagesBloc({required String instanceName}) =>
+    locatorOndemand<ChatMessagesBloc>(
+      () => ChatMessagesBloc(instance: instanceName),
+      instanceName: instanceName,
+    );
 
 Future<void> setupLocator() async {
   locator.registerFactory(
@@ -46,8 +60,6 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton<Logrepo>(
       () => Datarepo(locator(), dataSource: locator()));
   locator.registerLazySingleton<Datasource>(() => Dataimpl());
-  locator.registerLazySingleton<NetworkInfo>(
-      () => NetworkInfoImpl(InternetConnectionChecker()));
   // block
   locator.registerFactory(() => DataBloc(
         getServicesUseCase: locator(),
@@ -57,11 +69,10 @@ Future<void> setupLocator() async {
         getServicesUseCase: locator(),
         createServiceUsecase: locator(),
       ));
-  // atm, use registerLazySingleton
   locator.registerLazySingleton(() => ChatBloc());
 
   // util
-  locator.registerLazySingleton(() => Server());
+  locator.registerLazySingleton(() => Server(networkInfo: locator()));
   locator.registerLazySingleton(() => Notificaion());
   locator.registerLazySingleton(() => App(locator()));
 
@@ -77,4 +88,5 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton<DataSource>(() => DataSourceImpl());
   locator.registerLazySingleton<ChatSource>(
       () => ChatSourceImpl(server: locator()));
+  locator.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
 }

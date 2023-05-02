@@ -1,6 +1,7 @@
 import 'package:cp_project/core/util/app.dart';
 import 'package:cp_project/core/util/notification.dart';
 import 'package:cp_project/core/util/server.dart';
+import 'package:cp_project/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:cp_project/features/home/presentation/bloc/get_data_bloc.dart';
 import 'package:cp_project/features/home/presentation/pages/nav_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -13,9 +14,14 @@ import 'injection_container.dart';
 @pragma('vm:entry-point')
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // TODO: handle background messages
+  print('bak msg');
 }
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+ //Bloc.observer = SimpleBlocObserver();
+
   await setupLocator();
   await locator<Server>().initialize();
   await locator<App>().initialize();
@@ -23,7 +29,6 @@ void main() async {
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 

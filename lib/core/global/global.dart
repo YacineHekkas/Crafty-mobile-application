@@ -176,29 +176,29 @@ class ConstStrings {
   static String have_acc = 'Already have an account!';
 }
 
-class TimeAgoSettings implements LookupMessages {
+class TimeagoChatSettings implements LookupMessages {
   final dayData = {
-    "1": "Mon",
-    "2": "Tue",
-    "3": "Wed",
-    "4": "Thur",
-    "5": "Fri",
-    "6": "Sat",
-    "7": "Sun"
+    1: "Mon",
+    2: "Tue",
+    3: "Wed",
+    4: "Thur",
+    5: "Fri",
+    6: "Sat",
+    7: "Sun"
   };
   final monthData = {
-    "1": "Jan",
-    "2": "Feb",
-    "3": "Mar",
-    "4": "Apr",
-    "5": "May",
-    "6": "June",
-    "7": "Jul",
-    "8": "Aug",
-    "9": "Sep",
-    "10": "Oct",
-    "11": "Nov",
-    "12": "Dec"
+    1: "Jan",
+    2: "Feb",
+    3: "Mar",
+    4: "Apr",
+    5: "May",
+    6: "June",
+    7: "Jul",
+    8: "Aug",
+    9: "Sep",
+    10: "Oct",
+    11: "Nov",
+    12: "Dec"
   };
 
   @override
@@ -220,15 +220,17 @@ class TimeAgoSettings implements LookupMessages {
   @override
   String hours(int hours) => '${hours}h';
   @override
-  String aDay(int hours) => 'yesterday';
+  String aDay(int hours) => dayData[DateTime.now().subtract(Duration(hours: hours)).weekday]!;
   @override
-  String days(int days) =>
-      dayData['${DateTime.now().subtract(Duration(days: days)).weekday}']!;
+  String days(int days) {
+    final tm = DateTime.now().subtract(Duration(milliseconds: days * 24 * 60 * 60 * 1000));
+    
+    return days < 7 ? dayData[tm.weekday]! : '${tm.day} ${monthData[tm.month]}';
+  }
   @override
-  String aboutAMonth(int days) => 'last month';
+  String aboutAMonth(int days) => this.days(days);
   @override
-  String months(int months) => monthData[
-      '${DateTime.now().subtract(Duration(days: months * 31)).weekday}']!;
+  String months(int months) => this.days(months * 30);
   @override
   String aboutAYear(int year) => '${year}y';
   @override
@@ -243,4 +245,16 @@ class LoginMessages {
   static const sing_up_successe = 'Sing Up Successfully';
   static const code_v = 'email verified';
   static const code_s = 'the code has been sent ';
+}
+class TimeagoChatMessagesSettings extends TimeagoChatSettings {
+  @override
+  String lessThanOneMinute(int seconds) => '';
+  @override
+  String aboutAMinute(int minutes) => '';
+  @override
+  String minutes(int minutes) => '';
+  @override
+  String aboutAnHour(int minutes) => '';
+  @override
+  String hours(int hours) => '';
 }
