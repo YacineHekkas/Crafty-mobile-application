@@ -171,7 +171,7 @@ class ConstStrings {
   static String state = 'States';
   static String District = 'District';
   static String female = 'female';
-  static String male = ' male ';
+  static String male = 'male';
   static String unspecified = 'unspecified';
   static String have_acc = 'Already have an account!';
 }

@@ -287,10 +287,8 @@ class MessageWidgetState extends State<MessageWidget> {
                                       id: id,
                                     ),
                                   );
-                                  data
-                                      .editMessage(
-                                         id, message.value.text)
-                                      .then((value) {
+                                  data.editMessage(id, message.value.text).then(
+                                      (value) {
                                     data.getMessages(
                                       widget.conversation,
                                       forceNetworkFetch: true,
@@ -335,7 +333,7 @@ class MessageWidgetState extends State<MessageWidget> {
                           result: ChatResult.success,
                           id: id,
                         ));
-                        data.deleteMessage( id).then((value) {
+                        data.deleteMessage(id).then((value) {
                           data.getMessages(
                             widget.conversation,
                             cacheFetch: false,
@@ -396,7 +394,7 @@ class MessageWidgetState extends State<MessageWidget> {
             setState(() {
               id = state.messageNewID!;
             });
-          } 
+          }
         },
         buildWhen: (_, c) =>
             c.status == ChatStatus.messageOperation && c.messageID == id,
@@ -496,161 +494,163 @@ class MessageWidgetState extends State<MessageWidget> {
     );
   }
 
-  Widget buildAttachments() => Column(
-        children: [
-          if (widget.attachments != null &&
-                  widget.attachments!.images != null ||
-              widget.localAttchmentsList != null)
-            Container(
-              padding: EdgeInsets.only(
-                top: 2,
-                bottom: !body.isNotEmpty &&
-                        !deleted &&
-                        (showSeenSent || status.index == 3)
-                    ? 15
-                    : 2,
-                left: !widget.sender ? 8 : 0,
-                right: widget.sender ? 18 : 0,
-              ),
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width / 2,
-              ),
-              child: Directionality(
-                textDirection:
-                    widget.sender ? TextDirection.rtl : TextDirection.ltr,
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 6,
-                    mainAxisSpacing: 4,
-                  ),
-                  itemCount: widget.localAttchmentsList != null
-                      ? widget.localAttchmentsList!.length
-                      : widget.attachments!.images!.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () => onTap(),
-                      onDoubleTap: () {
-                        if (widget.attachments == null) return;
+  Widget buildAttachments() {
+    final items = widget.localAttchmentsList != null
+        ? widget.localAttchmentsList!.length
+        : widget.attachments?.images?.length ?? 0;
 
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) {
-                              return PhotoGallery(
-                                imgList: widget.attachments!.images!
-                                    .map((e) =>
-                                        'https://crafty-server.azurewebsites.net/api/download/$e')
-                                    .toList(),
-                                initialPage: index,
-                              );
-                            },
-                          ),
-                        );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Colors.black54,
-                              offset: Offset(.5, .5),
-                              blurRadius: 1.8,
-                            )
-                          ],
+    return Column(
+      children: [
+        if (widget.attachments != null && widget.attachments!.images != null ||
+            widget.localAttchmentsList != null)
+          Container(
+            padding: EdgeInsets.only(
+              top: 2,
+              bottom: !body.isNotEmpty &&
+                      !deleted &&
+                      (showSeenSent || status.index == 3)
+                  ? 15
+                  : 2,
+              left: !widget.sender ? 8 : 0,
+              right: widget.sender ? 18 : 0,
+            ),
+            constraints: BoxConstraints(
+              maxWidth: MediaQuery.of(context).size.width * (items == 1 ? 1 : items > 3 ? .6 : .9),
+            ),
+            child: Directionality(
+              textDirection:
+                  widget.sender ? TextDirection.rtl : TextDirection.ltr,
+              child: GridView.builder(
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 6,
+                  mainAxisSpacing: 4,
+                ),
+                itemCount: items,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () => onTap(),
+                    onDoubleTap: () {
+                      if (widget.attachments == null) return;
+
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return PhotoGallery(
+                              imgList: widget.attachments!.images!
+                                  .map((e) =>
+                                      'https://crafty-server.azurewebsites.net/api/download/$e')
+                                  .toList(),
+                              initialPage: index,
+                            );
+                          },
                         ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(15),
-                          child: widget.attachments != null
-                              ? CachedNetworkImage(
-                                  imageUrl:
-                                      'https://crafty-server.azurewebsites.net/api/download/${widget.attachments!.images![index]}',
-                                  httpHeaders: const {
-                                    'Authorization':
-                                        'gg eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMzMTJkYmJjYTRlNGFhOTdkZDMxYWVhMiIsImlhdCI6MTY3OTY2ODE2NywiZXhwIjoxNzExMjI1NzY3fQ.R3CAE1dEbYKCAvRr2Ayzt9DM5klpuSkPSZeoqoehlyo'
-                                  },
-                                  fit: BoxFit.cover,
-                                  progressIndicatorBuilder:
-                                      (context, url, progress) => Padding(
-                                    padding: const EdgeInsets.all(18),
-                                    child: CircularProgressIndicator(
-                                      color: AppConst.darkBlue,
-                                      value: progress.progress,
-                                    ),
+                      );
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(15),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black54,
+                            offset: Offset(.5, .5),
+                            blurRadius: 1.8,
+                          )
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: widget.attachments != null
+                            ? CachedNetworkImage(
+                                imageUrl:
+                                    'https://crafty-server.azurewebsites.net/api/download/${widget.attachments!.images![index]}',
+                                httpHeaders: const {
+                                  'Authorization':
+                                      'gg eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMzMTJkYmJjYTRlNGFhOTdkZDMxYWVhMiIsImlhdCI6MTY3OTY2ODE2NywiZXhwIjoxNzExMjI1NzY3fQ.R3CAE1dEbYKCAvRr2Ayzt9DM5klpuSkPSZeoqoehlyo'
+                                },
+                                fit: BoxFit.cover,
+                                progressIndicatorBuilder:
+                                    (context, url, progress) => Padding(
+                                  padding: const EdgeInsets.all(18),
+                                  child: CircularProgressIndicator(
+                                    color: AppConst.darkBlue,
+                                    value: progress.progress,
                                   ),
-                                )
-                              : ImageWidget(
-                                  key: ValueKey(
-                                    widget.localAttchmentsList![index].id,
-                                  ),
-                                  conversation: widget.conversation,
-                                  asset: widget.localAttchmentsList![index],
-                                  status: status,
-                                  onCompleted: (url, err) {
-                                    int len =
-                                        widget.localAttchmentsList!.length;
+                                ),
+                              )
+                            : ImageWidget(
+                                key: ValueKey(
+                                  widget.localAttchmentsList![index].id,
+                                ),
+                                conversation: widget.conversation,
+                                asset: widget.localAttchmentsList![index],
+                                status: status,
+                                onCompleted: (url, err) {
+                                  int len = widget.localAttchmentsList!.length;
 
-                                    if (status == MessageStatus.error) return;
+                                  if (status == MessageStatus.error) return;
 
-                                    if (err || url == null) {
-                                      _count++;
+                                  if (err || url == null) {
+                                    _count++;
 
-                                      if (_count < len) {
-                                        return;
-                                      }
-
-                                      bloc.add(
-                                        UpdateMessage(
-                                          MessageStatus.error,
-                                          result: ChatResult.failure,
-                                          id: id,
-                                        ),
-                                      );
+                                    if (_count < len) {
                                       return;
                                     }
 
-                                    _images.add(url);
-                                    if (len == (_images.length + _count)) {
-                                      sendMessage(
-                                        attachments: Attachments(
-                                          images: List.of(_images),
-                                        ),
-                                      );
-                                      _images.clear();
-                                    }
-                                  },
-                                ),
-                        ),
+                                    bloc.add(
+                                      UpdateMessage(
+                                        MessageStatus.error,
+                                        result: ChatResult.failure,
+                                        id: id,
+                                      ),
+                                    );
+                                    return;
+                                  }
+
+                                  _images.add(url);
+                                  if (len == (_images.length + _count)) {
+                                    sendMessage(
+                                      attachments: Attachments(
+                                        images: List.of(_images),
+                                      ),
+                                    );
+                                    _images.clear();
+                                  }
+                                },
+                              ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ),
-          if (link != null && link!.isNotEmpty)
-            Padding(
-              padding: EdgeInsets.only(
-                top: 4,
-                bottom: 4,
-                left: !widget.sender ? 8 : 0,
-                right: widget.sender ? 18 : 0,
+          ),
+        if (link != null && link!.isNotEmpty)
+          Padding(
+            padding: EdgeInsets.only(
+              top: 4,
+              bottom: 4,
+              left: !widget.sender ? 8 : 0,
+              right: widget.sender ? 18 : 0,
+            ),
+            child: Container(
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width / 2),
+              child: AnyLinkPreview(
+                link: link!,
+                backgroundColor: Colors.white,
+                bodyMaxLines: 2,
+                previewHeight: 150,
+                errorBody: '',
               ),
-              child: Container(
-                constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width / 2),
-                child: AnyLinkPreview(
-                  link: link!,
-                  backgroundColor: Colors.white,
-                  bodyMaxLines: 2,
-                  previewHeight: 150,
-                  errorBody: '',
-                ),
-              ),
-            )
-        ],
-      );
+            ),
+          )
+      ],
+    );
+  }
 
   Widget buildDateSpearetor(DateTime date) {
     var dateString = 'at ${intl.DateFormat.jm().format(date)}';

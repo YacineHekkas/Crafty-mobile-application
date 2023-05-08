@@ -150,8 +150,8 @@ class _StpageState extends State<Stpage> {
               SizedBox(
                 height: 30.0,
               ),
-              TextButton(
-                onPressed: () {
+              GestureDetector(
+                onTap: () {
                   _sumbitinfo();
                   if (fullname1.text.isNotEmpty && username1.text.isNotEmpty) {
                     Navigator.push(
@@ -173,8 +173,8 @@ class _StpageState extends State<Stpage> {
               ),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 textype(text1: ConstStrings.have_acc, Color: AppConst.darkBlue),
-                TextButton(
-                    onPressed: () {
+                GestureDetector(
+                    onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(

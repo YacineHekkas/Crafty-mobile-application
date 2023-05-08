@@ -27,15 +27,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (event is LoginEvent) {
         emit(LoadingState());
         final login = await loginUseCase.call(event.usera);
-        print(event.usera.indentifier);
-        print(event.usera.password);
         emit(_eitherDoneOrErrorState(
             login, LoginMessages.error_messg, LoginMessages.login_successe));
       } else if (event is SignupEvent) {
         emit(LoadingState());
         final singup = await _signupUseCase.call(event.users);
-        emit(_eitherDoneOrErrorState(
-            singup, LoginMessages.error_messg, LoginMessages.sing_up_successe));
+        emit(singup.fold(
+    (l) => FailedSign(message: 'erroor'),
+    (r) => SuccessedSign(message: 'abcd')));
       } else if (event is SendverficationEvent) {
         emit(LoadingState());
         final verify = await _sendverificationUseCase.call();

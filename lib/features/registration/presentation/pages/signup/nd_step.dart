@@ -127,8 +127,8 @@ class _SecondpageState extends State<Secondpage> {
                 SizedBox(
                   height: 50.0,
                 ),
-                TextButton(
-                  onPressed: () {
+                GestureDetector(
+                  onTap: () {
                     _sumbitinfo();
                     if (email.text.isNotEmpty &&
                         password.text.isNotEmpty &&

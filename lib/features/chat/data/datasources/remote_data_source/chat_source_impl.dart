@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cp_project/core/error/exceptions.dart';
+import 'package:cp_project/core/util/app.dart';
 import 'package:cp_project/core/util/server.dart';
 import 'package:cp_project/features/chat/data/datasources/remote_data_source/chat_source.dart';
 import 'package:cp_project/features/chat/data/models/conversation_model.dart';
 import 'package:cp_project/features/chat/data/models/message_model.dart';
+import 'package:cp_project/injection_container.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 
@@ -61,10 +63,12 @@ class ChatSourceImpl implements ChatSource {
           }
         }
       ''',
-      {'sort': 'UPDATEDAT_DESC', 'perPage': perPage, 'page': page},
+      vars: {'sort': 'UPDATEDAT_DESC', 'perPage': perPage, 'page': page},
       cacheFetch: cacheFetch,
       forceNetworkFetch: forceNetworkFetch,
     );
+
+    print(res);
     if (res.data == null ||
         res.exception != null ||
         res.data!['fetchUser'] == null) {
@@ -72,12 +76,13 @@ class ChatSourceImpl implements ChatSource {
     }
 
     return Pagination(
-        data: List<Conversation>.from(res.data!['fetchUser']['conservations']
-                ['items']
-            .map((x) => Conversation.fromJson(x))).toList()
-          ..removeWhere((e) => e.messagesCount <= 0),
-        pageInfo: PaginationInfo.fromJson(
-            res.data!['fetchUser']['conservations']['pageInfo']));
+      data: List<Conversation>.from(res
+          .data!['fetchUser']!['conservations']!['items']
+          .map((x) => Conversation.fromJson(x))).toList()
+        ..removeWhere((e) => e.messagesCount <= 0),
+      pageInfo: PaginationInfo.fromJson(
+          res.data!['fetchUser']!['conservations']!['pageInfo']!),
+    );
   }
 
   @override
@@ -114,7 +119,12 @@ class ChatSourceImpl implements ChatSource {
           }
           }
       ''',
-      {'id': id, 'sort': 'CREATEDAT_DESC', 'perPage': perPage, 'page': page},
+      vars: {
+        'id': id,
+        'sort': 'CREATEDAT_DESC',
+        'perPage': perPage,
+        'page': page
+      },
       cacheFetch: cacheFetch,
       forceNetworkFetch: forceNetworkFetch,
     );
@@ -144,11 +154,7 @@ class ChatSourceImpl implements ChatSource {
           }
         }
       ''',
-        {
-          'receiver': id,
-          'body': body,
-          'attachments': attachments?.toJson()
-        });
+        {'receiver': id, 'body': body, 'attachments': attachments?.toJson()});
 
     if (res.data == null ||
         res.exception != null ||
@@ -262,16 +268,17 @@ class ChatSourceImpl implements ChatSource {
       ..badCertificateCallback = (cert, host, port) => true;
     final request = await httpClient.postUrl(
         Uri.parse('https://crafty-server.azurewebsites.net/api/upload/$id'));
-    
+
     request.headers.set(
       HttpHeaders.authorizationHeader,
-      'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMzMTJkYmJjYTRlNGFhOTdkZDMxYWVhMiIsImlhdCI6MTY3OTY2ODE2NywiZXhwIjoxNzExMjI1NzY3fQ.R3CAE1dEbYKCAvRr2Ayzt9DM5klpuSkPSZeoqoehlyo',
+      'Bearer ${locator<App>().getUserToken()}',
     );
 
     final requestMultipart = http.MultipartRequest('POST', request.uri);
     requestMultipart.files.add(
       await http.MultipartFile.fromPath('image', path,
-          contentType: MediaType.parse(mimeType ?? 'image/${path.split('.').last}')),
+          contentType:
+              MediaType.parse(mimeType ?? 'image/${path.split('.').last}')),
     );
     final byteStream = requestMultipart.finalize();
 
@@ -302,6 +309,9 @@ class ChatSourceImpl implements ChatSource {
     await request.addStream(streamUpload);
 
     final httpResponse = await request.close();
+
+    print(httpResponse.statusCode);
+
     final body = StringBuffer();
 
     await for (final data in httpResponse.transform(utf8.decoder)) {

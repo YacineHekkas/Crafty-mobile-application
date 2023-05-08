@@ -95,8 +95,8 @@ class _signUPState extends State<signUP> {
               SizedBox(
                 height: 20.0,
               ),
-              TextButton(
-                onPressed: () {},
+              GestureDetector(
+                onTap: () {},
                 child: ButtonGlobo(
                   text: ConstStrings.sign,
                 ),

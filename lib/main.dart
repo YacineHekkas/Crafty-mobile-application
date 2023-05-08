@@ -4,11 +4,13 @@ import 'package:cp_project/core/util/server.dart';
 import 'package:cp_project/features/chat/presentation/bloc/chat_bloc.dart';
 import 'package:cp_project/features/home/presentation/bloc/get_data_bloc.dart';
 import 'package:cp_project/features/home/presentation/pages/nav_screen.dart';
+import 'package:cp_project/features/registration/presentation/pages/login/loginn.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'features/registration/presentation/pages/Introduction-Screens/IntroductionScreen.dart';
 import 'injection_container.dart';
 
 @pragma('vm:entry-point')
@@ -23,8 +25,8 @@ void main() async {
  //Bloc.observer = SimpleBlocObserver();
 
   await setupLocator();
-  await locator<Server>().initialize();
   await locator<App>().initialize();
+  await locator<Server>().initialize();
   await Notificaion.setupNotificaion();
 
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
@@ -41,7 +43,7 @@ class MyApp extends StatelessWidget  {
         create: (_)=> locator<DataBloc>(),
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          home:NavScreen(),
+          home: locator<App>().getShowIntro() != null ? locator<App>().getUserToken() != null ? NavScreen() : Loginscreen() : introductionScreen(),
         )
     );
   }

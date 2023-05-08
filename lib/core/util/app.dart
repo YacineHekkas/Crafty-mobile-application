@@ -1,13 +1,11 @@
 import 'package:cp_project/core/util/server.dart';
+import 'package:cp_project/injection_container.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 
 class App {
   late SharedPreferences _prefs;
-  final Server _server;
-
-  App(this._server);
 
   Future<void> initialize() async {
     _prefs = await SharedPreferences.getInstance();
@@ -19,6 +17,18 @@ class App {
 
   String? getFCMTokenTimestamp() => _prefs.getString('fcmTimestamp');
 
+  Future<bool> setShowIntro() async => await _prefs.setBool('showIntro', true);
+
+  bool? getShowIntro() => _prefs.getBool('showIntro');
+
+  Future<bool> setProvider({ bool value = true }) async => await _prefs.setBool('provider', value);
+
+  bool? getProvider() => _prefs.getBool('provider');
+
+  Future<bool> setUserToken(String token) async => await _prefs.setString('token', token);
+
+  String? getUserToken() => _prefs.getString('token');
+
   Future<bool> setFCMToken(String fcmToken) async {
     final token = _prefs.getString('fcmToken');
     if (token != null && token.compareTo(fcmToken) == 0) {
@@ -27,7 +37,7 @@ class App {
 
     print('setting FCM $fcmToken');
 
-    await _server.postFCMToken(fcmToken);
+    await locator<Server>().postFCMToken(fcmToken);
     return await _prefs.setString('fcmToken', fcmToken);
   } 
 }

@@ -197,13 +197,13 @@ class _Location_pageState extends State<Location_page> {
         SizedBox(
           height: 100.0,
         ),
-        TextButton(
-          onPressed: () async {
+        GestureDetector(
+          onTap: () async {
             Position? x;
-            x = await getCurrentLocation();
-            setState(() {
+            //x = await getCurrentLocation();
+            /*setState(() {
               myPosition = x;
-            });
+            });*/
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -215,8 +215,8 @@ class _Location_pageState extends State<Location_page> {
                           fullName: fullName,
                           location: Location(
                               coordinates: [
-                                myPosition!.latitude,
-                                myPosition!.longitude
+                               0,
+                               0
                               ],
                               district: District[selectedWilaya]
                                   [selectedBaladya],

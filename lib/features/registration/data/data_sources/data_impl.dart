@@ -1,4 +1,7 @@
 import 'dart:ffi';
+import 'package:cp_project/core/util/app.dart';
+import 'package:cp_project/core/util/server.dart';
+import 'package:cp_project/injection_container.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cp_project/features/registration/data/data_sources/dataSource.dart';
 import 'package:cp_project/features/registration/domain/entities/UserS.dart';
@@ -32,12 +35,12 @@ class Dataimpl implements Datasource {
             "password": pass,
             "indentifier": ind,
           }));
-      print(queryResult);
-      _savetoken(queryResult.data!['login']['token']);
 
-      if (queryResult.data!['token'] == null) {
-        print('try again ');
+      if (queryResult.data == null) {
+        throw const ServerException();
       }
+
+      locator<App>().setUserToken(queryResult.data!['login']['token']);
     } catch (e, s) {
       print(e);
       print(s);
@@ -52,9 +55,7 @@ class Dataimpl implements Datasource {
         link: _apiLink(),
         cache: GraphQLCache(),
       );
-      final mutationresult = await qlClient.mutate(
-        MutationOptions(
-          document: gql("""
+      final mutationresult = await locator<Server>().postData("""
 mutation Register(\$record: CreateOneUserInput!) {
   register(record: \$record) {
     record {
@@ -66,27 +67,29 @@ mutation Register(\$record: CreateOneUserInput!) {
     }
   }
 
-}"""),
-          variables: {
-            "record": {
-              "email": users.email!,
-              "gender": users.gender!,
-              "location": {
-                "type": "Point",
-                "district": users.location.district!,
-                "state": users.location.state!,
-                "coordinates": users.location.coordinates
-              },
-              "password": users.password!,
-              "phone": users.phone!,
-              "username": users.username!,
-              "name": users.name!,
-            }
+}""", {
+        "record": {
+          "email": users.email!,
+          "gender": users.gender!,
+          "location": {
+            "type": "Point",
+            "district": users.location.district!,
+            "state": users.location.state!,
+            "coordinates": users.location.coordinates
           },
-        ),
-      );
+          "password": users.password!,
+          "phone": users.phone!,
+          "username": users.username!,
+          "name": users.name!,
+          "provider": locator<App>().getProvider() ?? false,
+        }
+      });
 
       print(mutationresult);
+      if (mutationresult.data != null &&
+          mutationresult.data!['register'] != null) {
+        locator<App>().setUserToken(mutationresult.data!['register']['token']!);
+      }
     } catch (e) {
       print(e);
       throw const ServerException();
@@ -100,54 +103,28 @@ mutation Register(\$record: CreateOneUserInput!) {
   }
 
   @override
-  Future<Void> Sendverification() async {
+  Future<void> Sendverification() async {
     try {
-      GraphQLClient qlClient = GraphQLClient(
-        link: _apiLink(),
-        cache: GraphQLCache(),
-      );
-
-      QueryResult queryResult =
-          await qlClient.query(QueryOptions(document: gql("""query Query {
+      final queryResult = await locator<Server>().fetchData("""query Query {
              sendVerificationEmail
-           }""")));
+           }""");
       print(queryResult);
     } catch (e) {}
-    return Sendverification();
   }
 
   @override
   Future<bool> Isverified(String code1) async {
     try {
-      GraphQLClient qlClient = GraphQLClient(
-        link: _apiLink(),
-        cache: GraphQLCache(),
-      );
-
-      final mutationresult = await qlClient.mutate(MutationOptions(
-        document: gql(""" mutation Mutation(\$code: String!) {
+      final mutationresult = await locator<Server>().postData(""" mutation Mutation(\$code: String!) {
   verifyUser(code: \$code)
-}"""),
-        variables: {"code": code1},
-      ));
+}""", {"code": code1});
 
       print(mutationresult);
+
+    return mutationresult.exception == null && mutationresult.data != null && mutationresult.data!['verifyUser'] != null;
+
     } catch (e) {}
-    return Isverified(code1);
-  }
-
-  _savetoken(String token) async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final key = 'token';
-    final value = token;
-    await prefs.setString(token, value);
-    print('this is the key : $value');
-  }
-
-  readtoken() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final key = 'token';
-    final value = await prefs.get(key) ?? 0;
-    print('read : $value');
+  
+  return false;
   }
 }

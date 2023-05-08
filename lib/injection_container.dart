@@ -45,7 +45,7 @@ ChatMessagesBloc locatorMessagesBloc({required String instanceName}) =>
     );
 
 Future<void> setupLocator() async {
-  locator.registerFactory(
+  locator.registerLazySingleton(
       () => AuthBloc(locator(), locator(), locator(), locator(), locator()));
 
   // Use case
@@ -72,9 +72,9 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => ChatBloc());
 
   // util
+  locator.registerLazySingleton(() => App());
   locator.registerLazySingleton(() => Server(networkInfo: locator()));
   locator.registerLazySingleton(() => Notificaion());
-  locator.registerLazySingleton(() => App(locator()));
 
   // Use case
   locator.registerLazySingleton(() => GetServicesUsecase(repo: locator()));

@@ -1,5 +1,8 @@
 import 'package:cp_project/core/global/global.dart';
+import 'package:cp_project/core/util/app.dart';
 import 'package:cp_project/features/registration/presentation/pages/login/loginn.dart';
+import 'package:cp_project/features/registration/presentation/pages/signup/st_step.dart';
+import 'package:cp_project/injection_container.dart';
 import 'package:flutter/material.dart';
 
 import '../zextra/login_Screen.dart';
@@ -54,18 +57,26 @@ class _chooseS_PState extends State<chooseS_P> {
 
   Widget cardtyp(String imgLien, String txtdesc) {
     return InkWell(
-      onTap: () {
+      onTap: () async {
+
         if (txtdesc == "Looking for Services ?") {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Loginscreen()),
+            MaterialPageRoute(builder: (context) => Stpage()),
           );
           // here we need to do some logic to see whether we are going to work with client or both
         } else {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => Loginscreen()),
+            MaterialPageRoute(builder: (context) => Stpage()),
           );
+        }
+
+        final app = locator<App>();
+
+        app.setProvider(value: txtdesc != "Looking for Services ?");
+        if (app.getShowIntro() == null) {
+          await app.setShowIntro();
         }
       },
       child: Card(

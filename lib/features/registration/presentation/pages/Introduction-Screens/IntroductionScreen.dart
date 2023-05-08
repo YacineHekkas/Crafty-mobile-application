@@ -1,6 +1,6 @@
+import 'package:cp_project/features/registration/presentation/pages/login/loginn.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import '../../widgets/splittext.dart';
 import 'SpliteTakeAction.dart';
 import 'introPage_1.dart';
 import 'introPage_2.dart';
@@ -24,82 +24,84 @@ class _introductionScreenState extends State<introductionScreen> {
     return SafeArea(
       child: Scaffold(
           body: Stack(
-            children: [
-              PageView(
-                onPageChanged: (index){
-                  setState((){
-                    lastPage = (index == 3);
-                  });
-                },
-                controller: _controller,
-                children: const [
-                  introPage1(),
-                  introPage2(),
-                  introPage3(),
-                  chooseS_P(),
-                ],
-              ),
-              Container(//Skip Next and PageIndicator Container
-                alignment: Alignment(0,0.85),
-                child:Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                      onTap:(){
-                        _controller.jumpToPage(3);
-                      },
-                      child: Text(
-                        lastPage?'':
-                        'Skip',
-                        style:const TextStyle(
-                          color: Colors.black87,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                        ),
+        children: [
+          PageView(
+            onPageChanged: (index) {
+              setState(() {
+                lastPage = (index == 3);
+              });
+            },
+            controller: _controller,
+            children: const [
+              introPage1(),
+              introPage2(),
+              introPage3(),
+              chooseS_P(),
+            ],
+          ),
+          Container(
+              //Skip Next and PageIndicator Container
+              alignment: Alignment(0, 0.85),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      _controller.jumpToPage(3);
+                    },
+                    child: Text(
+                      lastPage ? '' : 'Skip',
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ),
-                    lastPage?Container(
-                      child:SplitText(text: 'OR',)
-                    )
-                        :buildsmoothPageIndicator(),
-                    GestureDetector(
-                      onTap:(){
-                        _controller.nextPage(duration: Duration(milliseconds: 120), curve: Curves.bounceIn);
-                      },
-                      child: Text(
-                        lastPage?'':
-                        'Next',
-                        style:const TextStyle(
-                          color: Colors.black87,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ),
-              Container(// continue as guest Container
-                alignment: Alignment(0,0.95),
-                child: GestureDetector(
-                  onTap: (){
-                  },
-                  child: Text(
-                    lastPage? 'continue as guest':'',
-                    style:const TextStyle(
-                      color: Colors.black87,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
+                  if (!lastPage) buildsmoothPageIndicator(),
+                  GestureDetector(
+                    onTap: () {
+                      _controller.nextPage(
+                          duration: Duration(milliseconds: 120),
+                          curve: Curves.bounceIn);
+                    },
+                    child: Text(
+                      lastPage ? '' : 'Next',
+                      style: const TextStyle(
+                        color: Colors.black87,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+          Container(
+            // continue as guest Container
+            alignment: Alignment(0, 0.95),
+            child: GestureDetector(
+              onTap: () {
+                                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Loginscreen()));
+              },
+              child: Text(
+                lastPage ? 'Login' : '',
+                style: const TextStyle(
+                  color: Colors.black87,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
                 ),
-              )
-            ],
+              ),
+            ),
           )
-      ),
+        ],
+      )),
     );
   }
-  SmoothPageIndicator buildsmoothPageIndicator(){
+
+  SmoothPageIndicator buildsmoothPageIndicator() {
     return SmoothPageIndicator(
       controller: _controller,
       count: 4,
@@ -110,4 +112,3 @@ class _introductionScreenState extends State<introductionScreen> {
     );
   }
 }
-

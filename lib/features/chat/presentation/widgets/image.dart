@@ -104,7 +104,7 @@ class ImageWidgetState extends State<ImageWidget> {
           ),
         if (loading && !error)
           Padding(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(48),
             child: CircularProgressIndicator(
               color: AppConst.orong,
               value: progress,

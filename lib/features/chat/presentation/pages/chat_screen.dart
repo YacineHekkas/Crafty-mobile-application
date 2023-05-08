@@ -124,7 +124,9 @@ class _ChatScreenState extends State<ChatScreen> {
           padding: const EdgeInsets.only(top: 12),
           child: ClipRRect(
             borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(45), topRight: Radius.circular(45)),
+              topLeft: Radius.circular(25),
+              topRight: Radius.circular(25),
+            ),
             child: RefreshIndicator(
               onRefresh: () async {
                 // TODO: refactor this
@@ -169,11 +171,13 @@ class _ChatScreenState extends State<ChatScreen> {
                               children: [
                                 if (state.conversations.isEmpty)
                                   Container(
-                                      alignment: Alignment.center,
-                                      padding:
-                                          const EdgeInsets.symmetric(horizontal: 32),
-                                      child: SvgPicture.asset(
-                                          'assets/images/chat/data_error.svg')),
+                                    alignment: Alignment.center,
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 32),
+                                    child: SvgPicture.asset(
+                                      'assets/images/chat/data_error.svg',
+                                    ),
+                                  ),
                                 Container(
                                   color: Colors.white,
                                   child: Row(

@@ -6,6 +6,6 @@ abstract class Datasource {
   Future<void> login(String pass, String ind);
   Future<bool> IsLogIn();
   Future<void> signUP(UserS users);
-  Future<Void> Sendverification();
+  Future<void> Sendverification();
   Future<bool> Isverified(String code1);
 }

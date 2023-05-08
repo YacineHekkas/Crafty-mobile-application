@@ -83,7 +83,7 @@ class DataSourceImpl implements DataSource {
                           }
                         }
                   ''',
-          { 'filter':
+          vars: { 'filter':
               myMap
           }
       );
@@ -128,7 +128,7 @@ class DataSourceImpl implements DataSource {
                         }
                   }
                 ''',
-        {
+        vars: {
           'record': {
             'category': category,
             'description': subCategory,
