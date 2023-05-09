@@ -67,12 +67,7 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                 }else if (state is ErrorState ){
                   return EitherSuccessOrError( etate: false, message: state.message,);
                 }else if (state is OperationDoneState){
-                  // categoryTag = 0;
-                  // subCategoryTag = 0;
-                  //  category = '';
-                  //  subCategory = '';
-                  //  description = '';
-                  // images = [];
+
                   return theUI();
                 }
                 else {
@@ -373,14 +368,25 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
   }
 
   void _createService(String category, String subcategory, String description) {
-    BlocProvider.of<DataBloc>(context).add(
-        CreateServiceEvent(
-          category: category,
-          subCategory: subcategory,
-          description: description,
-          imagesList: images,
-        )
-    );
+    if( images.isNotEmpty || displayImage.isNotEmpty || category.isNotEmpty || subcategory.isNotEmpty || description.isNotEmpty ){
+      BlocProvider.of<DataBloc>(context).add(
+          CreateServiceEvent(
+            category: category,
+            subCategory: subcategory,
+            description: description,
+            imagesList: images,
+            imageDisplayList:displayImage ,
+          )
+      );
+    }else{
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            backgroundColor: Colors.red,
+            content: Text('Fields can\'t be empty'),
+          )
+      );
+    }
+
   }
 
   selectCategory(bool itsCategory) {

@@ -1,22 +1,31 @@
 import 'package:cp_project/core/global/global.dart';
+import 'package:cp_project/features/account/presentation/bloc/user_bloc.dart';
 import 'package:cp_project/features/chat/presentation/pages/chat_screen.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import '../../../account/presentation/pages/mainAccountScreen.dart';
 import 'add_service_pages/add_service_page.dart';
 import 'home_page/home_screen.dart';
 
 class NavScreen extends StatefulWidget {
-  const NavScreen({Key? key}) : super(key: key);
+
+   NavScreen({Key? key}) : super(key: key);
 
   @override
   State<NavScreen> createState() => _NavScreenState();
 }
 
 class _NavScreenState extends State<NavScreen> {
+  final List<Widget> _pages = [
+    const HomeScreen(),
+    CreateServiceScreen(),
+    const ChatScreen(),
+    MainAccountScreen(),
+  ];
   int index = 0;
-  final List<Widget> _pages = [  HomeScreen(),const Placeholder(),const ChatScreen()
-    , const Placeholder()];
+  // UserEntity? userInfo =();;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +66,16 @@ class _NavScreenState extends State<NavScreen> {
                                   Navigator.push(
                                       context, MaterialPageRoute(builder: (context) => const CreateServiceScreen())
                                   );
-                                }else{
+                                }else if (val ==3){
+                                  BlocProvider.of<UserBloc>(context).add(
+                                    GetUserInfoEvent( )
+                                  );
+
+                                  setState(() {
+                                    index = val;
+                                  });
+                                }
+                                else{
                                   setState(() {
                                     index = val;
                                   });
@@ -71,8 +89,8 @@ class _NavScreenState extends State<NavScreen> {
                                   text: 'Home',
                                 ),
                                 GButton(
-                                  icon: Icons.add_box,
-                                  text: 'Likes',
+                                  icon: Icons.add_circle_outline_outlined,
+                                  text: 'create service',
                                 ),
                                 GButton(
                                   icon: Icons.message,
@@ -81,7 +99,8 @@ class _NavScreenState extends State<NavScreen> {
                                 GButton(
                                   icon: Icons.account_circle_sharp,
                                   text: 'Profile',
-                                )
+                                ),
+
                               ]) ,
                         ),
                       )

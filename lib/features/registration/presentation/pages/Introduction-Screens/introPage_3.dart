@@ -18,25 +18,30 @@ class introPage3 extends StatelessWidget {
             Lottie.asset(
               'assets/animation/thirdpage.json',
             ),
-            SizedBox(
+            const SizedBox(
               height: 10.0,
             ),
-            Center(
+            const Center(
                 child: Text(
               'SAVE YOUR TIME !',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: 20,
+                  fontFamily: AppConst.font,
+                  fontWeight: FontWeight.bold),
             )),
-            Center(
+            const Center(
                 child: Padding(
-              padding: const EdgeInsets.all(50.0),
+              padding: EdgeInsets.symmetric(vertical: 10,horizontal: 20),
               child: Text(
-                ' our app helps you find the right craft worker for your specific needs,From minor repairs to major installations, with reliable and transparent pricing',
+                textAlign:TextAlign.center,
+                'Our app helps you find the right craft worker for your specific needs,From minor repairs to major installations, with reliable and transparent pricing',
                 style: TextStyle(
+                  fontFamily: AppConst.font,
                   fontSize: 20, //
                 ),
               ),
             )),
-            SizedBox(
+            const SizedBox(
               height: 40.0,
             ),
           ],

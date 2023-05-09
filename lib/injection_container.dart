@@ -2,6 +2,10 @@ import 'package:cp_project/core/network/network_info.dart';
 import 'package:cp_project/core/util/app.dart';
 import 'package:cp_project/core/util/notification.dart';
 import 'package:cp_project/core/util/server.dart';
+import 'package:cp_project/features/account/data/data_sources/remot_data_source/user_data_source_impl.dart';
+import 'package:cp_project/features/account/data/repositories/user_repo_impl.dart';
+import 'package:cp_project/features/account/domain/use_cases/get_user_data_usecase.dart';
+import 'package:cp_project/features/account/presentation/bloc/user_bloc.dart';
 import 'package:cp_project/features/chat/data/datasources/remote_data_source/chat_source.dart';
 import 'package:cp_project/features/chat/data/datasources/remote_data_source/chat_source_impl.dart';
 import 'package:cp_project/features/chat/presentation/bloc/chat_bloc.dart';
@@ -14,8 +18,8 @@ import 'package:get_it/get_it.dart';
 import 'package:cp_project/features/registration/domain/use_cases/Sendverification.dart';
 import 'package:cp_project/features/registration/domain/use_cases/SignUp_Usecase.dart';
 import 'package:cp_project/features/registration/domain/use_cases/is_verified_usecase.dart';
-import 'package:internet_connection_checker/internet_connection_checker.dart';
 
+import 'features/account/domain/repositories/user_repo.dart';
 import 'features/registration/data/data_sources/dataSource.dart';
 import 'features/registration/data/data_sources/data_impl.dart';
 import 'features/registration/data/repositories/data_repo.dart';
@@ -61,11 +65,15 @@ Future<void> setupLocator() async {
       () => Datarepo(locator(), dataSource: locator()));
   locator.registerLazySingleton<Datasource>(() => Dataimpl());
   // block
-  locator.registerFactory(() => DataBloc(
-        getServicesUseCase: locator(),
-        createServiceUsecase: locator(),
-      ));
-  locator.registerSingleton(() => DataBloc(
+
+  locator.registerLazySingleton(() =>
+      UserBloc
+    (
+      getUserDataUsecase: locator(),
+    )
+  );
+
+  locator.registerLazySingleton(() => DataBloc(
         getServicesUseCase: locator(),
         createServiceUsecase: locator(),
       ));
@@ -80,11 +88,19 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => GetServicesUsecase(repo: locator()));
   locator.registerLazySingleton(() => CreatServiceUsecase(repo: locator()));
 
+  locator.registerLazySingleton(() => GetUserDataUsecase(repo: locator()));
+
   // Repo
   locator.registerLazySingleton<GetDataRepo>(
     () => GetDataRepoImpl(dataSource: locator()),
   );
+  locator.registerLazySingleton<UserRepo>(
+    () => UserRepoImpl(dataSourceImpl:locator()),
+  );
   // data source
+  locator.registerLazySingleton(
+          () => UserDataSourceImpl()
+  );
   locator.registerLazySingleton<DataSource>(() => DataSourceImpl());
   locator.registerLazySingleton<ChatSource>(
       () => ChatSourceImpl(server: locator()));

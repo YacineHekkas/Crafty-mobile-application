@@ -20,6 +20,30 @@ class _chooseS_PState extends State<chooseS_P> {
         child: Scaffold(
       body: Stack(
         children: [
+          const Align(
+            alignment: Alignment(-0.75, -0.85),
+            child: Text(
+              'Welcome to',
+              style: TextStyle(
+                color: AppConst.darkBlue,
+                fontFamily: AppConst.font,
+                fontSize: 28,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          const Align(
+            alignment: Alignment(-0.75, -0.75),
+            child: Text(
+              'Crafty',
+              style: TextStyle(
+                color: AppConst.darkBlue,
+                fontFamily: AppConst.font,
+                fontSize: 40,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: Container(
@@ -30,22 +54,19 @@ class _chooseS_PState extends State<chooseS_P> {
                     topRight: Radius.circular(20)),
               ),
               alignment: const Alignment(0, 0.9),
-              width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 4.5,
             ),
           ),
           Align(
-            alignment: Alignment(0, 0.65),
+            alignment: const Alignment(0, 0.65),
             child: SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height / 5,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  cardtyp('assets/images/findservice.png',
-                      'Looking for Services ?'),
-                  cardtyp('assets/images/provideservice.jpg',
-                      'Provide some Services'),
+                  cardtyp('assets/images/find.jpg', 'Looking for Services'),
+                  cardtyp('assets/images/provide.jpg', 'Provide some Services'),
                 ],
               ),
             ),
@@ -58,23 +79,14 @@ class _chooseS_PState extends State<chooseS_P> {
   Widget cardtyp(String imgLien, String txtdesc) {
     return InkWell(
       onTap: () async {
-
-        if (txtdesc == "Looking for Services ?") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Stpage()),
-          );
-          // here we need to do some logic to see whether we are going to work with client or both
-        } else {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => Stpage()),
-          );
-        }
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Stpage()),
+        );
 
         final app = locator<App>();
 
-        app.setProvider(value: txtdesc != "Looking for Services ?");
+        app.setProvider(value: txtdesc != "Looking for Services");
         if (app.getShowIntro() == null) {
           await app.setShowIntro();
         }

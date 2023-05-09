@@ -36,6 +36,7 @@ class Dataimpl implements Datasource {
             "indentifier": ind,
           }));
 
+      print(queryResult);
       if (queryResult.data == null) {
         throw const ServerException();
       }

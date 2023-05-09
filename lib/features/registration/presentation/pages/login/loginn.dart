@@ -10,7 +10,6 @@ import '../../bloc/loginBloc/bloc/Auth_bloc.dart';
 import '../../widgets/Textfieled.dart';
 import '../../widgets/buttonGlobo.dart';
 import '../../widgets/textype.dart';
-import '../signup/st_step.dart';
 
 class Loginscreen extends StatefulWidget {
   const Loginscreen({super.key});
@@ -33,7 +32,7 @@ class _LoginscreenState extends State<Loginscreen> {
               context, MaterialPageRoute(builder: (context) => NavScreen()));
         }
       },
-      builder: (c, s) => s is LoadingState ? LoadingWidget() : Scaffold(
+      builder: (c, s) => s is LoadingState ? const LoadingWidget() : Scaffold(
         backgroundColor: AppConst.bgColor,
         body: Padding(
           padding: const EdgeInsets.only(top: 10.0, right: 5.0),
@@ -42,10 +41,10 @@ class _LoginscreenState extends State<Loginscreen> {
             Padding(
               padding: const EdgeInsets.only(right: 155.0),
               child: Container(
-                  margin: EdgeInsets.fromLTRB(12, 70.0, 0, 0),
+                  margin: const EdgeInsets.fromLTRB(12, 70.0, 0, 0),
                   width: 175,
                   height: 148,
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     color: Color(0xffd9d9d9),
                   )),
             ),
@@ -53,20 +52,20 @@ class _LoginscreenState extends State<Loginscreen> {
               padding: const EdgeInsets.only(right: 100.0),
               child: Column(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     height: 30.0,
                   ),
                   Container(
                     child: Text(
                       ConstStrings.wel,
-                      style: TextStyle(
+                      style: const TextStyle(
                           fontFamily: AppConst.font,
                           color: AppConst.darkBlue,
                           fontSize: 32,
                           fontWeight: FontWeight.w500),
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 10.0,
                   ),
                   Container(
@@ -77,11 +76,11 @@ class _LoginscreenState extends State<Loginscreen> {
               ),
             ),
 
-            SizedBox(height: 40.0),
+            const SizedBox(height: 40.0),
 
             if (s is FailedSign)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
                 child: Text('Failed login, try again'),
               ),
 
@@ -92,7 +91,7 @@ class _LoginscreenState extends State<Loginscreen> {
                     hintText1: ConstStrings.email,
                     textInputType: TextInputType.name)),
             // for the user_name
-            SizedBox(
+            const SizedBox(
               height: 25.0,
             ),
 
@@ -118,7 +117,7 @@ class _LoginscreenState extends State<Loginscreen> {
                         text1: ConstStrings.forget, Color: AppConst.darkBlue)),*/
             //    ),
             //),
-            SizedBox(
+            const SizedBox(
               height: 40.0,
             ),
             Align(
@@ -133,7 +132,7 @@ class _LoginscreenState extends State<Loginscreen> {
                       text: ConstStrings.login,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 25.0,
                   ),
                   Row(
@@ -145,7 +144,7 @@ class _LoginscreenState extends State<Loginscreen> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => chooseS_P()));
+                                    builder: (context) => const chooseS_P()));
                           },
                           child: textype(
                               text1: ConstStrings.sign, Color: AppConst.orong))

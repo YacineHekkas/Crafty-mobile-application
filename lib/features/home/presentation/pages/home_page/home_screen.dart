@@ -91,7 +91,7 @@ class HomeScreen extends StatelessWidget {
 
   void callData(String category, cntx) {
     BlocProvider.of<DataBloc>(cntx).add(
-        CallServerEvent(subCategory: '', category: category)
+        CallServerEvent(subCategory: '', category: category, searchingValue: '', isSearching: false)
     );
   }
 }

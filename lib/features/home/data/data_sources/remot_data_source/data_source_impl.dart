@@ -1,8 +1,9 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:cp_project/core/error/Messages.dart';
 import 'package:cp_project/core/error/failurs.dart';
-import 'package:cp_project/core/global/global.dart';
+import 'package:cp_project/core/util/app.dart';
 import 'package:cp_project/features/home/data/models/Services_model.dart';
 import 'package:cp_project/features/home/domain/entities/service_entitie.dart';
 import 'package:http_parser/http_parser.dart';
@@ -13,16 +14,18 @@ import 'package:http/http.dart' as http;
 import 'data_source.dart';
 
 class DataSourceImpl implements DataSource {
-  final token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyMmIxMTM4YzFhYTJkOWQ5OGVkMzdiMCIsImlhdCI6MTY3OTIyNTM0NiwiZXhwIjoxNzEwNzgyOTQ2fQ.wsa4ZZfuf2ygO4VMpTfk8nFPXQzkSHjo2psiWKlOP5A';
   final server = locator<Server>();
   Map<String, dynamic> myMap = {};
   bool status = true;
 
-  Future<ServicesModel> getServicesData(String filterCategory,String filterSubCategory) async {
+  Future<ServicesModel> getServicesData(String filterCategory,String filterSubCategory,String searchingValue,bool isSearching) async {
     try {
       myMap = {};
-      checkFilter('category',filterCategory);
-      checkFilter('subcategory',filterSubCategory);
+      isSearching?checkFilter("search", searchingValue):{
+        checkFilter('category',filterCategory),
+        checkFilter('subcategory',filterSubCategory)
+      };
+
       print(myMap.entries);
       final res = await server.fetchData(
           '''
@@ -85,7 +88,9 @@ class DataSourceImpl implements DataSource {
                   ''',
           vars: { 'filter':
               myMap
-          }
+          },
+          cacheFetch: false,
+        forceNetworkFetch: true,
       );
       print('--------->query data :${res}');
       final result = ServicesModel.fromJson(res.data!);
@@ -97,8 +102,8 @@ class DataSourceImpl implements DataSource {
   }
   @override
 
-  Future<List<ServiceEntity>> servicesList(String category,String subCategory) async {
-    return await getServicesData(category,subCategory)
+  Future<List<ServiceEntity>> servicesList(String category,String subCategory,String searchingValue,bool isSearching) async {
+    return await getServicesData(category,subCategory,searchingValue,isSearching)
         .then((value) => value.paginateServices.items
         .map(
           (e) => ServiceEntity(
@@ -117,7 +122,7 @@ class DataSourceImpl implements DataSource {
   }
   @override
 
-  Future<String> createService(String category, String subCategory, String description,List<dynamic> imagesList) async {
+  Future<String> createService(String category, String subCategory, String description,List<dynamic> imagesList,List<dynamic> imagesDisplayList) async {
 
     try{
       final res = await server.fetchData(
@@ -131,56 +136,88 @@ class DataSourceImpl implements DataSource {
         vars: {
           'record': {
             'category': category,
-            'description': subCategory,
-            'subcategory': description
+            'description': description ,
+            'subcategory': subCategory
           }
         }
       );
 
-      print('--------->query data :$res');
+      print('-----+++---->query data :${res.data}');
 
-      if (res.data != null ) {
+      if (res.data != null )
+      {
         final id = CreateServiceModel.fromJson(res.data!);
+        await uploadData(imagesDisplayList[0].path, id.createService.recordId,"display");
+        if (!status){
+          return Future.value(Messages.imagesDidentUpload);
+        }
 
         for (dynamic image in imagesList) {
 
-          await uploadData(image.path, id.createService.recordId);
+          await uploadData(image.path, id.createService.recordId,"gallery");
           if (!status){
             return Future.value(Messages.imagesDidentUpload);
           }
-
         }
-
-      }else{
+      } else{
         return Future.value(Messages.serviceDidntCreated);
       }
-
-
       return Future.value(Messages.uploadSuccess);
-
     }catch(e,stackTrace) {
       print('---->$e/////////////$stackTrace');
       throw ServerFailure();
     }
   }
 
-  Future  uploadData(imageFilePath, serviceId) async {
-    var request = http.MultipartRequest('POST', Uri.parse('https://crafty-server.azurewebsites.net/api/upload/$serviceId'),);
-    request.headers.addAll({
-      HttpHeaders.authorizationHeader: 'Bearer $token',
-    });
+  Future  uploadData(imageFilePath, serviceId, imgType) async {
+    int byteCount = 0;
+    final httpClient = HttpClient()
+      ..connectionTimeout = const Duration(seconds: 10)
+      ..badCertificateCallback = (cert, host, port) => true;
+    final request = await httpClient.postUrl( Uri.parse('https://crafty-server.azurewebsites.net/api/upload/$serviceId'),);
+    request.headers.set(
+      HttpHeaders.authorizationHeader,
+      'Bearer ${locator<App>().getUserToken()}',
+    );
+    final requestMultipart = http.MultipartRequest('POST', request.uri);
+    requestMultipart.files.add(
+      await http.MultipartFile.fromPath(
+        imgType,
+        imageFilePath,
+        contentType: MediaType('image', 'png'),
+      ),
+    );
+    final byteStream = requestMultipart.finalize();
 
-    request.files.add(
-        await http.MultipartFile.fromPath(
-      'gallery',
-      imageFilePath,
-          contentType: MediaType('image', 'png'),
-    ));
+    request.headers.set(HttpHeaders.contentTypeHeader,
+        requestMultipart.headers[HttpHeaders.contentTypeHeader]!
+    );
 
-    var response = await request.send();
-    print('-------------------->>${response.statusCode}');
-    print(response.stream.bytesToString());
-    if (response.statusCode != 200){
+    request.contentLength = requestMultipart.contentLength;
+
+    final streamUpload = byteStream.transform<List<int>>(
+      StreamTransformer.fromHandlers(
+        handleData: (data, sink) {
+          sink.add(data);
+          byteCount += data.length;
+          print('+++++++++++++++++++++++++++++++++>>$byteCount');
+        },
+        handleError: (error, stack, sink) {
+          throw error;
+        },
+        handleDone: (sink) {
+          sink.close();
+        },
+      ),
+    );
+
+    await request.addStream(streamUpload);
+
+    final httpResponse = await request.close();
+
+
+    print('-------------------->>${httpResponse.statusCode}');
+    if (httpResponse.statusCode != 200){
       status = false;
     }
   }

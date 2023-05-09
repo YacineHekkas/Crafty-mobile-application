@@ -1,4 +1,5 @@
 import 'package:cp_project/features/registration/presentation/pages/login/loginn.dart';
+import 'package:cp_project/features/registration/presentation/widgets/splittext.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'SpliteTakeAction.dart';
@@ -58,11 +59,10 @@ class _introductionScreenState extends State<introductionScreen> {
                       ),
                     ),
                   ),
-                  if (!lastPage) buildsmoothPageIndicator(),
-                  GestureDetector(
+                  !lastPage?buildsmoothPageIndicator():const SplitText(text: 'OR',),                  GestureDetector(
                     onTap: () {
                       _controller.nextPage(
-                          duration: Duration(milliseconds: 120),
+                          duration: const Duration(milliseconds: 120),
                           curve: Curves.bounceIn);
                     },
                     child: Text(
@@ -81,10 +81,8 @@ class _introductionScreenState extends State<introductionScreen> {
             alignment: Alignment(0, 0.95),
             child: GestureDetector(
               onTap: () {
-                                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Loginscreen()));
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Loginscreen()));
               },
               child: Text(
                 lastPage ? 'Login' : '',

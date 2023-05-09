@@ -10,8 +10,8 @@ class CreatServiceUsecase{
     required this.repo
   });
 
-  Future<Either<Failure,String>> call(String category, String subCategory, String description, List<dynamic> imagesList) async{
-    return await repo.createService(category, subCategory, description,imagesList);
+  Future<Either<Failure,String>> call(String category, String subCategory, String description, List<dynamic> imagesList,List<dynamic> imageDisplayList) async{
+    return await repo.createService(category, subCategory, description,imagesList,imageDisplayList);
   }
 
 

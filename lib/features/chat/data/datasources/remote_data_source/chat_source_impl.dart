@@ -283,16 +283,16 @@ class ChatSourceImpl implements ChatSource {
     final byteStream = requestMultipart.finalize();
 
     request.headers.set(HttpHeaders.contentTypeHeader,
-        requestMultipart.headers[HttpHeaders.contentTypeHeader]!);
+        requestMultipart.headers[HttpHeaders.contentTypeHeader]!
+    );
+
     request.contentLength = requestMultipart.contentLength;
 
     final streamUpload = byteStream.transform<List<int>>(
       StreamTransformer.fromHandlers(
         handleData: (data, sink) {
           sink.add(data);
-
           byteCount += data.length;
-
           if (callback != null) {
             callback(byteCount, requestMultipart.contentLength);
           }

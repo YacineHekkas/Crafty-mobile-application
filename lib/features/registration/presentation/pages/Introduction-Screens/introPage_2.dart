@@ -18,24 +18,32 @@ class introPage2 extends StatelessWidget {
             Lottie.asset(
               'assets/animation/secondpage.json',
             ),
-            SizedBox(
+            const SizedBox(
               height: 50.0,
             ),
             Container(
-              padding: EdgeInsets.only(left: 20.0, right: 20.0),
-              child: Center(
+              padding: const EdgeInsets.only(left: 20.0, right: 20.0),
+              child: const Center(
                   child: Text(
-                'NEED HOME REPAIRS OR RENOVLATIONS',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    textAlign:TextAlign.center,
+                'NEED HOME REPAIRS OR RENOVATIONS',
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  fontFamily: AppConst.font
+                ),
               )),
             ),
-            SizedBox(
+            const SizedBox(
               height: 40.0,
             ),
-            Center(
+            const Center(
                 child: Text(
-              'couldnt find a trused craftworkwer!',
-              style: TextStyle(fontSize: 18.0),
+              'could\'t find a trusted crafts-workers!',
+              style: TextStyle(
+                  fontSize: 18.0,
+                  fontFamily: AppConst.font
+              ),
             )),
           ],
         ),

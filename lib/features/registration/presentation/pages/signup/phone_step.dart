@@ -68,6 +68,7 @@ class _Phone_stepState extends State<Phone_step> {
       builder: (ctx, s) => s is LoadingState ? LoadingWidget() :
          Scaffold(
           backgroundColor: AppConst.bgColor,
+          resizeToAvoidBottomInset: false,
           body: Column(children: [
             Padding(
           padding: const EdgeInsets.only(

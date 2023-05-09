@@ -14,7 +14,7 @@ import 'service_details.dart';
 class CategoryScreen extends StatefulWidget {
   final String categoryName;
 
-  CategoryScreen({Key? key, required this.categoryName}) : super(key: key);
+  const CategoryScreen({Key? key, required this.categoryName}) : super(key: key);
 
   @override
   State<CategoryScreen> createState() => _CategoryScreenState();
@@ -150,7 +150,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                       .firstWhere((element) =>
                                           element.name == widget.categoryName)
                                       .subcategories[index],
-                              category: widget.categoryName));
+                              category: widget.categoryName,
+                              searchingValue: '',
+                              isSearching: false));
                           isSelected = index;
                         });
                       }),
@@ -174,7 +176,8 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   child: LoadingWidget(),
                 );
               }
-            }),
+            }
+            ),
           )
         ],
       ),
@@ -213,7 +216,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
 
   void getdata() async {
     dynamic tempo = await BlocProvider.of<DataBloc>(context)
-        .getServicesUseCase(widget.categoryName, '');
+        .getServicesUseCase(widget.categoryName, '','',false);
     tempo.fold(
         (l) => print('-----------------ggbloc--->$l'),
             (r) => allDataList = r);

@@ -10,8 +10,8 @@ import 'photo_Gallery_screen.dart';
 
 class ServiceDetails extends StatelessWidget {
   final ServiceEntity? serviceInfo;
-  const ServiceDetails({Key? key, required this.serviceInfo}) : super(key: key);
 
+  const ServiceDetails({Key? key, required this.serviceInfo}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,6 +87,7 @@ class ServiceDetails extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+
                             Text(serviceInfo!.user.name,
                                 style: const TextStyle(
                                     fontFamily: AppConst.font,
@@ -96,12 +97,18 @@ class ServiceDetails extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width*0.7,
+                                  child:
                                 Text('${serviceInfo!.user.location.state} ${serviceInfo!.user.location.district}',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
                                         color: AppConst.textColor,
                                         fontFamily: AppConst.font,
                                         fontSize: 18,
                                         fontWeight: FontWeight.w500)),
+                                ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
@@ -129,6 +136,8 @@ class ServiceDetails extends StatelessWidget {
                             const SizedBox(height: 20.0),
                             Text(
                                 '${serviceInfo!.category}, ${serviceInfo!.subcategory}',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     fontFamily: AppConst.font,
                                     fontSize: 20,
@@ -168,49 +177,33 @@ class ServiceDetails extends StatelessWidget {
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width / 2,
                                   child: Stack(
-                                    children: const [
+                                    children:   [
                                       Positioned(
-                                        child: Card(
-                                          color: Color.fromARGB(255, 0, 255, 0),
-                                          shape: CircleBorder(),
-                                          child: SizedBox(
-                                            width: 50,
-                                            height: 50,
-                                          ),
+                                        child:CircleAvatar(
+                                          radius: 20,
+                                          backgroundImage:getAvatarImg(0)
                                         ),
                                       ),
                                       Positioned(
                                         left: 30,
-                                        child: Card(
-                                          color: Colors.blueAccent,
-                                          shape: CircleBorder(),
-                                          child: SizedBox(
-                                            width: 50,
-                                            height: 50,
-                                          ),
-                                        ),
+                                        child:CircleAvatar(
+                                            radius: 20,
+                                            backgroundImage:getAvatarImg(0)
+                                        ) ,
                                       ),
                                       Positioned(
                                         left: 60,
-                                        child: Card(
-                                          color: Colors.purpleAccent,
-                                          shape: CircleBorder(),
-                                          child: SizedBox(
-                                            width: 50,
-                                            height: 50,
-                                          ),
+                                        child:CircleAvatar(
+                                            radius: 20,
+                                            backgroundImage:getAvatarImg(0)
                                         ),
                                       ),
                                       Positioned(
                                         left: 90,
-                                        child: Card(
-                                          color: Colors.greenAccent,
-                                          shape: CircleBorder(),
-                                          child: SizedBox(
-                                            width: 50,
-                                            height: 50,
-                                          ),
-                                        ),
+                                        child:CircleAvatar(
+                                            radius: 20,
+                                            backgroundImage:getAvatarImg(0)
+                                        )
                                       ),
                                     ],
                                   ),
@@ -313,8 +306,23 @@ class ServiceDetails extends StatelessWidget {
                         )),
                   )
               ],
-            ))
+            )
+        )
     );
+  }
+  ImageProvider getAvatarImg(int index){
+     if(serviceInfo!.reviews.items.isNotEmpty && serviceInfo!.reviews.items.length >= index){
+      if(serviceInfo?.reviews.items[0].reviewUser.avatar.url!=null)
+      {
+        return NetworkImage(serviceInfo!.reviews.items[0].reviewUser.avatar.url);
+            }
+            else {
+            return const AssetImage("assets/images/placeholder.webp") ;
+            }
+            }
+            else{
+            return const AssetImage("assets/images/placeholder.webp") ;
+            }
   }
   Future callOrMessage(cntx) {
     return showDialog(

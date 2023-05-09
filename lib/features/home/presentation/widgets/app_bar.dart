@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 AppBar customAppBar(){
   return AppBar(
+    automaticallyImplyLeading: false,
     backgroundColor: Colors.transparent,
     flexibleSpace: Container(
       height: 65,

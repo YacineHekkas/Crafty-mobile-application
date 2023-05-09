@@ -148,7 +148,7 @@ class ConstStrings {
   static String wel = ' Welcome Back ';
   static String login_mes = 'please log in to your account ';
   static String forget = 'forget password !';
-  static String exception = 'Don' 't have an account ?  ';
+  static String exception = 'Don\'t have an account ?';
   static String sign = 'Sign Up ';
   static String gett = ' Getting Started ';
   static String sign_mes = 'Create a new account to continue ! ';
@@ -161,7 +161,7 @@ class ConstStrings {
   static String last = 'The last step';
   static String number = 'Enter your phone number ';
   static String code = 'Get confirmation code ';
-  static String location = 'location';
+  static String location = 'Location';
   static String giveL = 'Give us your exact location ';
   static String email = 'Email Address ';
   static String pass = 'Password';

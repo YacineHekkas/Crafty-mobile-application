@@ -1,19 +1,11 @@
-import 'dart:ui';
 import 'package:cp_project/features/registration/presentation/pages/signup/phone_step.dart';
-import 'package:cp_project/features/registration/presentation/widgets/Textfieled.dart';
 import 'package:cp_project/features/registration/presentation/widgets/buttonGlobo.dart';
-import 'package:cp_project/features/registration/presentation/widgets/text_form.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:geolocator/geolocator.dart';
+
 import '../../../../../../core/global/global.dart';
 
 import '../../../../domain/entities/UserS.dart';
 import '../../../widgets/textype.dart';
-import 'get_coordinates.dart';
 import 'location_parameters.dart';
 
 class Location_page extends StatefulWidget {
@@ -47,81 +39,80 @@ class _Location_pageState extends State<Location_page> {
 
   int selectedWilaya = 0;
   int selectedBaladya = 0;
-  Position? myPosition;
+  List<double> myPosition = const [];
   String? value;
   String? baladya;
+
+  List<String> baladyat = [];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppConst.bgColor,
-      body: SingleChildScrollView(
-          child: Column(children: [
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 100.0,
-          ),
-          child: Column(
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppConst.bgColor,
+        body: Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 200.0, left: 0.0),
-                child: Text(
-                  ConstStrings.location,
-                  style: TextStyle(
-                      fontFamily: AppConst.font,
-                      color: AppConst.darkBlue,
-                      fontSize: 32,
-                      fontWeight: FontWeight.w500),
-                ),
-              ),
-              SizedBox(
-                height: 15.0,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 100.0),
-                child: Container(
-                  child: textype(
-                    text1: ConstStrings.giveL,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-        SizedBox(
-          height: 50.0,
-        ),
-        Container(
-            child: Column(children: [
           Padding(
-            padding: const EdgeInsets.only(left: 25.0, right: 40.0),
-            child: Container(
-                width: 300,
-                height: 90,
-                decoration: BoxDecoration(
-                  color: Color(0xffd9d9d9),
-                )),
-          ),
-        ])),
-        SizedBox(
-          height: 50.0,
+        padding: const EdgeInsets.only(
+          top: 50.0,
         ),
-//////////////////////////////////////////////////////////////////////////////////////////////////////////=> states
-        Padding(
-          padding: const EdgeInsets.only(left: 25.0, right: 25.0),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 65.0),
-            margin:
-                const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFFFFF),
-              borderRadius: BorderRadius.circular(10.0),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: Text(
+                ConstStrings.location,
+                style: const TextStyle(
+                    fontFamily: AppConst.font,
+                    color: AppConst.darkBlue,
+                    fontSize: 32,
+                    fontWeight: FontWeight.w500),
+              ),
             ),
-            child: DropdownButton<String>(
+            const SizedBox(
+              height: 15.0,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: Container(
+                child: textype(
+                  text1: ConstStrings.giveL,
+                ),
+              ),
+            ),
+          ],
+        ),
+          ),
+          const SizedBox(
+        height: 50.0,
+          ),
+          Column(children: [
+        Padding(
+          padding: const EdgeInsets.only(left: 25.0, right: 40.0),
+          child: Container(
+              width: 300,
+              height: 90,
+              decoration: const BoxDecoration(
+                color: Color(0xffd9d9d9),
+              )),
+        ),
+          ]),
+          const SizedBox(
+        height: 50.0,
+          ),
+          //////////////////////////////////////////////////////////////////////////////////////////////////////////=> states
+           Container(
+          padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 15),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20)
+          ),
+          child: DropdownButton<String>(
                 hint: Text(ConstStrings.state),
                 value: value,
                 //selected
                 icon: const Icon(
-                  Icons.arrow_downward,
+                  Icons.keyboard_arrow_down_sharp,
                   color: AppConst.darkBlue,
                 ),
                 iconSize: 24,
@@ -139,95 +130,90 @@ class _Location_pageState extends State<Location_page> {
                   });
                 },
                 items: [
-                  for (int abc = 0; abc < States.length; abc++)
+                  for (int i = 0; i < States.length; i++)
                     DropdownMenuItem<String>(
                         onTap: () => setState(() {
-                              selectedWilaya = abc;
+                              selectedWilaya = i;
+                              baladyat = List.from(District.where((e) => e['id'] == i + 1).map((e) => e['name']));
 
                               /// pointeur ta3 wilaya
-                              baladya = District[abc][0];
+                              baladya = baladyat.first;
                               //// lazem tkoun haka sinon bcz bladiya we dont know tema directly ki dir wilaya ttla3 baladiya lewla as initial value  it won't work FOR REAL !
                             }),
-                        value: States[
-                            abc], // we pass the real value of the state according to the index selected
-                        child: Text(States[abc].toString())),
+                        value: States[i], // we pass the real value of the state according to the index selected
+                        child: Text(States[i])),
                 ]),
-          ),
         ),
-        SizedBox(
-          height: 30.0,
-        ),
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////=> districts
-        Container(
-          padding: EdgeInsets.symmetric(horizontal: 100.0),
-          margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-          decoration: BoxDecoration(
-            color: const Color(0xFFFFFFFF),
-            borderRadius: BorderRadius.circular(10.0),
+          const SizedBox(
+        height: 30.0,
           ),
-          child: DropdownButton<String>(
-              hint: Text(ConstStrings.District),
-              value: baladya,
-              //selected
-              icon: const Icon(Icons.arrow_downward, color: AppConst.darkBlue),
-              iconSize: 24,
-              elevation: 16,
+          ////////////////////////////////////////////////////////////////////////////////////////////////////////////=> districts
+          Container(
+        padding: const EdgeInsets.symmetric(vertical: 2,horizontal: 15),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20)
+        ),
+        child: DropdownButton<String>(
+            hint: Text(ConstStrings.District),
+            value: baladya,
+            //selected
+            icon: const Icon(Icons.keyboard_arrow_down_sharp, color: AppConst.darkBlue),
+            iconSize: 24,
+            elevation: 16,
+            onChanged: (newValue) {
+              setState(() {
+                if (newValue == null) {
+                } else {
+                  baladya = newValue;
+                }
+              });
+            },
+            items: [
+              for (int efg = 0; efg < baladyat.length; efg++)
+                DropdownMenuItem<String>(
+                    onTap: () {
+                      final dis = District.firstWhere((e) => e['name'] == baladyat[efg]);
 
-              // style: TextStyle(
-              //     color: AppConst.textColor, fontSize: 20.0),
+                      print(dis);
 
-              onChanged: (newValue) {
-                setState(() {
-                  if (newValue == null) {
-                  } else {
-                    baladya = newValue;
-                  }
-                });
-              },
-              items: [
-                for (int efg = 0; efg < District[selectedWilaya].length; efg++)
-                  DropdownMenuItem<String>(
-                      onTap: () => setState(() {
-                            selectedBaladya = efg;
-                          }),
-                      value: District[selectedWilaya][efg],
-                      child: Text(District[selectedWilaya][efg].toString())),
-              ]),
-        ),
-        SizedBox(
-          height: 100.0,
-        ),
-        GestureDetector(
-          onTap: () async {
-            Position? x;
-            //x = await getCurrentLocation();
-            /*setState(() {
-              myPosition = x;
-            });*/
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Phone_step(
-                          email: email,
-                          username: username,
-                          paaword: paaword,
-                          gender: gender,
-                          fullName: fullName,
-                          location: Location(
-                              coordinates: [
-                               0,
-                               0
-                              ],
-                              district: District[selectedWilaya]
-                                  [selectedBaladya],
-                              state: States[selectedWilaya]),
-                        )));
-          },
-          child: ButtonGlobo(
-            text: ConstStrings.next,
+                      setState(() {
+                        selectedBaladya = efg;
+
+                        myPosition = [dis['latitude'], dis['longitude']];
+                      });
+      },
+                    value: baladyat[efg],
+                    child: Text(baladyat[efg])),
+            ]),
           ),
+          const SizedBox(
+        height: 100.0,
+          ),
+          GestureDetector(
+        onTap: () async {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Phone_step(
+                        email: email,
+                        username: username,
+                        paaword: paaword,
+                        gender: gender,
+                        fullName: fullName,
+                        location: Location(
+                            coordinates: myPosition,
+                            district: baladyat
+                                [selectedBaladya],
+                            state: States[selectedWilaya]),
+                      )));
+        },
+        child: ButtonGlobo(
+          text: ConstStrings.next,
         ),
-      ])),
+          ),
+        ]),
+      ),
     );
   }
 }

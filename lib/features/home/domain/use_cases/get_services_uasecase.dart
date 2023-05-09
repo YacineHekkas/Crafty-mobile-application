@@ -10,7 +10,7 @@ class GetServicesUsecase{
     required this.repo
   });
 
-  Future<Either<Failure,List<ServiceEntity>>> call(String category,String subCategory) async{
-    return await repo.getServices(category,subCategory);
+  Future<Either<Failure,List<ServiceEntity>>> call(String category,String subCategory, String searchingValue,bool isSearching) async{
+    return await repo.getServices(category,subCategory,searchingValue,isSearching);
   }
 }

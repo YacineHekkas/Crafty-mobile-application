@@ -19,17 +19,18 @@ class DataBloc extends Bloc<DataEvent, GetDataState> {
       {required this.createServiceUsecase, required this.getServicesUseCase})
       : super(GetDataInitial()) {
     on<DataEvent>((event, emit) async {
+
       if (event is CallServerEvent) {
         emit(LoadingState());
-        final dataList = await getServicesUseCase.call(event.category,event.subCategory);
+        final dataList = await getServicesUseCase.call(event.category,event.subCategory,event.searchingValue,event.isSearching);
         dataList.fold((l) => print('-----------------ggbloc--->$l'),
             (r) => emit(DataIsHereState(servicedata: r)));
       }
       else if (event is CreateServiceEvent) {
         emit(LoadingState());
-        final result = await createServiceUsecase.call(event.category, event.subCategory, event.description, event.imagesList,);
+        final result = await createServiceUsecase.call(event.category, event.subCategory, event.description, event.imagesList,event.imageDisplayList);
         emit(_eitherDoneOrErrorState(result,left(result),right(result)));
-        await Future.delayed(Duration(seconds: 3), () {
+        await Future.delayed(const Duration(seconds: 3), () {
           emit(OperationDoneState());
         });
       }
