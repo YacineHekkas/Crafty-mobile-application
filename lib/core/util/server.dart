@@ -63,8 +63,12 @@ class Server {
         .mutate(MutationOptions(document: gql(doc), variables: vars));
   }
 
+  void connect() => wsLink.connectOrReconnect();
+
   Future<void> initialize() async {
-    wsLink.connectOrReconnect();
+    if (locator<App>().getUserToken() != null) {
+      connect();
+    }
 
     // TODO: cache images also
     await initHiveForFlutter();

@@ -5,15 +5,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
 
 class App {
+  final server = locator<Server>();
   late SharedPreferences _prefs;
 
   Future<void> initialize() async {
     _prefs = await SharedPreferences.getInstance();
 
-    HydratedBloc.storage = await HydratedStorage.build(storageDirectory: await getTemporaryDirectory());
+    HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: await getTemporaryDirectory());
   }
 
-  Future<bool> setFCMTokenTimestamp() async => await _prefs.setString('fcmTimestamp', DateTime.now().toString());
+  Future<bool> setFCMTokenTimestamp() async =>
+      await _prefs.setString('fcmTimestamp', DateTime.now().toString());
 
   String? getFCMTokenTimestamp() => _prefs.getString('fcmTimestamp');
 
@@ -21,11 +24,25 @@ class App {
 
   bool? getShowIntro() => _prefs.getBool('showIntro');
 
-  Future<bool> setProvider({ bool value = true }) async => await _prefs.setBool('provider', value);
+  Future<bool> setProvider({bool value = true}) async =>
+      await _prefs.setBool('provider', value);
 
   bool? getProvider() => _prefs.getBool('provider');
 
-  Future<bool> setUserToken(String token) async => await _prefs.setString('token', token);
+  Future<bool> setUserToken(String token) async {
+    final fcm = _prefs.getString('fcmToken');
+
+    if (!await _prefs.setString('token', token)) {
+      return false;
+    }
+
+    if (fcm != null) {
+      await server.postFCMToken(fcm);
+    }
+
+    server.connect();
+    return true;
+  }
 
   String? getUserToken() => _prefs.getString('token');
 
@@ -37,7 +54,7 @@ class App {
 
     print('setting FCM $fcmToken');
 
-    await locator<Server>().postFCMToken(fcmToken);
+    await server.postFCMToken(fcmToken);
     return await _prefs.setString('fcmToken', fcmToken);
-  } 
+  }
 }
