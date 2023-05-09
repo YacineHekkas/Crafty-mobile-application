@@ -68,7 +68,6 @@ class ChatSourceImpl implements ChatSource {
       forceNetworkFetch: forceNetworkFetch,
     );
 
-    print(res);
     if (res.data == null ||
         res.exception != null ||
         res.data!['fetchUser'] == null) {
@@ -142,6 +141,32 @@ class ChatSourceImpl implements ChatSource {
             .map((x) => Message.fromJson(x))),
         pageInfo:
             PaginationInfo.fromJson(res.data!['fetchMessages']['pageInfo']));
+  }
+
+  @override
+  Future<String> createConversation(
+    String id,
+  ) async {
+    final res = await server.postData(
+      '''
+      mutation CreateConversation(\$record: CreateOneConversationInput!) {
+        createConversation(record: \$record) {
+            _id
+        }
+      }
+      ''',
+      {
+        'record': {'receiver': id},
+      },
+    );
+
+    if (res.data == null ||
+        res.exception != null ||
+        res.data!['createConversation'] == null) {
+      throw ServerException;
+    }
+
+    return res.data!['createConversation']['_id'];
   }
 
   @override
@@ -283,8 +308,7 @@ class ChatSourceImpl implements ChatSource {
     final byteStream = requestMultipart.finalize();
 
     request.headers.set(HttpHeaders.contentTypeHeader,
-        requestMultipart.headers[HttpHeaders.contentTypeHeader]!
-    );
+        requestMultipart.headers[HttpHeaders.contentTypeHeader]!);
 
     request.contentLength = requestMultipart.contentLength;
 

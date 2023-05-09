@@ -1,17 +1,23 @@
-
 import 'package:cp_project/core/global/global.dart';
+import 'package:cp_project/features/chat/data/datasources/remote_data_source/chat_source.dart';
+import 'package:cp_project/features/chat/presentation/widgets/conversation_messages.dart';
 import 'package:cp_project/features/home/domain/entities/service_entitie.dart';
+import 'package:cp_project/features/home/presentation/bloc/get_data_bloc.dart';
+import 'package:cp_project/injection_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'photo_Gallery_screen.dart';
 
-
 class ServiceDetails extends StatelessWidget {
   final ServiceEntity? serviceInfo;
+  String? id;
 
-  const ServiceDetails({Key? key, required this.serviceInfo}) : super(key: key);
+  ServiceDetails({Key? key, required this.serviceInfo, this.id})
+      : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,11 +37,10 @@ class ServiceDetails extends StatelessWidget {
                       pinned: true,
                       stretch: true,
                       flexibleSpace: FlexibleSpaceBar(
-                        background: Image.network(
-                          serviceInfo!.images.displayImage.url,
-                          fit: BoxFit.cover,
-                        )
-                      ),
+                          background: Image.network(
+                        serviceInfo!.images.displayImage.url,
+                        fit: BoxFit.cover,
+                      )),
                       bottom: PreferredSize(
                         preferredSize: const Size.fromHeight(0.0),
                         child: Container(
@@ -70,7 +75,7 @@ class ServiceDetails extends StatelessWidget {
                       //       filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
                       //       child: Container(
                       //         height: 36.0,
-                      //         width: 36.0,
+                      //         width: 36.0,DataBloc
                       //         alignment: Alignment.center,
                       //         decoration: BoxDecoration(
                       //           shape: BoxShape.circle,
@@ -87,7 +92,6 @@ class ServiceDetails extends StatelessWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-
                             Text(serviceInfo!.user.name,
                                 style: const TextStyle(
                                     fontFamily: AppConst.font,
@@ -98,16 +102,17 @@ class ServiceDetails extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 SizedBox(
-                                  width: MediaQuery.of(context).size.width*0.7,
-                                  child:
-                                Text('${serviceInfo!.user.location.state} ${serviceInfo!.user.location.district}',
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                        color: AppConst.textColor,
-                                        fontFamily: AppConst.font,
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w500)),
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.7,
+                                  child: Text(
+                                      '${serviceInfo!.user.location.state} ${serviceInfo!.user.location.district}',
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                          color: AppConst.textColor,
+                                          fontFamily: AppConst.font,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500)),
                                 ),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
@@ -177,34 +182,30 @@ class ServiceDetails extends StatelessWidget {
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width / 2,
                                   child: Stack(
-                                    children:   [
+                                    children: [
                                       Positioned(
-                                        child:CircleAvatar(
-                                          radius: 20,
-                                          backgroundImage:getAvatarImg(0)
-                                        ),
+                                        child: CircleAvatar(
+                                            radius: 20,
+                                            backgroundImage: getAvatarImg(0)),
                                       ),
                                       Positioned(
                                         left: 30,
-                                        child:CircleAvatar(
+                                        child: CircleAvatar(
                                             radius: 20,
-                                            backgroundImage:getAvatarImg(0)
-                                        ) ,
+                                            backgroundImage: getAvatarImg(0)),
                                       ),
                                       Positioned(
                                         left: 60,
-                                        child:CircleAvatar(
+                                        child: CircleAvatar(
                                             radius: 20,
-                                            backgroundImage:getAvatarImg(0)
-                                        ),
+                                            backgroundImage: getAvatarImg(0)),
                                       ),
                                       Positioned(
-                                        left: 90,
-                                        child:CircleAvatar(
-                                            radius: 20,
-                                            backgroundImage:getAvatarImg(0)
-                                        )
-                                      ),
+                                          left: 90,
+                                          child: CircleAvatar(
+                                              radius: 20,
+                                              backgroundImage:
+                                                  getAvatarImg(0))),
                                     ],
                                   ),
                                 ),
@@ -239,7 +240,12 @@ class ServiceDetails extends StatelessWidget {
                                     onTap: () {
                                       Navigator.of(context).push(
                                           MaterialPageRoute(builder: (context) {
-                                        return PhotoGallery(imgList: serviceInfo!.images.images!.map((e) => e.url).toList(), initialPage: index,);
+                                        return PhotoGallery(
+                                          imgList: serviceInfo!.images.images!
+                                              .map((e) => e.url)
+                                              .toList(),
+                                          initialPage: index,
+                                        );
                                       }));
                                     },
                                     child: Container(
@@ -249,7 +255,8 @@ class ServiceDetails extends StatelessWidget {
                                               BorderRadius.circular(15),
                                           image: DecorationImage(
                                             image: NetworkImage(
-                                              serviceInfo!.images.images![index].url,
+                                              serviceInfo!
+                                                  .images.images![index].url,
                                             ),
                                             fit: BoxFit.cover,
                                           )),
@@ -258,7 +265,6 @@ class ServiceDetails extends StatelessWidget {
                                 },
                               ),
                             ),
-
 
                             const SizedBox(height: 16.0),
 
@@ -271,59 +277,57 @@ class ServiceDetails extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(10),
-                  child:  Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          width: MediaQuery.of(context).size.width / 1.5,
-                          height: 50,
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: const Offset(0, 3),
-                                ),
-                              ],
-                              borderRadius: BorderRadius.circular(50),
-                              color: AppConst.orong),
-                            child:InkWell(
-                              onTap: (){
-                                callOrMessage(context);
-                              },
-                                child: const Center(
+                  child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: MediaQuery.of(context).size.width / 1.5,
+                        height: 50,
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.3),
+                                spreadRadius: 1,
+                                blurRadius: 2,
+                                offset: const Offset(0, 3),
+                              ),
+                            ],
+                            borderRadius: BorderRadius.circular(50),
+                            color: AppConst.orong),
+                        child: InkWell(
+                            onTap: () {
+                              callOrMessage(context);
+                            },
+                            child: const Center(
                               child: Text(
-                              'Contact',
-                              style: TextStyle(
-                                  color: CupertinoColors.white,
-                                  fontFamily: AppConst.font,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w600,
-                                  letterSpacing: 1),
-                            ),
-                            )
-                          ),
-                        )),
-                  )
+                                'Contact',
+                                style: TextStyle(
+                                    color: CupertinoColors.white,
+                                    fontFamily: AppConst.font,
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 1),
+                              ),
+                            )),
+                      )),
+                )
               ],
-            )
-        )
-    );
+            )));
   }
-  ImageProvider getAvatarImg(int index){
-     if(serviceInfo!.reviews.items.isNotEmpty && serviceInfo!.reviews.items.length >= index){
-      if(serviceInfo?.reviews.items[0].reviewUser.avatar.url!=null)
-      {
-        return NetworkImage(serviceInfo!.reviews.items[0].reviewUser.avatar.url);
-            }
-            else {
-            return const AssetImage("assets/images/placeholder.webp") ;
-            }
-            }
-            else{
-            return const AssetImage("assets/images/placeholder.webp") ;
-            }
+
+  ImageProvider getAvatarImg(int index) {
+    if (serviceInfo!.reviews.items.isNotEmpty &&
+        serviceInfo!.reviews.items.length >= index) {
+      if (serviceInfo?.reviews.items[0].reviewUser.avatar.url != null) {
+        return NetworkImage(
+            serviceInfo!.reviews.items[0].reviewUser.avatar.url);
+      } else {
+        return const AssetImage("assets/images/placeholder.webp");
+      }
+    } else {
+      return const AssetImage("assets/images/placeholder.webp");
+    }
   }
+
   Future callOrMessage(cntx) {
     return showDialog(
         context: cntx,
@@ -334,36 +338,52 @@ class ServiceDetails extends StatelessWidget {
             child: SizedBox(
               height: 150,
               child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    GestureDetector(
-                          onTap: ()   => launchUrl(Uri.parse('tel:${serviceInfo!.user.phone}')),
-                          child:Container(
-                            height: 90,
-                            width: 90,
-                            color: Colors.red,
-                            child: const Text(
-                                'call'
-                            ),
-                          ),
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      GestureDetector(
+                        onTap: () => launchUrl(
+                            Uri.parse('tel:${serviceInfo!.user.phone}')),
+                        child: Container(
+                          height: 90,
+                          width: 90,
+                          color: Colors.red,
+                          child: const Text('call'),
                         ),
-                    GestureDetector(
-                          onTap: ()  {
-                          },
-                          child:Container(
-                            height: 90,
-                            width: 90,
-                            color: Colors.yellowAccent,
-                            child: const Text(
-                                'message'
-                            ),
-                          ),
-                        ),
-                  ],
-                )
-              ),
+                      ),
+                      BlocBuilder<DataBloc, GetDataState>(
+                        bloc: locator<DataBloc>()
+                          ..add(GetConvEvent(serviceInfo!.author)),
+                        buildWhen: (_, c) => c is IDisHere,
+                        builder: (c, s) => s is! IDisHere
+                            ? Icon(Icons.message_rounded)
+                            : GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (_) => ConversationMessages(
+                                        id: s.id,
+                                        receiver: serviceInfo!.author,
+                                        name: serviceInfo!.user.name,
+                                        avatar: serviceInfo!.user.avatar.url,
+                                        isOnline: serviceInfo!.user.online,
+                                        lastOnline:
+                                            serviceInfo!.user.lastOnline,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  height: 90,
+                                  width: 90,
+                                  color: Colors.yellowAccent,
+                                  child: const Text('message'),
+                                ),
+                              ),
+                      ),
+                    ],
+                  )),
             ),
           );
         });

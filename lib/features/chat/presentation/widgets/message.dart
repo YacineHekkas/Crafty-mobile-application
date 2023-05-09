@@ -1,6 +1,7 @@
 import 'package:any_link_preview/any_link_preview.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cp_project/core/global/global.dart';
+import 'package:cp_project/core/util/app.dart';
 import 'package:cp_project/features/chat/data/datasources/remote_data_source/chat_source.dart';
 import 'package:cp_project/features/chat/data/models/message_model.dart';
 import 'package:cp_project/features/chat/presentation/bloc/chat_bloc.dart';
@@ -567,9 +568,9 @@ class MessageWidgetState extends State<MessageWidget> {
                             ? CachedNetworkImage(
                                 imageUrl:
                                     'https://crafty-server.azurewebsites.net/api/download/${widget.attachments!.images![index]}',
-                                httpHeaders: const {
+                                httpHeaders: {
                                   'Authorization':
-                                      'gg eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMzMTJkYmJjYTRlNGFhOTdkZDMxYWVhMiIsImlhdCI6MTY3OTY2ODE2NywiZXhwIjoxNzExMjI1NzY3fQ.R3CAE1dEbYKCAvRr2Ayzt9DM5klpuSkPSZeoqoehlyo'
+                                      'gg ${locator<App>().getUserToken()}'
                                 },
                                 fit: BoxFit.cover,
                                 progressIndicatorBuilder:

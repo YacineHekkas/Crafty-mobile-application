@@ -12,14 +12,14 @@ class Conversation {
   String id;
   bool seen;
   int messagesCount;
-  Message lastMessage;
+  Message? lastMessage;
   ReceiverUser receiverUser;
 
   factory Conversation.fromJson(Map<String, dynamic> json) => Conversation(
         id: json["_id"],
         seen: json["seen"],
         messagesCount: json['messages']['count'],
-        lastMessage: Message.fromJson(json["lastMessage"]),
+        lastMessage: json["lastMessage"] != null ? Message.fromJson(json["lastMessage"]) : null,
         receiverUser: ReceiverUser.fromJson(json["receiverUser"]),
       );
 
@@ -27,7 +27,7 @@ class Conversation {
         '_id': id,
         'seen': seen,
         'messages': {'count': messagesCount},
-        'lastMessage': lastMessage.toJson(),
+        'lastMessage': lastMessage?.toJson(),
         'receiverUser': receiverUser.toJson(),
       };
 }

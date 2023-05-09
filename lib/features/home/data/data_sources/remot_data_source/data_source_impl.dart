@@ -78,6 +78,8 @@ class DataSourceImpl implements DataSource {
                                 name
                                 phone
                                 provider
+                                online
+                                lastOnline
                                 rate
                                 rateCount
                                 username

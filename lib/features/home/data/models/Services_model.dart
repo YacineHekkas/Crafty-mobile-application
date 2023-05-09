@@ -70,7 +70,9 @@ class User {
     required this.rate,
     required this.rateCount,
     required this.username,
-    required this.service
+    required this.service,
+    required this.lastOnline,
+    required this.online,
   });
   late final String id;
   late final Avatar avatar;
@@ -79,6 +81,9 @@ class User {
   late final String name;
   late final dynamic phone;
   late final bool provider;
+  late final bool online;
+  late final DateTime? lastOnline;
+
   late final int rate;
   late final int rateCount;
   late final String username;
@@ -90,8 +95,11 @@ class User {
     gender = json['gender'];
     location = Location.fromJson(json['location']);
     name = json['name'];
-    
-    phone =  json['phone'];
+    online = json['online'];
+    lastOnline = json['lastOnline'] != null
+        ? DateTime.parse(json['lastOnline']).toLocal()
+        : null;
+    phone = json['phone'];
     provider = json['provider'];
     rate = json['rate'];
     rateCount = json['rateCount'];
@@ -108,10 +116,11 @@ class Images {
   late final List<Image>? images;
 
   Images.fromJson(Map<String, dynamic> json) {
-
-    json['displayImage'] != null ? displayImage = Image.fromJson(json['displayImage']):
-        displayImage = Image(url: "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1780&q=80")
-    ;
+    json['displayImage'] != null
+        ? displayImage = Image.fromJson(json['displayImage'])
+        : displayImage = Image(
+            url:
+                "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1780&q=80");
     images = json['images'] != null
         ? List.from(json['images']).map((e) => Image.fromJson(e)).toList()
         : null;

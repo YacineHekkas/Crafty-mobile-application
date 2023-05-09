@@ -234,14 +234,14 @@ class _ChatScreenState extends State<ChatScreen> {
                                       receiver: state
                                           .conversations[index].receiverUser.id,
                                       lastMessage: state
-                                          .conversations[index].lastMessage,
+                                          .conversations[index].lastMessage!,
                                       avatar: state.conversations[index]
                                           .receiverUser.avatar
                                           .replaceFirst('man',
                                               'men'), // TODO: remove this
                                       time: timeago.format(state
                                           .conversations[index]
-                                          .lastMessage
+                                          .lastMessage!
                                           .createdAt),
                                       isRead: state.conversations[index].seen,
                                       isOnline: state.conversations[index]

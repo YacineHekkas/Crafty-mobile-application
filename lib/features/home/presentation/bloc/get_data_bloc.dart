@@ -1,7 +1,9 @@
 import 'package:cp_project/core/error/failurs.dart';
+import 'package:cp_project/features/chat/data/datasources/remote_data_source/chat_source.dart';
 import 'package:cp_project/features/home/domain/entities/service_entitie.dart';
 import 'package:cp_project/features/home/domain/use_cases/create_service_usecase.dart';
 import 'package:cp_project/features/home/domain/use_cases/get_services_uasecase.dart';
+import 'package:cp_project/injection_container.dart';
 
 import 'package:dartz/dartz.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,6 +20,7 @@ class DataBloc extends Bloc<DataEvent, GetDataState> {
   DataBloc(
       {required this.createServiceUsecase, required this.getServicesUseCase})
       : super(GetDataInitial()) {
+        on<GetConvEvent>(_getConversation);
     on<DataEvent>((event, emit) async {
 
       if (event is CallServerEvent) {
@@ -35,6 +38,18 @@ class DataBloc extends Bloc<DataEvent, GetDataState> {
         });
       }
     });
+  }
+
+  Future<void> _getConversation(GetConvEvent event, Emitter<GetDataState> emit) async {
+    try {
+      final id = await locator<ChatSource>().createConversation(event.id);
+
+      emit(IDisHere(id));
+
+    } catch (e, s) {
+    print(e);
+    print(s);
+    }
   }
 
   GetDataState _eitherDoneOrErrorState(

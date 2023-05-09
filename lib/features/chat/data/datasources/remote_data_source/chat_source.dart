@@ -48,6 +48,10 @@ abstract class ChatSource {
     bool forceNetworkFetch,
   });
 
+  Future<String> createConversation(
+    String id,
+  );
+
   Future<String> sendMessage(
     String id,
     String body, {

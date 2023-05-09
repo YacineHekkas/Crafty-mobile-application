@@ -1,4 +1,6 @@
 import 'package:cp_project/core/global/global.dart';
+import 'package:cp_project/core/util/app.dart';
+import 'package:cp_project/injection_container.dart';
 import 'package:flutter/material.dart';
 
 class Avatar extends StatelessWidget {
@@ -9,11 +11,14 @@ class Avatar extends StatelessWidget {
   final DateTime? lastOnline;
   final Color backgroundColor;
 
-  const Avatar(
-      {super.key,
-      required this.avatar,
-      required this.isOnline,
-      this.lastOnline, this.size, required this.backgroundColor});
+  const Avatar({
+    super.key,
+    required this.avatar,
+    required this.isOnline,
+    this.lastOnline,
+    this.size,
+    required this.backgroundColor,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +26,12 @@ class Avatar extends StatelessWidget {
       clipBehavior: Clip.none,
       children: [
         CircleAvatar(
-          backgroundImage: NetworkImage(avatar),
+          backgroundImage: NetworkImage(
+            avatar.contains('http')
+                ? avatar
+                : 'https://crafty-server.azurewebsites.net/api/download/$avatar',
+            headers: {'Authorization': 'gg ${locator<App>().getUserToken()}'},
+          ),
           foregroundColor: AppConst.darkBlue,
           maxRadius: size ?? 31,
         ),

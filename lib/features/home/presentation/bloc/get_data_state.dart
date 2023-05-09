@@ -9,6 +9,12 @@ class LoadingState extends GetDataState {}
 
 class OperationDoneState extends GetDataState {}
 
+class IDisHere extends GetDataState {
+  final String id;
+  IDisHere(this.id);
+}
+
+
 class DataIsHereState extends GetDataState {
   final List<ServiceEntity> servicedata;
 
