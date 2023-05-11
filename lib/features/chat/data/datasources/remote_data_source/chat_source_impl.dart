@@ -69,7 +69,6 @@ class ChatSourceImpl implements ChatSource {
     );
 
     if (res.data == null ||
-        res.exception != null ||
         res.data!['fetchUser'] == null) {
       throw ServerException;
     }

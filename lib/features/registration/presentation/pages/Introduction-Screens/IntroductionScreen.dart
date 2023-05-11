@@ -85,11 +85,14 @@ class _introductionScreenState extends State<introductionScreen> {
               )),
           Container(
             // continue as guest Container
-            alignment: Alignment(0, 0.95),
+            alignment: const Alignment(0, 0.95),
             child: GestureDetector(
               onTap: () async {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Loginscreen()));
+                    MaterialPageRoute(builder: (context) => Loginscreen()
+                    )
+                );
+
                 final app = locator<App>();
 
                 if (app.getShowIntro() == null) {

@@ -4,6 +4,7 @@ import 'package:cp_project/core/util/notification.dart';
 import 'package:cp_project/core/util/server.dart';
 import 'package:cp_project/features/account/data/data_sources/remot_data_source/user_data_source_impl.dart';
 import 'package:cp_project/features/account/data/repositories/user_repo_impl.dart';
+import 'package:cp_project/features/account/domain/use_cases/change_avatar-photo.dart';
 import 'package:cp_project/features/account/domain/use_cases/get_user_data_usecase.dart';
 import 'package:cp_project/features/account/presentation/bloc/user_bloc.dart';
 import 'package:cp_project/features/chat/data/datasources/remote_data_source/chat_source.dart';
@@ -20,6 +21,7 @@ import 'package:cp_project/features/registration/domain/use_cases/SignUp_Usecase
 import 'package:cp_project/features/registration/domain/use_cases/is_verified_usecase.dart';
 
 import 'features/account/domain/repositories/user_repo.dart';
+import 'features/account/domain/use_cases/become_provider_usecase.dart';
 import 'features/registration/data/data_sources/dataSource.dart';
 import 'features/registration/data/data_sources/data_impl.dart';
 import 'features/registration/data/repositories/data_repo.dart';
@@ -64,14 +66,16 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton<Logrepo>(
       () => Datarepo(locator(), dataSource: locator()));
   locator.registerLazySingleton<Datasource>(() => Dataimpl());
+
   // block
 
-  locator.registerLazySingleton(() =>
-      UserBloc
-    (
-      getUserDataUsecase: locator(),
+  locator.registerLazySingleton(() => UserBloc(
+    getUserDataUsecase: locator(),
+    changeAvatarUsecase: locator(),
+    becomeProviderUsecase: locator(),
     )
   );
+
 
   locator.registerLazySingleton(() => DataBloc(
         getServicesUseCase: locator(),
@@ -89,6 +93,8 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => CreatServiceUsecase(repo: locator()));
 
   locator.registerLazySingleton(() => GetUserDataUsecase(repo: locator()));
+  locator.registerLazySingleton(() => ChangeAvatarUsecase(repo: locator()));
+  locator.registerLazySingleton(() => BecomeProviderUsecase(repo: locator()));
 
   // Repo
   locator.registerLazySingleton<GetDataRepo>(

@@ -5,6 +5,7 @@ class UserEntity {
     required this.avatar,
     required this.createdAt,
     required this.email,
+    required this.id,
     required this.gender,
     required this.location,
     required this.name,
@@ -14,9 +15,10 @@ class UserEntity {
     required this.tags,
     required this.username,
   });
-  late final Avatar? avatar;
+  late final String? avatar;
   late final String createdAt;
   late final String email;
+  late final String id;
   late final String gender;
   late final Location location;
   late final String name;

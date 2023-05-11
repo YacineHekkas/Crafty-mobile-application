@@ -20,7 +20,7 @@ class NavScreen extends StatefulWidget {
 class _NavScreenState extends State<NavScreen> {
   final List<Widget> _pages = [
     const HomeScreen(),
-    CreateServiceScreen(),
+    const CreateServiceScreen(),
     const ChatScreen(),
     MainAccountScreen(),
   ];

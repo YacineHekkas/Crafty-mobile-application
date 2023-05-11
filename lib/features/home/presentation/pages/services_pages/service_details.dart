@@ -1,5 +1,5 @@
+import 'package:cp_project/core/global/Screens.dart';
 import 'package:cp_project/core/global/global.dart';
-import 'package:cp_project/features/chat/data/datasources/remote_data_source/chat_source.dart';
 import 'package:cp_project/features/chat/presentation/widgets/conversation_messages.dart';
 import 'package:cp_project/features/home/domain/entities/service_entitie.dart';
 import 'package:cp_project/features/home/presentation/bloc/get_data_bloc.dart';
@@ -7,8 +7,10 @@ import 'package:cp_project/injection_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../../core/util/app.dart';
 import 'photo_Gallery_screen.dart';
 
 class ServiceDetails extends StatelessWidget {
@@ -37,10 +39,15 @@ class ServiceDetails extends StatelessWidget {
                       pinned: true,
                       stretch: true,
                       flexibleSpace: FlexibleSpaceBar(
-                          background: Image.network(
-                        serviceInfo!.images.displayImage.url,
-                        fit: BoxFit.cover,
-                      )),
+                        background: Image.network(
+                            serviceInfo!.images.displayImage.url.contains('http') ? serviceInfo!.images.displayImage.url :
+                            "https://crafty-server.azurewebsites.net/api/download/${serviceInfo!.images.displayImage.url}",
+                          fit: BoxFit.cover,
+                            headers: {
+                              'Authorization': 'bb ${locator<App>().getUserToken()}'
+                            }
+                        )
+                      ),
                       bottom: PreferredSize(
                         preferredSize: const Size.fromHeight(0.0),
                         child: Container(
@@ -346,18 +353,23 @@ class ServiceDetails extends StatelessWidget {
                         onTap: () => launchUrl(
                             Uri.parse('tel:${serviceInfo!.user.phone}')),
                         child: Container(
-                          height: 90,
-                          width: 90,
-                          color: Colors.red,
-                          child: const Text('call'),
+                        height: 90,
+                        width: 90,
+                        child: SvgPicture.asset(
+                        'assets/images/call.svg',
+                        width: 90,
+                        height: 90,
+                        colorFilter: ColorFilter.mode( AppConst.darkBlue, BlendMode.srcIn),
                         ),
+
+                      ),
                       ),
                       BlocBuilder<DataBloc, GetDataState>(
                         bloc: locator<DataBloc>()
                           ..add(GetConvEvent(serviceInfo!.author)),
                         buildWhen: (_, c) => c is IDisHere,
                         builder: (c, s) => s is! IDisHere
-                            ? Icon(Icons.message_rounded)
+                            ? LoadingWidget()
                             : GestureDetector(
                                 onTap: () {
                                   Navigator.of(context).push(
@@ -375,11 +387,15 @@ class ServiceDetails extends StatelessWidget {
                                   );
                                 },
                                 child: Container(
-                                  height: 90,
-                                  width: 90,
-                                  color: Colors.yellowAccent,
-                                  child: const Text('message'),
-                                ),
+          height: 90,
+          width: 90,
+          child: SvgPicture.asset(
+          'assets/images/message.svg',
+          width: 90,
+          height: 90,
+          colorFilter: ColorFilter.mode( AppConst.darkBlue, BlendMode.srcIn),
+          ),
+          )
                               ),
                       ),
                     ],

@@ -33,7 +33,7 @@ class DataBloc extends Bloc<DataEvent, GetDataState> {
         emit(LoadingState());
         final result = await createServiceUsecase.call(event.category, event.subCategory, event.description, event.imagesList,event.imageDisplayList);
         emit(_eitherDoneOrErrorState(result,left(result),right(result)));
-        await Future.delayed(const Duration(seconds: 3), () {
+        await Future.delayed(const Duration(seconds: 5), () {
           emit(OperationDoneState());
         });
       }

@@ -14,6 +14,7 @@ class FetchUser {
     required this.avatar,
     required this.createdAt,
     required this.email,
+    required this.id,
     required this.gender,
     required this.location,
     required this.name,
@@ -23,9 +24,10 @@ class FetchUser {
     required this.tags,
     required this.username,
   });
-  late final Avatar? avatar;
+  late final String? avatar;
   late final String? createdAt;
   late final String email;
+  late final String id;
   late final String gender;
   late final Location location;
   late final String name;
@@ -36,9 +38,10 @@ class FetchUser {
   late final String username;
 
  FetchUser.fromJson(Map<String, dynamic> json){
-    avatar = json['avatar''url'];
+    avatar = json['avatar']!=null?json['avatar']['url']:null;
     createdAt = json['createdAt'];
     email = json['email'];
+    id = json['_id'];
     gender = json['gender'];
     location = Location.fromJson(json['location']);
     name = json['name'];
@@ -50,22 +53,6 @@ class FetchUser {
   }
 }
 
-class Avatar {
-  Avatar({
-    required this.url,
-  });
-  late final String url;
-
-  Avatar.fromJson(Map<String, dynamic> json) {
-    url = json['url'] ?? "assets/images/placeholder.webp";
-  }
-
-  Map<String, dynamic> toJson() {
-    final _data = <String, dynamic>{};
-    _data['url'] = url;
-    return _data;
-  }
-}
 
 class Location {
   Location({

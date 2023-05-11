@@ -1,6 +1,9 @@
 import 'package:cp_project/core/global/global.dart';
+import 'package:cp_project/core/util/app.dart';
 import 'package:cp_project/features/home/domain/entities/service_entitie.dart';
 import 'package:flutter/material.dart';
+
+import '../../../../injection_container.dart';
 
 class CategoryCard extends StatelessWidget {
   final Function() onSelected;
@@ -42,15 +45,23 @@ class CategoryCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                ClipRRect(
-                  // this to change the shape of the child inside in our case thw img
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      bottomLeft: Radius.circular(10)),
-                  child: Image.network(
-                   serviceInfo!.images.displayImage.url
-                  ),
-                ),
+                Container(
+                  width: MediaQuery.of(context).size.width/2.9,
+                  child:ClipRRect(
+                    // this to change the shape of the child inside in our case thw img
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(10),
+                        bottomLeft: Radius.circular(10)),
+                    child: Image.network(serviceInfo!.images.displayImage.url.contains('http') ? serviceInfo!.images.displayImage.url :
+                    "https://crafty-server.azurewebsites.net/api/download/${serviceInfo!.images.displayImage.url}",
+                      headers: {
+                        'Authorization': 'bb ${locator<App>().getUserToken()}'
+                      },
+                      fit: BoxFit.fill,
+                    ),
+                  ) ,
+                )
+                ,
                 const SizedBox(
                   width: 8,
                 ),
@@ -79,15 +90,20 @@ class CategoryCard extends StatelessWidget {
                         height: 8,
                       ),
                       SizedBox(
-                        child: Text(
-                          serviceInfo!.description,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                              fontFamily: AppConst.font,
-                              color: AppConst.textColor,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child:
+                            Text(
+                              textAlign:TextAlign.start,
+                              serviceInfo!.description,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                  fontFamily: AppConst.font,
+                                  color: AppConst.textColor,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500),
+                            ),
                         ),
                       ),
                       const SizedBox(

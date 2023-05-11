@@ -7,6 +7,7 @@ import 'package:cp_project/features/home/presentation/bloc/get_data_bloc.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -56,7 +57,16 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
       backgroundColor: AppConst.bgColor,
       body: SafeArea(
           top: false,
-          child: BlocBuilder<DataBloc, GetDataState>(
+          child: BlocConsumer<DataBloc, GetDataState>(
+            listener: (context,state){
+              if (state is OperationDoneState){
+              Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => CreateServiceScreen()),
+              );
+              }
+            },
+
               builder: (context, state) {
                 if(state is LoadingState){
                   return const LoadingWidget();
@@ -64,11 +74,9 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                 else if (state is SuccessState ){
                   return EitherSuccessOrError( etate:true, message: state.message,);
 
-                }else if (state is ErrorState ){
+                }
+                else if (state is ErrorState ){
                   return EitherSuccessOrError( etate: false, message: state.message,);
-                }else if (state is OperationDoneState){
-
-                  return theUI();
                 }
                 else {
                   return theUI();
@@ -438,15 +446,18 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20.0)), //this right here
             child: SizedBox(
-              height: 150,
+              height: MediaQuery.of(context).size.height/5,
               child: Padding(
                 padding: const EdgeInsets.all(12.0),
                 child: Column(
                   children: [
                     const Text(
-                      'Select Image From !',
+                      'Select Image From :',
                       style: TextStyle(
                           fontSize: 18.0, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 20,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -471,9 +482,11 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                           child:Container(
                             height: 90,
                             width: 90,
-                            color: Colors.red,
-                            child: const Text(
-                                'gallery'
+                            child: SvgPicture.asset(
+                              'assets/images/gallery.svg',
+                              width: 90,
+                              height: 90,
+                              colorFilter: ColorFilter.mode( AppConst.darkBlue, BlendMode.srcIn),
                             ),
                           ),
                         ),
@@ -482,9 +495,13 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                             if(images.length < 12) {
                               var selectedImage = await selectImageFromCamera();
                               if (selectedImage.path != '') {
-                                images.add(selectedImage);
                                 setState(() {
-
+          if(isItDisplay){
+          displayImage.clear();
+          displayImage.add(selectedImage);
+          }else{
+            images.add(selectedImage);
+          }
                                 });
                                 Navigator.pop(context);
                               } else {
@@ -497,11 +514,13 @@ class _CreateServiceScreenState extends State<CreateServiceScreen> {
                             }
                           },
                           child:Container(
-                            height: 100,
-                            width: 100,
-                            color: Colors.yellowAccent,
-                            child: const Text(
-                                'photo'
+                            height: 90,
+                            width: 90,
+                            child: SvgPicture.asset(
+                              'assets/images/camera.svg',
+                              width: 80,
+                              height: 80,
+                              colorFilter: ColorFilter.mode( AppConst.darkBlue, BlendMode.srcIn),
                             ),
                           ),
                         ),

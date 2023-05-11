@@ -247,9 +247,9 @@ class Location {
 
   Location.fromJson(Map<String, dynamic> json) {
     type = json['type'];
-    state = json['state'];
+    state = json['state']??"not defined";
 
-    district = json['district'];
+    district = json['district']??"not defined";
 
     coordinates = List.castFrom<dynamic, double>(json['coordinates']);
   }

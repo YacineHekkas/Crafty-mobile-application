@@ -145,6 +145,7 @@ class DataSourceImpl implements DataSource {
       );
 
       print('-----+++---->query data :${res.data}');
+      print('-----+++---->query data :${res}');
 
       if (res.data != null )
       {

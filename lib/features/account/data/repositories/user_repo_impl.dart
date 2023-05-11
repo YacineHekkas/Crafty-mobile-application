@@ -21,4 +21,30 @@ class UserRepoImpl implements UserRepo{
       return left(ServerFailure());
     }
   }
+
+  @override
+  Future<Either<Failure, Unit>> changeAvatarPhoto( String id,String imgPath)  async {
+    try{
+      print('repo user change photo before');
+      await dataSourceImpl.uploadAvatarPhoto(id,imgPath);
+      print('repo user change photo after');
+    }catch(e){
+      print(e);
+      return left(ServerFailure());
+    }
+    return left(ServerFailure());
+  }
+
+  @override
+  Future<Either<Failure, String>> becomeProvider() async {
+    try{
+      print('repo become before');
+      final r =  await dataSourceImpl.becomeProvider();
+      print('repo become after');
+      return right(r);
+    }catch(e){
+      print(e);
+      return left(ServerFailure());
+    }
+  }
 }
