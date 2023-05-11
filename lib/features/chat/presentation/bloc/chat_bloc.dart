@@ -91,6 +91,7 @@ class ChatMessagesBloc extends HydratedBloc<ChatEvent, ChatMessagesSate> {
               : null,
           messagesPageInfo: event.messagesPageInfo,
           isConnected: event.isConnected,
+          isChatOpen: event.isChatOpen
         ),
       );
     });

@@ -80,6 +80,7 @@ class _ConversationMessagesState extends State<ConversationMessages> {
       ),
     );
 
+    bloc.add(const ChatEventAddable(isChatOpen: true));
     messages = bloc.state.getMessages;
     scroll.addListener(_onScroll);
   }
@@ -89,6 +90,7 @@ class _ConversationMessagesState extends State<ConversationMessages> {
     cnxTimer.cancel();
     if (timer != null) timer!.cancel();
 
+    bloc.add(const ChatEventAddable(isChatOpen: false));
     scroll
       ..removeListener(_onScroll)
       ..dispose();

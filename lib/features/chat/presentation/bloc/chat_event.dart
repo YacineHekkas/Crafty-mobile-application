@@ -20,11 +20,12 @@ abstract class ChatEvent extends Equatable {
 class ChatEventAddable extends ChatEvent {
   final Message? pendingMessage;
   final bool? isConnected;
+  final bool? isChatOpen;
 
-  const ChatEventAddable({this.pendingMessage, this.isConnected, super.page = 1, super.conversations, super.messages, super.conversationsPageInfo, super.messagesPageInfo, super.status, super.result, super.forceRefresh = false, super.forceNetworkFetch = false });
+  const ChatEventAddable({this.pendingMessage, this.isConnected, this.isChatOpen, super.page = 1, super.conversations, super.messages, super.conversationsPageInfo, super.messagesPageInfo, super.status, super.result, super.forceRefresh = false, super.forceNetworkFetch = false });
 
   @override
-  List<Object?> get props => [pendingMessage, isConnected, ...super.props];
+  List<Object?> get props => [pendingMessage, isConnected, isChatOpen, ...super.props];
 }
 
 class FetchConversations extends ChatEvent {

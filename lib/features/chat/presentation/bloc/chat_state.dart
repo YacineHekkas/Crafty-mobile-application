@@ -81,6 +81,7 @@ class ChatMessagesSate extends Equatable {
     this.messages = const <Message>[],
     this.pendingMessages = const <Message>[],
     this.isConnected = true,
+    this.isChatOpen = false,
     this.messageID,
     this.messageNewID,
     this.messageStatus,
@@ -100,6 +101,7 @@ class ChatMessagesSate extends Equatable {
   final MessageStatus? messageStatus;
 
   final bool isConnected;
+  final bool isChatOpen;
 
   List<Message> get getMessages => List.of(pendingMessages.reversed)
     ..removeWhere((e) => messages.any((m) => e.id == m.id))
@@ -117,6 +119,7 @@ class ChatMessagesSate extends Equatable {
     String? messageNewID,
     MessageStatus? messageStatus,
     bool? isConnected,
+    bool? isChatOpen,
   }) =>
       ChatMessagesSate(
         status: status ?? this.status,
@@ -128,6 +131,7 @@ class ChatMessagesSate extends Equatable {
         messageID: messageID ?? this.messageID,
         messageNewID: messageNewID ?? this.messageNewID,
         isConnected: isConnected ?? this.isConnected,
+        isChatOpen: isChatOpen ?? this.isChatOpen,
       );
 
   factory ChatMessagesSate.fromJson(Map<String, dynamic> json) =>
@@ -165,6 +169,7 @@ class ChatMessagesSate extends Equatable {
         messageID,
         messageNewID,
         messageStatus,
-        isConnected
+        isConnected,
+        isChatOpen,
       ];
 }

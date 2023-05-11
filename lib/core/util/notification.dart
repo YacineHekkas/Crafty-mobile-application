@@ -82,6 +82,9 @@ class Notificaion {
       final String? id = message.data['id'];
       final String? typing = message.data['typing'];
       final bloc = locator<ChatBloc>();
+      final msgBloc = conversation != null
+          ? locatorMessagesBloc(instanceName: conversation)
+          : null;
 
       print('fore $event');
 
@@ -90,7 +93,7 @@ class Notificaion {
       print('fore $typing');
 
       if (conversation != null && event == 'MESSAGE_TYPING') {
-        locatorMessagesBloc(instanceName: conversation).add(
+        msgBloc!.add(
           UpdateMessage(
             typing == 'true' ? MessageStatus.typing : MessageStatus.none,
           ),
@@ -106,7 +109,7 @@ class Notificaion {
       }
 
       if (id != null && conversation != null) {
-        locatorMessagesBloc(instanceName: conversation).add(
+        msgBloc!.add(
           UpdateMessage(
             event == 'MESSAGE_SEEN'
                 ? MessageStatus.seen
@@ -122,12 +125,12 @@ class Notificaion {
         return;
       }
 
-      if (message.notification != null) {
+      if (message.notification != null && !msgBloc!.state.isChatOpen) {
         showNotification(message.notification!);
       }
 
       if (conversation != null) {
-        locatorMessagesBloc(instanceName: conversation).add(
+        msgBloc!.add(
           FetchMessages(conversation,
               forceRefresh: true, forceNetworkFetch: true),
         );

@@ -44,7 +44,10 @@ class _TypingState extends State<Typing> {
           }
 
           _timer = Timer.periodic(const Duration(milliseconds: 900), (_) {
-            if (_messageStatus == MessageStatus.none) return;
+            if (_messageStatus == MessageStatus.none) {
+              _timer?.cancel();
+              return;
+            }
 
             setState(() => _toggleAlign = !_toggleAlign);
           });

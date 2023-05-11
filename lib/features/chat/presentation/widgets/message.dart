@@ -158,12 +158,12 @@ class MessageWidgetState extends State<MessageWidget> {
         result: ChatResult.success,
         id: id,
       ));
-      bloc.add(FetchMessages(
+      /*bloc.add(FetchMessages(
         widget.conversation,
         page: bloc.state.messagesPageInfo.page,
         forceRefresh: true,
         forceNetworkFetch: true,
-      ));
+      ));*/
     }
   }
 
@@ -575,7 +575,7 @@ class MessageWidgetState extends State<MessageWidget> {
                                 fit: BoxFit.cover,
                                 progressIndicatorBuilder:
                                     (context, url, progress) => Padding(
-                                  padding: const EdgeInsets.all(18),
+                                  padding: const EdgeInsets.all(32),
                                   child: CircularProgressIndicator(
                                     color: AppConst.darkBlue,
                                     value: progress.progress,
