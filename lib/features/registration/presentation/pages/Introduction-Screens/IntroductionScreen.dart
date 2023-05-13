@@ -1,6 +1,5 @@
 import 'package:cp_project/core/util/app.dart';
 import 'package:cp_project/features/registration/presentation/pages/login/loginn.dart';
-import 'package:cp_project/features/registration/presentation/widgets/splittext.dart';
 import 'package:cp_project/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -63,9 +62,38 @@ class _introductionScreenState extends State<introductionScreen> {
                   ),
                   !lastPage
                       ? buildsmoothPageIndicator()
-                      : const SplitText(
-                          text: 'OR',
+                      :  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsetsDirectional.only( end: 10.0),
+                        width: MediaQuery.of(context).size.width/ 7,
+                        height: 3,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color:Colors.black,
                         ),
+
+                      ),
+                      const Text(
+                        "OR",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold
+                        ),
+
+                      ),
+                      Container(
+                        margin: const EdgeInsetsDirectional.only( start: 10.0),
+                        width: MediaQuery.of(context).size.width/ 7,
+                        height: 3,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
+                          color:Colors.black,
+                        ),
+
+                      )
+                    ],
+                  ),
                   GestureDetector(
                     onTap: () {
                       _controller.nextPage(

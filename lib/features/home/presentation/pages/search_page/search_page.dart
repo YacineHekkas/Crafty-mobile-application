@@ -1,7 +1,6 @@
 import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/features/home/presentation/pages/services_pages/service_details.dart';
 import 'package:cp_project/features/home/presentation/widgets/category_card.dart';
-import 'package:cp_project/features/registration/presentation/widgets/LoadingWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

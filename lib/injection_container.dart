@@ -16,19 +16,8 @@ import 'package:cp_project/features/home/data/repositories/get_data_repo_impl.da
 import 'package:cp_project/features/home/domain/use_cases/get_services_uasecase.dart';
 import 'package:get_it/get_it.dart';
 
-import 'package:cp_project/features/registration/domain/use_cases/Sendverification.dart';
-import 'package:cp_project/features/registration/domain/use_cases/SignUp_Usecase.dart';
-import 'package:cp_project/features/registration/domain/use_cases/is_verified_usecase.dart';
-
 import 'features/account/domain/repositories/user_repo.dart';
 import 'features/account/domain/use_cases/become_provider_usecase.dart';
-import 'features/registration/data/data_sources/dataSource.dart';
-import 'features/registration/data/data_sources/data_impl.dart';
-import 'features/registration/data/repositories/data_repo.dart';
-import 'features/registration/domain/repositories/logrepo.dart';
-import 'features/registration/domain/use_cases/is_login_case.dart';
-import 'features/registration/domain/use_cases/login_Usecase.dart';
-import 'features/registration/presentation/bloc/loginBloc/bloc/Auth_bloc.dart';
 
 import 'features/home/domain/repositories/get_data_repo.dart';
 import 'features/home/domain/use_cases/create_service_usecase.dart';
@@ -51,21 +40,6 @@ ChatMessagesBloc locatorMessagesBloc({required String instanceName}) =>
     );
 
 Future<void> setupLocator() async {
-  locator.registerLazySingleton(
-      () => AuthBloc(locator(), locator(), locator(), locator(), locator()));
-
-  // Use case
-  locator.registerLazySingleton(() => LoginUseCase(repository: locator()));
-  locator.registerLazySingleton(() => IsLogInusecase(repository: locator()));
-  locator.registerLazySingleton(() => SignupUseCase(repository: locator()));
-  locator.registerLazySingleton(
-      () => SendverificationUseCase(repository: locator()));
-  locator
-      .registerLazySingleton(() => Isverifiednusecase(repository: locator()));
-
-  locator.registerLazySingleton<Logrepo>(
-      () => Datarepo(locator(), dataSource: locator()));
-  locator.registerLazySingleton<Datasource>(() => Dataimpl());
 
   // block
 

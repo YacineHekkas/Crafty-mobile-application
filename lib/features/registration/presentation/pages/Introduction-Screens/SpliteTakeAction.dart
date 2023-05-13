@@ -1,11 +1,9 @@
 import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/core/util/app.dart';
-import 'package:cp_project/features/registration/presentation/pages/login/loginn.dart';
-import 'package:cp_project/features/registration/presentation/pages/signup/st_step.dart';
+import 'package:cp_project/features/registration/presentation/pages/signup_pages/first_page.dart';
 import 'package:cp_project/injection_container.dart';
 import 'package:flutter/material.dart';
 
-import '../zextra/login_Screen.dart';
 
 class chooseS_P extends StatefulWidget {
   const chooseS_P({Key? key}) : super(key: key);
@@ -81,7 +79,7 @@ class _chooseS_PState extends State<chooseS_P> {
       onTap: () async {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Stpage()),
+          MaterialPageRoute(builder: (context) => FirstPage()),
         );
 
         final app = locator<App>();

@@ -1,6 +1,8 @@
 import 'package:cp_project/core/util/app.dart';
 import 'package:cp_project/core/util/notification.dart';
 import 'package:cp_project/core/util/server.dart';
+import 'package:cp_project/features/registration/presentation/pages/Introduction-Screens/IntroductionScreen.dart';
+import 'package:cp_project/features/registration/presentation/pages/signup_pages/first_page.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 
@@ -10,8 +12,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'features/account/presentation/bloc/user_bloc.dart';
 import 'features/home/presentation/bloc/get_data_bloc.dart';
 import 'features/home/presentation/pages/nav_screen.dart';
-import 'features/registration/presentation/pages/Introduction-Screens/IntroductionScreen.dart';
-import 'features/registration/presentation/pages/login/loginn.dart';
+
+
 import 'injection_container.dart';
 
 @pragma('vm:entry-point')
@@ -48,7 +50,7 @@ class MyApp extends StatelessWidget  {
         ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            home:locator<App>().getShowIntro() != null ? locator<App>().getUserToken() != null ? NavScreen() : const Loginscreen() : const introductionScreen(),
+            home:introductionScreen()//locator<App>().getShowIntro() != null ? locator<App>().getUserToken() != null ? NavScreen() : const Loginscreen() : const introductionScreen(),
           )
 
     );
