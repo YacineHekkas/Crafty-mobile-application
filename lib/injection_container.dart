@@ -14,6 +14,9 @@ import 'package:cp_project/features/home/data/data_sources/remot_data_source/dat
 import 'package:cp_project/features/home/data/data_sources/remot_data_source/data_source_impl.dart';
 import 'package:cp_project/features/home/data/repositories/get_data_repo_impl.dart';
 import 'package:cp_project/features/home/domain/use_cases/get_services_uasecase.dart';
+import 'package:cp_project/features/registration/data/data_sources/remote_data_source/auth_source.dart';
+import 'package:cp_project/features/registration/data/data_sources/remote_data_source/auth_source_impl.dart';
+import 'package:cp_project/features/registration/presentation/bloc/auth_bloc.dart';
 import 'package:get_it/get_it.dart';
 
 import 'features/account/domain/repositories/user_repo.dart';
@@ -42,6 +45,8 @@ ChatMessagesBloc locatorMessagesBloc({required String instanceName}) =>
 Future<void> setupLocator() async {
 
   // block
+  locator.registerLazySingleton(() => AuthBloc());
+  locator.registerLazySingleton<AuthSource>(() => AuthSourceImpl(server: locator()));
 
   locator.registerLazySingleton(() => UserBloc(
     getUserDataUsecase: locator(),

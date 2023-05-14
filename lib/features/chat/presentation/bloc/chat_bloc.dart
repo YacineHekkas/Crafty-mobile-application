@@ -1,7 +1,6 @@
 import 'package:cp_project/features/chat/data/datasources/remote_data_source/chat_source.dart';
 import 'package:cp_project/features/chat/data/models/conversation_model.dart';
 import 'package:cp_project/features/chat/data/models/message_model.dart';
-import 'package:cp_project/features/chat/presentation/widgets/message.dart';
 import 'package:cp_project/injection_container.dart';
 import 'package:equatable/equatable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
@@ -103,18 +102,19 @@ class ChatMessagesBloc extends HydratedBloc<ChatEvent, ChatMessagesSate> {
     if (!event.forceRefresh && !state.messagesPageInfo.hasNextPage) return;
 
     try {
-      final messages = List.of(state.messages);
+      final pendingMessages = List.of(state.pendingMessages);
+
       final pagination = await data.getMessages(
         event.id,
         page: event.forceRefresh ? 1 : event.page,
         cacheFetch: !event.forceNetworkFetch && !event.forceRefresh,
         forceNetworkFetch: event.forceNetworkFetch,
       );
-      final pendingMessages = List.of(state.pendingMessages);
+
       if (pendingMessages.isNotEmpty) {
         pendingMessages.removeWhere(
           (e) =>
-              messages.any((m) => e.id == m.id) ||
+              (List.of(state.messages)..addAll(pagination.data)).any((m) => e.id == m.id) ||
               e.status == MessageStatus.error,
         );
       }
@@ -124,7 +124,7 @@ class ChatMessagesBloc extends HydratedBloc<ChatEvent, ChatMessagesSate> {
         result: ChatResult.success,
         messages: event.forceRefresh
             ? pagination.data
-            : (messages..addAll(pagination.data)),
+            : (List.of(state.messages)..addAll(pagination.data)),
         pendingMessages: pendingMessages,
         messagesPageInfo: pagination.pageInfo,
       ));

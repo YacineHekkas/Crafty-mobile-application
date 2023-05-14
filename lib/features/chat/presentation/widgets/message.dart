@@ -516,7 +516,12 @@ class MessageWidgetState extends State<MessageWidget> {
               right: widget.sender ? 18 : 0,
             ),
             constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * (items == 1 ? 1 : items > 3 ? .6 : .9),
+              maxWidth: MediaQuery.of(context).size.width *
+                  (items == 1
+                      ? 1
+                      : items > 3
+                          ? .6
+                          : .9),
             ),
             child: Directionality(
               textDirection:
@@ -654,22 +659,23 @@ class MessageWidgetState extends State<MessageWidget> {
   }
 
   Widget buildDateSpearetor(DateTime date) {
-    var dateString = 'at ${intl.DateFormat.jm().format(date)}';
+    var dateString = formatDate(date);
 
     if (DateTime.now().difference(date).inDays > 0) {
       dateString =
-          '${timeago.format(date, locale: 'inChatMessages')} $dateString';
+          '${timeago.format(date, locale: 'inChatMessages')}$dateString';
     }
 
     return Center(
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Text(
-          dateString.toUpperCase(),
+          dateString.toUpperCase().trim(),
           style: TextStyle(
-              color: AppConst.textColor.withOpacity(.6),
-              fontSize: 14,
-              fontFamily: 'Kumbh_Sans'),
+            color: AppConst.textColor.withOpacity(.6),
+            fontSize: 14,
+            fontFamily: 'Kumbh_Sans',
+          ),
         ),
       ),
     );

@@ -147,218 +147,217 @@ class _ConversationMessagesState extends State<ConversationMessages> {
 
     return BlocProvider.value(
       value: bloc,
-      child: SafeArea(
-        child: WillPopScope(
-          onWillPop: () async {
-            locator<ChatBloc>().add(
-              const FetchConversations(
-                forceRefresh: true,
-                forceNetworkFetch: true,
-              ),
-            );
-            await Future.delayed(const Duration(milliseconds: 100));
-            return true;
-          },
-          child: Scaffold(
+      child: WillPopScope(
+        onWillPop: () async {
+          locator<ChatBloc>().add(
+            const FetchConversations(
+              forceRefresh: true,
+              forceNetworkFetch: true,
+            ),
+          );
+          await Future.delayed(const Duration(milliseconds: 100));
+          return true;
+        },
+        child: Scaffold(
+          backgroundColor: AppConst.darkBlue,
+          appBar: AppBar(
+            automaticallyImplyLeading: false,
+            shadowColor: Colors.transparent,
+            surfaceTintColor: Colors.transparent,
             backgroundColor: AppConst.darkBlue,
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              shadowColor: Colors.transparent,
-              surfaceTintColor: Colors.transparent,
-              backgroundColor: AppConst.darkBlue,
-              flexibleSpace: SafeArea(
-                child: Container(
-                  height: 65,
-                  padding: const EdgeInsets.only(right: 16),
-                  child: Row(
-                    children: <Widget>[
-                      IconButton(
+            flexibleSpace: SafeArea(
+              child: Container(
+                height: 65,
+                padding: const EdgeInsets.only(right: 16),
+                child: Row(
+                  children: <Widget>[
+                    IconButton(
+                      splashRadius: 20,
+                      onPressed: () => Navigator.of(context).maybePop(),
+                      icon: const Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                    ),
+                    const SizedBox(width: 2),
+                    BlocConsumer<ChatBloc, ChatState>(
+                      bloc: locator<ChatBloc>(),
+                      listener: (c, s) {
+                        try {
+                          final conv = s.conversations
+                              .firstWhere((e) => e.id == widget.id);
+                          isOnline = conv.receiverUser.online;
+                          lastOnline = conv.receiverUser.lastOnline;
+                        } catch (_) {}
+                      },
+                      builder: (context, state) => Expanded(
+                        child: Row(
+                          children: [
+                            Avatar(
+                              avatar: widget.avatar,
+                              size: 22,
+                              backgroundColor: AppConst.darkBlue,
+                              isOnline: isOnline,
+                            ),
+                            const SizedBox(
+                              width: 10,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Text(
+                                    widget.name,
+                                    style: const TextStyle(
+                                        fontSize: 16,
+                                        fontFamily: 'Kumbh_Sans',
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  if (isOnline ||
+                                      lastOnline != null &&
+                                          DateTime.now()
+                                                  .difference(lastOnline!)
+                                                  .inDays ==
+                                              0)
+                                    Padding(
+                                      padding: const EdgeInsets.only(top: 5),
+                                      child: Text(
+                                        isOnline
+                                            ? 'Active now'
+                                            : 'Active ${timeago.format(lastOnline!, locale: 'en')}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontFamily: 'Kumbh_Sans',
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: IconButton(
                         splashRadius: 20,
-                        onPressed: () => Navigator.of(context).maybePop(),
+                        onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (ctxMenu) {
+                              // return alert dialog object
+                              return AlertDialog(
+                                title: const Text('Conversation'),
+                                content: Material(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      InkWell(
+                                        onTap: () => showDialog(
+                                          context: context,
+                                          builder: (ctxConfirm) {
+                                            // return alert dialog object
+                                            return AlertDialog(
+                                              title: const Text(
+                                                  'Are you sure that you want to delete your conversation copy?'),
+                                              actions: [
+                                                InkWell(
+                                                  child: const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Text(
+                                                      'Cancel',
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          color: AppConst
+                                                              .darkBlue),
+                                                    ),
+                                                  ),
+                                                  onTap: () {
+                                                    Navigator.of(ctxConfirm)
+                                                        .pop();
+                                                  },
+                                                ),
+                                                const SizedBox(
+                                                  width: 2,
+                                                ),
+                                                InkWell(
+                                                  child: const Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Text(
+                                                      'Delete',
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          color: AppConst
+                                                              .darkBlue),
+                                                    ),
+                                                  ),
+                                                  onTap: () async {
+                                                    Navigator.of(ctxConfirm)
+                                                        .pop();
+                                                    Navigator.of(ctxMenu).pop();
+                                                    Fluttertoast.showToast(
+                                                        msg:
+                                                            'Removing conversation..',
+                                                        fontSize: 16.0);
+                                                    data
+                                                        .deleteConversation(
+                                                            widget.id)
+                                                        .then((value) {
+                                                      Navigator.of(context)
+                                                          .maybePop();
+                                                    }, onError: (_) {
+                                                      Fluttertoast.showToast(
+                                                          msg:
+                                                              'Failed to delete conversation',
+                                                          fontSize: 16.0);
+                                                    });
+                                                  },
+                                                ),
+                                              ],
+                                            );
+                                          },
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(children: const [
+                                            Icon(Icons.delete_rounded),
+                                            SizedBox(
+                                              width: 2,
+                                            ),
+                                            Text('Remove'),
+                                          ]),
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        },
                         icon: const Icon(
-                          Icons.arrow_back,
+                          Icons.info_outline_rounded,
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(width: 2),
-                      BlocConsumer<ChatBloc, ChatState>(
-                        bloc: locator<ChatBloc>(),
-                        listener: (c, s) {
-                          try {
-                            final conv = s.conversations
-                                .firstWhere((e) => e.id == widget.id);
-                            isOnline = conv.receiverUser.online;
-                            lastOnline = conv.receiverUser.lastOnline;
-                          } catch (_) {}
-                        },
-                        builder: (context, state) => Expanded(
-                          child: Row(
-                            children: [
-                              Avatar(
-                                avatar: widget.avatar,
-                                size: 22,
-                                backgroundColor: AppConst.darkBlue,
-                                isOnline: isOnline,
-                              ),
-                              const SizedBox(
-                                width: 10,
-                              ),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    Text(
-                                      widget.name,
-                                      style: const TextStyle(
-                                          fontSize: 16,
-                                          fontFamily: 'Kumbh_Sans',
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                    if (isOnline ||
-                                        lastOnline != null &&
-                                            DateTime.now()
-                                                    .difference(lastOnline!)
-                                                    .inDays ==
-                                                0)
-                                      Padding(
-                                        padding: const EdgeInsets.only(top: 5),
-                                        child: Text(
-                                          isOnline
-                                              ? 'Active now'
-                                              : 'Active ${timeago.format(lastOnline!, locale: 'en')}',
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontFamily: 'Kumbh_Sans',
-                                            fontSize: 13,
-                                          ),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: IconButton(
-                          splashRadius: 20,
-                          onPressed: () {
-                            showDialog(
-                              context: context,
-                              builder: (ctxMenu) {
-                                // return alert dialog object
-                                return AlertDialog(
-                                  title: const Text('Conversation'),
-                                  content: Material(
-                                    child: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceAround,
-                                      children: [
-                                        InkWell(
-                                          onTap: () => showDialog(
-                                            context: context,
-                                            builder: (ctxConfirm) {
-                                              // return alert dialog object
-                                              return AlertDialog(
-                                                title: const Text(
-                                                    'Are you sure that you want to delete your conversation copy?'),
-                                                actions: [
-                                                  InkWell(
-                                                    child: const Padding(
-                                                      padding:
-                                                          EdgeInsets.all(8.0),
-                                                      child: Text(
-                                                        'Cancel',
-                                                        style: TextStyle(
-                                                            fontSize: 18,
-                                                            color: AppConst
-                                                                .darkBlue),
-                                                      ),
-                                                    ),
-                                                    onTap: () {
-                                                      Navigator.of(ctxConfirm)
-                                                          .pop();
-                                                    },
-                                                  ),
-                                                  const SizedBox(
-                                                    width: 2,
-                                                  ),
-                                                  InkWell(
-                                                    child: const Padding(
-                                                      padding:
-                                                          EdgeInsets.all(8.0),
-                                                      child: Text(
-                                                        'Delete',
-                                                        style: TextStyle(
-                                                            fontSize: 18,
-                                                            color: AppConst
-                                                                .darkBlue),
-                                                      ),
-                                                    ),
-                                                    onTap: () async {
-                                                      Navigator.of(ctxConfirm)
-                                                          .pop();
-                                                      Navigator.of(ctxMenu)
-                                                          .pop();
-                                                      Fluttertoast.showToast(
-                                                          msg:
-                                                              'Removing conversation..',
-                                                          fontSize: 16.0);
-                                                      data
-                                                          .deleteConversation(
-                                                              widget.id)
-                                                          .then((value) {
-                                                        Navigator.of(context)
-                                                            .maybePop();
-                                                      }, onError: (_) {
-                                                        Fluttertoast.showToast(
-                                                            msg:
-                                                                'Failed to delete conversation',
-                                                            fontSize: 16.0);
-                                                      });
-                                                    },
-                                                  ),
-                                                ],
-                                              );
-                                            },
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Row(children: const [
-                                              Icon(Icons.delete_rounded),
-                                              SizedBox(
-                                                width: 2,
-                                              ),
-                                              Text('Remove'),
-                                            ]),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.info_outline_rounded,
-                            color: Colors.white,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                    )
+                  ],
                 ),
               ),
             ),
-            body: Padding(
+          ),
+          body: SafeArea(
+            child: Padding(
               padding: const EdgeInsets.only(top: 12),
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(

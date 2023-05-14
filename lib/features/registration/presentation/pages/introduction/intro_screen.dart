@@ -1,24 +1,19 @@
-import 'package:cp_project/core/util/app.dart';
-import 'package:cp_project/features/registration/presentation/pages/login/login_page.dart';
-import 'package:cp_project/injection_container.dart';
+import 'package:cp_project/features/registration/presentation/pages/introduction/intro_final_page.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'SpliteTakeAction.dart';
-import 'introPage_1.dart';
-import 'introPage_2.dart';
-import 'introPage_3.dart';
+import 'package:cp_project/features/registration/presentation/pages/introduction/intro_first_page.dart';
+import 'package:cp_project/features/registration/presentation/pages/introduction/intro_second_page.dart';
+import 'package:cp_project/features/registration/presentation/pages/introduction/intro_third_page.dart';
 
-class introductionScreen extends StatefulWidget {
-  const introductionScreen({Key? key}) : super(key: key);
+class IntroScreen extends StatefulWidget {
+  const IntroScreen({super.key});
 
   @override
-  State<introductionScreen> createState() => _introductionScreenState();
+  State<IntroScreen> createState() => _IntroScreen();
 }
 
-class _introductionScreenState extends State<introductionScreen> {
-  // this controller is here to keep trak of pages we have in pageView
-  PageController _controller = PageController();
-  // keep track of the lase Page
+class _IntroScreen extends State<IntroScreen> {
+  final _controller = PageController();
   bool lastPage = false;
 
   @override
@@ -35,15 +30,15 @@ class _introductionScreenState extends State<introductionScreen> {
                   },
                   controller: _controller,
                   children: const [
-                    introPage1(),
-                    introPage2(),
-                    introPage3(),
-                    chooseS_P(),
+                    IntroFirstPage(),
+                    IntroSecondPage(),
+                    IntroThirdPage(),
+                    IntroFinalPage(),
                   ],
                 ),
                 Container(
                   //Skip Next and PageIndicator Container
-                    alignment: Alignment(0, 0.85),
+                    alignment: const Alignment(0, 0.85),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [

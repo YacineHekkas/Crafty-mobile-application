@@ -1,0 +1,191 @@
+import 'package:cp_project/core/global/global.dart';
+import 'package:cp_project/features/account/presentation/bloc/user_bloc.dart';
+import 'package:cp_project/features/registration/presentation/bloc/auth_bloc.dart';
+import 'package:cp_project/features/registration/presentation/pages/signup/signup_verification_page.dart';
+import 'package:cp_project/features/registration/presentation/widgets/functions.dart';
+import 'package:cp_project/features/registration/presentation/widgets/loading_overlay.dart';
+import 'package:cp_project/injection_container.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:cp_project/features/registration/presentation/widgets/buttonGlobo.dart';
+import 'package:cp_project/features/registration/presentation/widgets/custom_textformfield.dart';
+import 'package:cp_project/features/registration/presentation/widgets/page_title.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+class SignupNextPage extends StatefulWidget {
+  final bool hasBackArrow;
+
+  const SignupNextPage({super.key, this.hasBackArrow = true});
+
+  @override
+  State<SignupNextPage> createState() => _SignupNextPage();
+}
+
+class _SignupNextPage extends State<SignupNextPage> {
+  final bloc = locator<AuthBloc>();
+  late final width = MediaQuery.of(context).size.width;
+  late final height = MediaQuery.of(context).size.height;
+
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final repeatedPasswordController = TextEditingController();
+  final phoneController = TextEditingController();
+
+  bool emailError = false;
+  bool passWordError = false;
+  bool repeatedPassWordError = false;
+  bool phoneError = false;
+
+  void validate() => setState(() {
+        emailError = !isEmailValid(emailController.value.text);
+        passWordError = !isPasswordValid(passwordController.value.text);
+        phoneError = !isPhoneValid(phoneController.value.text);
+
+        repeatedPassWordError = passwordController.value.text.isEmpty ||
+            passwordController.value.text !=
+                repeatedPasswordController.value.text;
+      });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<AuthBloc, AuthState>(
+      bloc: bloc,
+      listenWhen: (p, c) => c.status == AuthStatus.register && p.result != c.result || c.status == AuthStatus.verification,
+      listener: (ctx, s) {
+        if (s.status == AuthStatus.verification &&
+            s.result == AuthResult.success) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const SignupVerificationPage(hasBackArrow: false,),
+            ),
+          );
+
+          return;
+        }
+        if (s.status == AuthStatus.register && s.result == AuthResult.failure) {
+          Fluttertoast.showToast(
+            msg: s.lastException ?? 'Please check your connection',
+            fontSize: 16.0,
+          );
+        }
+      },
+      buildWhen: (_, c) => c.status == AuthStatus.register,
+      builder: (c, s) => LoadingOverlay(
+        isLoading: s.result == AuthResult.pending,
+        child: Scaffold(
+          backgroundColor: AppConst.bgColor,
+          appBar: AppBar(
+            backgroundColor: AppConst.bgColor,
+            elevation: 0,
+            leading: widget.hasBackArrow
+                ? IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.black,
+                    ),
+                    onPressed: () => Navigator.of(context).pop(),
+                  )
+                : null,
+          ),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Form(
+                  onChanged: validate,
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [pageTitle("Second step")],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Row(
+                        children: [pageSubTitle("Set an email and password")],
+                      ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Container(
+                        width: 2200,
+                        height: 60,
+                        color: AppConst.gray,
+                      ),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      CustomTextField(
+                        hint: 'Address email',
+                        textEditingController: emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        isThereError: emailError,
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      CustomTextField(
+                        hint: 'Password',
+                        textEditingController: passwordController,
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: true,
+                        isThereError: passWordError,
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      CustomTextField(
+                        hint: 'Repeat password',
+                        textEditingController: repeatedPasswordController,
+                        keyboardType: TextInputType.visiblePassword,
+                        obscureText: true,
+                        isThereError: repeatedPassWordError,
+                      ),
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      CustomTextField(
+                        hint: 'Phone number',
+                        prefixIcon: const Icon(Icons.flag_circle),
+                        textEditingController: phoneController,
+                        keyboardType: TextInputType.number,
+                        isThereError: phoneError,
+                      ),
+                      SizedBox(
+                        height: height / 10,
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          if (!emailError &&
+                              !passWordError &&
+                              !repeatedPassWordError &&
+                              !phoneError) {
+                            bloc.add(
+                              UpdateRegistrationDataEvent(
+                                step: 2,
+                                email: emailController.value.text,
+                                password: passwordController.value.text,
+                                phone: phoneController.value.text,
+                              ),
+                            );
+
+                            bloc.add(const AccountRegisterEvent());
+                          }
+                        },
+                        child: const ButtonGlobo(
+                          text: 'Next',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}

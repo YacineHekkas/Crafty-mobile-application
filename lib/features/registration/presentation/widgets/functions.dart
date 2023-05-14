@@ -1,20 +1,25 @@
 bool isEmailValid(String email) {
-
   const pattern = r'^[\w-]+(\.[\w-]+)*@([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,7}$';
   final regExp = RegExp(pattern);
   return regExp.hasMatch(email);
 }
+
+bool isPhoneValid(String phone) {
+  const pattern = r'^0[567]{1}\d{8}$';
+  final regExp = RegExp(pattern);
+  return regExp.hasMatch(phone);
+}
 bool isPasswordValid(String password) {
   // Check if the password meets the minimum length requirement
-  if (password.length < 8) {
+  if (password.length < 6) {
     return false;
   }
 
-  // Check if the password contains at least one uppercase letter
-  // if (!password.contains(RegExp(r'[A-Z]'))) {
-  //   return false;
-  // }
-  //
+  // Check if the password contains at least one letter
+  if (!password.contains(RegExp(r'[a-z]', caseSensitive: false))) {
+    return false;
+  }
+  
   // // Check if the password contains at least one lowercase letter
   // if (!password.contains(RegExp(r'[a-z]'))) {
   //   return false;
@@ -26,9 +31,9 @@ bool isPasswordValid(String password) {
   // }
 
   // Check if the password contains at least one special character
-  if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-    return false;
-  }
+  // if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+  //   return false;
+  // }
 
   return true;
 }
@@ -59,3 +64,5 @@ bool isNameValid(String name) {
 
   return true;
 }
+
+bool isIndentifierValid(String indentifier) => isEmailValid(indentifier) || isNameValid(indentifier) || isPhoneValid(indentifier);

@@ -19,10 +19,11 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  int page = 1;
   final bloc = locator<ChatBloc>();
   final data = locator<ChatSource>();
   final scroll = ScrollController();
+
+  int page = 1;
   late Timer timer;
 
   @override
@@ -73,18 +74,18 @@ class _ChatScreenState extends State<ChatScreen> {
   bool get _isBottom =>
       scroll.hasClients &&
       scroll.offset >= scroll.position.maxScrollExtent * .8;
+
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: AppConst.darkBlue,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        surfaceTintColor: Colors.transparent,
+        shadowColor: Colors.transparent,
         backgroundColor: AppConst.darkBlue,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          surfaceTintColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          backgroundColor: AppConst.darkBlue,
-          flexibleSpace: SafeArea(
-              child: Container(
+        flexibleSpace: SafeArea(
+          child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -110,17 +111,20 @@ class _ChatScreenState extends State<ChatScreen> {
                       'Provider',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                          fontSize: 16,
-                          fontFamily: 'Kumbh_Sans',
-                          fontWeight: FontWeight.bold),
+                        fontSize: 16,
+                        fontFamily: 'Kumbh_Sans',
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 )
               ],
             ),
-          )),
+          ),
         ),
-        body: Padding(
+      ),
+      body: SafeArea(
+        child: Padding(
           padding: const EdgeInsets.only(top: 12),
           child: ClipRRect(
             borderRadius: const BorderRadius.only(

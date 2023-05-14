@@ -48,7 +48,7 @@ class App {
 
   Future<bool> setFCMToken(String fcmToken) async {
     final token = _prefs.getString('fcmToken');
-    if (token != null && token.compareTo(fcmToken) == 0) {
+    if (getUserToken() == null || token != null && token.compareTo(fcmToken) == 0) {
       return true;
     }
 

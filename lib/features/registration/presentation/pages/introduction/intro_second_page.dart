@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../../../../core/global/global.dart';
+import 'package:cp_project/core/global/global.dart';
 
-class introPage2 extends StatelessWidget {
-  const introPage2({Key? key}) : super(key: key);
+class IntroSecondPage extends StatelessWidget {
+  const IntroSecondPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
