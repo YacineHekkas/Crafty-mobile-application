@@ -1,5 +1,6 @@
 import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/core/util/app.dart';
+import 'package:cp_project/features/registration/presentation/pages/login/login_page.dart';
 import 'package:cp_project/features/registration/presentation/pages/signup_pages/first_page.dart';
 import 'package:cp_project/injection_container.dart';
 import 'package:flutter/material.dart';
@@ -14,9 +15,9 @@ class chooseS_P extends StatefulWidget {
 class _chooseS_PState extends State<chooseS_P> {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
-      body: Stack(
+    return  Scaffold(
+      body: SafeArea(
+      child: Stack(
         children: [
           const Align(
             alignment: Alignment(-0.75, -0.85),
@@ -68,7 +69,68 @@ class _chooseS_PState extends State<chooseS_P> {
                 ],
               ),
             ),
-          )
+          ),
+          Align(
+            alignment: const Alignment(0, 0.85),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  margin: const EdgeInsetsDirectional.only( end: 10.0),
+                  width: MediaQuery.of(context).size.width/ 7,
+                  height: 3,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color:Colors.black,
+                  ),
+
+                ),
+                const Text(
+                  "OR",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold
+                  ),
+
+                ),
+                Container(
+                  margin: const EdgeInsetsDirectional.only( start: 10.0),
+                  width: MediaQuery.of(context).size.width/ 7,
+                  height: 3,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color:Colors.black,
+                  ),
+
+                )
+              ],
+            ),
+          ),
+          Container(
+            // continue as guest Container
+            alignment: const Alignment(0, 0.95),
+            child: GestureDetector(
+              onTap: () async {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Loginscreen()
+                    )
+                );
+
+                final app = locator<App>();
+
+                if (app.getShowIntro() == null) {
+                  await app.setShowIntro();
+                }
+              },
+              child: const Text(
+                'Login',
+                style: TextStyle(
+                  color: Colors.black87,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     ));

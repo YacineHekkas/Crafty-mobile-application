@@ -1,6 +1,7 @@
 import 'package:cp_project/core/util/app.dart';
 import 'package:cp_project/core/util/notification.dart';
 import 'package:cp_project/core/util/server.dart';
+
 import 'package:cp_project/features/registration/presentation/pages/Introduction-Screens/IntroductionScreen.dart';
 import 'package:cp_project/features/registration/presentation/pages/signup_pages/first_page.dart';
 
@@ -11,7 +12,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'features/account/presentation/bloc/user_bloc.dart';
 import 'features/home/presentation/bloc/get_data_bloc.dart';
-import 'features/home/presentation/pages/nav_screen.dart';
 
 
 import 'injection_container.dart';
@@ -45,12 +45,16 @@ class MyApp extends StatelessWidget  {
     return
       MultiBlocProvider(
           providers: [
-            BlocProvider(create: (_)=> locator<DataBloc>(),),
-            BlocProvider(create: (_)=> locator<UserBloc>(),),
+            BlocProvider(
+              create: (_)=> locator<DataBloc>(),
+            ),
+            BlocProvider(
+              create: (_)=> locator<UserBloc>(),
+            ),
         ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
-            home:introductionScreen()//locator<App>().getShowIntro() != null ? locator<App>().getUserToken() != null ? NavScreen() : const Loginscreen() : const introductionScreen(),
+            home:introductionScreen(),//locator<App>().getShowIntro() != null ? locator<App>().getUserToken() != null ? NavScreen() : const Loginscreen() : const introductionScreen(),
           )
 
     );

@@ -1,5 +1,6 @@
 import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/features/registration/presentation/pages/signup_pages/third_page.dart';
+import 'package:cp_project/features/registration/presentation/widgets/functions.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/buttonGlobo.dart';
@@ -11,16 +12,21 @@ class SecondPage extends StatefulWidget {
 
   @override
   State<SecondPage> createState() => _SecondPageState();
+
 }
 
 class _SecondPageState extends State<SecondPage> {
+
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController repeatedPasswordController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+
+  bool emailError =false;
+  bool passWordError =false;
+  bool repeatedPassWordError =false;
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
     return Scaffold(
             backgroundColor: AppConst.bgColor,
@@ -65,7 +71,8 @@ class _SecondPageState extends State<SecondPage> {
                             hint: 'Address email',
                             textEditingController: emailController,
                             keyboardType: TextInputType.emailAddress,
-                            obscureText: true,
+                            obscureText: false,
+                           isThereError: emailError,
                          ),
                         const SizedBox(
                           height: 25,
@@ -74,15 +81,17 @@ class _SecondPageState extends State<SecondPage> {
                             hint: 'Password',
                             textEditingController: passwordController,
                             keyboardType: TextInputType.visiblePassword,
-                            obscureText: false,),
+                            obscureText: true,
+                          isThereError: passWordError,),
                         const SizedBox(
                           height: 25,
                         ),
                         CustomTextField(
                           hint: 'Repeat password',
-                          textEditingController: passwordController,
+                          textEditingController: repeatedPasswordController,
                           keyboardType: TextInputType.visiblePassword,
-                          obscureText: false,),
+                          obscureText: true,
+                          isThereError: repeatedPassWordError,),
                         const SizedBox(
                           height: 25,
                         ),
@@ -105,7 +114,7 @@ class _SecondPageState extends State<SecondPage> {
                                         color: AppConst.darkBlue),
                                   )),
                             ),
-                            SizedBox(width: 15,),
+                            const SizedBox(width: 15,),
                             Expanded(
 
                                 child: Container(
@@ -145,13 +154,22 @@ class _SecondPageState extends State<SecondPage> {
                         ),
                         GestureDetector(
                           onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const ThirdPage()));
+                            setState(() {
+                              emailError = !isEmailValid(emailController.value.text);
+                              passWordError = !isPasswordValid(passwordController.value.text);
+                              repeatedPassWordError = !(passwordController.value.text == repeatedPasswordController.value.text);
+                            });
+                            if(!emailError&&!passWordError&&!repeatedPassWordError){
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const ThirdPage())
+                              );
+                            }
+
                           },
-                          child: ButtonGlobo(
-                            text: ConstStrings.next,
+                          child: const ButtonGlobo(
+                            text: "Next",
                           ),
                         ),
                       ]

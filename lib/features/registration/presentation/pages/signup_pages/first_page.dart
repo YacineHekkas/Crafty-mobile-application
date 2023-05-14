@@ -1,6 +1,8 @@
 import 'package:cp_project/core/global/global.dart';
+import 'package:cp_project/features/registration/presentation/pages/login/login_page.dart';
 import 'package:cp_project/features/registration/presentation/widgets/buttonGlobo.dart';
 import 'package:cp_project/features/registration/presentation/widgets/custom_textformfield.dart';
+import 'package:cp_project/features/registration/presentation/widgets/functions.dart';
 import 'package:cp_project/features/registration/presentation/widgets/page_title.dart';
 import 'package:cp_project/features/registration/presentation/widgets/textype.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -19,6 +21,11 @@ class _FirstPage extends State<FirstPage> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController userNameController = TextEditingController();
+  bool firstNameError = false;
+  bool lastNameError = false;
+  bool userError = false;
+  bool stateError = false;
+  bool districtError = false;
 
   String selectedValue = "Male";
 
@@ -52,20 +59,21 @@ class _FirstPage extends State<FirstPage> {
             ),
             body: SafeArea(
               child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                   child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 15),
-                child: Column(
-                  children: [
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: Column(
+                      children: [
                     Row(
                       children: [pageTitle("Getting started")],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
                       children: [pageSubTitle("Create your free account")],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     Container(
@@ -73,7 +81,7 @@ class _FirstPage extends State<FirstPage> {
                       height: 60,
                       color: AppConst.gray,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     Row(
@@ -85,19 +93,23 @@ class _FirstPage extends State<FirstPage> {
                               hint: 'First name',
                               textEditingController: firstNameController,
                               keyboardType: TextInputType.name,
-                              obscureText: true,
-                            )),
+                              obscureText: false,
+                              isThereError: firstNameError,
+
+                            )
+                        ),
                         SizedBox(
                             width: _width / 2.4,
                             child: CustomTextField(
                               hint: 'Last name',
                               textEditingController: lastNameController,
                               keyboardType: TextInputType.name,
-                              obscureText: true,
+                              obscureText: false,
+                              isThereError: lastNameError,
                             )),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 30,
                     ),
                     SizedBox(
@@ -106,10 +118,11 @@ class _FirstPage extends State<FirstPage> {
                         hint: 'User name',
                         textEditingController: userNameController,
                         keyboardType: TextInputType.name,
-                        obscureText: true,
+                        obscureText: false,
+                        isThereError: userError,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 35,
                     ),
                     Row(
@@ -174,9 +187,8 @@ class _FirstPage extends State<FirstPage> {
                             dropdownStyleData: DropdownStyleData(
                               maxHeight: 200,
                               width: 200,
-                              padding: null,
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(14),
+                                borderRadius: BorderRadius.circular(15),
                                 color: Colors.white,
                               ),
                               elevation: 8,
@@ -196,7 +208,7 @@ class _FirstPage extends State<FirstPage> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 35,
                     ),
                     Row(
@@ -237,18 +249,24 @@ class _FirstPage extends State<FirstPage> {
                               });
                             },
                             buttonStyleData: ButtonStyleData(
+
                               height: 50,
                               width: _width / 2.4,
                               padding: const EdgeInsets.only(left: 14, right: 14),
                               decoration: BoxDecoration(
+                                border: stateError? Border.all(
+                                  color: Colors.red,
+                                  width: 1.0,
+                                ):null,
                                 borderRadius: BorderRadius.circular(20),
                                 color: Colors.white,
                               ),
                               elevation: 1,
                             ),
-                            iconStyleData: const IconStyleData(
+                            iconStyleData: IconStyleData(
                               icon: Icon(
                                 Icons.keyboard_arrow_down_outlined,
+                                color: stateError?Colors.red:Colors.black87,
                               ),
                               iconSize: 24,
                               iconEnabledColor: Colors.black87,
@@ -313,14 +331,19 @@ class _FirstPage extends State<FirstPage> {
                               width: _width / 2.4,
                               padding: const EdgeInsets.only(left: 14, right: 14),
                               decoration: BoxDecoration(
+                                border: districtError? Border.all(
+                                  color: Colors.red,
+                                  width: 1.0,
+                                ):null,
                                 borderRadius: BorderRadius.circular(20),
                                 color: Colors.white,
                               ),
                               elevation: 1,
                             ),
-                            iconStyleData: const IconStyleData(
+                            iconStyleData: IconStyleData(
                               icon: Icon(
                                 Icons.keyboard_arrow_down_outlined,
+                                  color: districtError?Colors.red:Colors.black87,
                               ),
                               iconSize: 24,
                               iconEnabledColor: Colors.black87,
@@ -356,13 +379,22 @@ class _FirstPage extends State<FirstPage> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SecondPage()));
+                        setState(() {
+                          firstNameError = !isNameValid(firstNameController.value.text);
+                          lastNameError = !isNameValid(lastNameController.value.text);
+                          userError = !isNameValid(userNameController.value.text);
+                          districtError = district == "District";
+                          stateError = state == "State";
+                        });
+                        if(!firstNameError&&!lastNameError&&!userError&&!districtError&&!stateError){
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const SecondPage()));
+                        }
                       },
-                      child: ButtonGlobo(
-                        text: ConstStrings.next,
+                      child: const ButtonGlobo(
+                        text: "next",
                       ),
                     ),
                     SizedBox(
@@ -370,17 +402,17 @@ class _FirstPage extends State<FirstPage> {
                     ),
                     Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                       textype(
-                          text1: ConstStrings.have_acc, Color: AppConst.darkBlue),
+                          text1: 'Already have an account! ', Color: AppConst.darkBlue),
                       GestureDetector(
                           onTap: () {
-                            // Navigator.push(
-                            //     context,
-                            //     MaterialPageRoute(
-                            //         builder: (context) => const Loginscreen())
-                            // );
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Loginscreen())
+                            );
                           },
                           child: textype(
-                              text1: ConstStrings.login, Color: AppConst.orong))
+                              text1: 'login', Color: AppConst.orong))
                     ])
                   ],
                 ),

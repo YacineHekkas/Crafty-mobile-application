@@ -1,3 +1,5 @@
+import 'package:cp_project/core/util/app.dart';
+import 'package:cp_project/injection_container.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view_gallery.dart';
@@ -41,11 +43,11 @@ class _PhotoGalleryState extends State<PhotoGallery> {
         builder: (BuildContext context, int index) {
           return PhotoViewGalleryPageOptions(
             imageProvider: NetworkImage(
-              widget.imgList.elementAt(index),
-              headers: {
-                'Authorization':
-                    'gg eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImMzMTJkYmJjYTRlNGFhOTdkZDMxYWVhMiIsImlhdCI6MTY3OTY2ODE2NywiZXhwIjoxNzExMjI1NzY3fQ.R3CAE1dEbYKCAvRr2Ayzt9DM5klpuSkPSZeoqoehlyo'
-              },
+                widget.imgList[index].contains('http') ?  widget.imgList[index]  :
+                "https://crafty-server.azurewebsites.net/api/download/${widget.imgList[index]}",
+                headers: {
+                  'Authorization': 'bb ${locator<App>().getUserToken()}'
+                }
             ),
           );
         },

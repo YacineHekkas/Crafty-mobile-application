@@ -1,5 +1,5 @@
 import 'package:cp_project/core/util/app.dart';
-import 'package:cp_project/features/registration/presentation/pages/login/loginn.dart';
+import 'package:cp_project/features/registration/presentation/pages/login/login_page.dart';
 import 'package:cp_project/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -23,122 +23,67 @@ class _introductionScreenState extends State<introductionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-          body: Stack(
-        children: [
-          PageView(
-            onPageChanged: (index) {
-              setState(() {
-                lastPage = (index == 3);
-              });
-            },
-            controller: _controller,
-            children: const [
-              introPage1(),
-              introPage2(),
-              introPage3(),
-              chooseS_P(),
-            ],
-          ),
-          Container(
-              //Skip Next and PageIndicator Container
-              alignment: Alignment(0, 0.85),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      _controller.jumpToPage(3);
-                    },
-                    child: Text(
-                      lastPage ? '' : 'Skip',
-                      style: const TextStyle(
-                        color: Colors.black87,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  !lastPage
-                      ? buildsmoothPageIndicator()
-                      :  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        margin: const EdgeInsetsDirectional.only( end: 10.0),
-                        width: MediaQuery.of(context).size.width/ 7,
-                        height: 3,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color:Colors.black,
-                        ),
-
-                      ),
-                      const Text(
-                        "OR",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold
-                        ),
-
-                      ),
-                      Container(
-                        margin: const EdgeInsetsDirectional.only( start: 10.0),
-                        width: MediaQuery.of(context).size.width/ 7,
-                        height: 3,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                          color:Colors.black,
-                        ),
-
-                      )
-                    ],
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      _controller.nextPage(
-                          duration: const Duration(milliseconds: 120),
-                          curve: Curves.bounceIn);
-                    },
-                    child: Text(
-                      lastPage ? '' : 'Next',
-                      style: const TextStyle(
-                        color: Colors.black87,
-                        fontSize: 17,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              )),
-          Container(
-            // continue as guest Container
-            alignment: const Alignment(0, 0.95),
-            child: GestureDetector(
-              onTap: () async {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Loginscreen()
-                    )
-                );
-
-                final app = locator<App>();
-
-                if (app.getShowIntro() == null) {
-                  await app.setShowIntro();
-                }
-              },
-              child: Text(
-                lastPage ? 'Login' : '',
-                style: const TextStyle(
-                  color: Colors.black87,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
+    return Scaffold(
+          body: SafeArea(
+            child: Stack(
+              children: [
+                PageView(
+                  onPageChanged: (index) {
+                    setState(() {
+                      lastPage = (index == 3);
+                    });
+                  },
+                  controller: _controller,
+                  children: const [
+                    introPage1(),
+                    introPage2(),
+                    introPage3(),
+                    chooseS_P(),
+                  ],
                 ),
-              ),
+                Container(
+                  //Skip Next and PageIndicator Container
+                    alignment: Alignment(0, 0.85),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _controller.jumpToPage(3);
+                          },
+                          child: Text(
+                            lastPage ? '' : 'Skip',
+                            style: const TextStyle(
+                              color: Colors.black87,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        !lastPage
+                            ? buildsmoothPageIndicator()
+                            :  const SizedBox(),
+                        GestureDetector(
+                          onTap: () {
+                            _controller.nextPage(
+                                duration: const Duration(milliseconds: 120),
+                                curve: Curves.bounceIn);
+                          },
+                          child: Text(
+                            lastPage ? '' : 'Next',
+                            style: const TextStyle(
+                              color: Colors.black87,
+                              fontSize: 17,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+
+              ],
             ),
-          )
-        ],
-      )),
+    ),
     );
   }
 

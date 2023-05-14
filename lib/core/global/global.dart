@@ -145,35 +145,6 @@ class PageName {
 class ConstStrings {
   static String descCategory =
       'Lorem Ipsum is simply dummy text of the printing and typesetting industry';
-  static String wel = ' Welcome Back ';
-  static String login_mes = 'please log in to your account ';
-  static String forget = 'forget password !';
-  static String exception = 'Don\'t have an account ?';
-  static String sign = 'Sign Up ';
-  static String gett = ' Getting Started ';
-  static String sign_mes = 'Create a new account to continue ! ';
-  static String gs = 'Getting Started ';
-  static String gs_mes = ' Create a new account and give a service ';
-  static String gender = 'Gender :';
-  static String next = ' Next ';
-  static String nd_step = 'Second step ';
-  static String ns_mes = 'Set an email and choose your password ';
-  static String last = 'The last step';
-  static String number = 'Enter your phone number ';
-  static String code = 'Get confirmation code ';
-  static String location = 'Location';
-  static String giveL = 'Give us your exact location ';
-  static String email = 'Email Address ';
-  static String pass = 'Password';
-  static String login = '  Log in ';
-  static String full_name = 'Full name ';
-  static String user_name = 'User name ';
-  static String state = 'States';
-  static String District = 'District';
-  static String female = 'female';
-  static String male = 'male';
-  static String unspecified = 'unspecified';
-  static String have_acc = 'Already have an account!';
 }
 
 class TimeagoChatSettings implements LookupMessages {
