@@ -76,10 +76,8 @@ class AuthSourceImpl implements AuthSource {
   @override
   Future<bool> getAccountVerificationStatus() async {
     final res = await server.fetchData("""
-      query FetchUser {
-        fetchUser {
-          verified
-        }
+      mutation Mutation() {
+        verifyUser()
       }
     """);
 
@@ -88,13 +86,13 @@ class AuthSourceImpl implements AuthSource {
     }
     if (res.data == null ||
         res.exception != null ||
-        res.data!['fetchUser'] == null) {
+        res.data!['verifyUser'] == null) {
       print(res);
 
       throw ServerException;
     }
 
-    return res.data!['fetchUser']['verified'];
+    return res.data!['verifyUser'];
   }
 
   @override

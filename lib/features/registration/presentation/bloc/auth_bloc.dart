@@ -16,8 +16,12 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
         return;
       }
 
-      emit(state.copyWith(
-          status: _getEventStatus(event), result: AuthResult.pending));
+      emit(
+        state.copyWith(
+          status: _getEventStatus(event),
+          result: AuthResult.pending,
+        ),
+      );
     });
     on<AccountLoginEvent>(_onAccountLogin);
     on<AccountRegisterEvent>(_onAccountRegister);
@@ -78,7 +82,7 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
         state.copyWith(
           status: AuthStatus.login,
           result: AuthResult.failure,
-          lastException: e is GraphQLError ? e.message : 'UNKNOWN_ERROR',
+          lastException: e is GraphQLError ? e.message : e.toString(),
         ),
       );
     }
@@ -86,8 +90,6 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
 
   Future<void> _onAccountRegister(
       AccountRegisterEvent event, Emitter<AuthState> emit) async {
-    var res;
-
     try {
       assert(state.data.firstName != null);
       assert(state.data.lastName != null);
@@ -98,14 +100,16 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
       assert(state.data.provider != null);
       assert(state.data.location != null);
 
-      res = await data.accountRegister(state.data);
+      final res = await data.accountRegister(state.data);
 
-      emit(state.copyWith(
-        status: AuthStatus.verification,
-        result: AuthResult.success,
-        isVerified: false,
-        token: res,
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.verification,
+          result: AuthResult.success,
+          isVerified: false,
+          token: res,
+        ),
+      );
     } catch (e, s) {
       print(e);
       print(s);
@@ -114,7 +118,7 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
         state.copyWith(
           status: AuthStatus.register,
           result: AuthResult.failure,
-          lastException: e is GraphQLError ? e.message : 'UNKNOWN_ERROR',
+          lastException: e is GraphQLError ? e.message : e.toString(),
         ),
       );
     }
@@ -125,12 +129,13 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
     try {
       final res = await data.verifyCode(event.code);
 
-      emit(state.copyWith(
-        status: AuthStatus.verification,
-        result: AuthResult.authenticated,
-        isVerified: true
-        
-      ));
+      emit(
+        state.copyWith(
+          status: AuthStatus.verification,
+          result: AuthResult.authenticated,
+          isVerified: true,
+        ),
+      );
     } catch (e, s) {
       print(e);
       print(s);
@@ -139,7 +144,7 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
         state.copyWith(
           status: AuthStatus.verification,
           result: AuthResult.failure,
-          lastException: e is GraphQLError ? e.message : 'UNKNOWN_ERROR',
+          lastException: e is GraphQLError ? e.message : e.toString(),
         ),
       );
     }

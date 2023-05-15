@@ -31,14 +31,8 @@ class _LoginScreen extends State<LoginScreen> {
   final indentifierController = TextEditingController();
   final passwordController = TextEditingController();
 
-  bool indentifierError = false;
-  bool passWordError = false;
-
-  void validate() => setState(() {
-        indentifierError =
-            !isIndentifierValid(indentifierController.value.text);
-        passWordError = !isPasswordValid(passwordController.value.text);
-      });
+  final indentifierValid = ValueNotifier<bool>(false);
+  final passWordValid = ValueNotifier<bool>(false);
 
   @override
   Widget build(BuildContext context) {
@@ -90,105 +84,104 @@ class _LoginScreen extends State<LoginScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 15),
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
-                child: Form(
-                  onChanged: validate,
-                  child: Column(
-                    children: [
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [pageTitle("Welcome back")],
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          pageSubTitle("Please log in to your account ")
-                        ],
-                      ),
-                      const SizedBox(height: 40.0),
-                      Container(
-                        width: 100,
-                        height: 100,
-                        color: AppConst.gray,
-                      ),
-                      const SizedBox(height: 40.0),
-                      CustomTextField(
-                        hint: 'Username, Email address or phone number',
-                        textEditingController: indentifierController,
-                        keyboardType: TextInputType.name,
-                        isThereError: indentifierError,
-                      ),
-                      const SizedBox(height: 30.0),
-                      CustomTextField(
-                        hint: 'Password',
-                        textEditingController: passwordController,
-                        keyboardType: TextInputType.name,
-                        obscureText: true,
-                        isThereError: passWordError,
-                      ),
-                      const SizedBox(
-                        height: 10.0,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 15.0, top: 0.0),
-                        child: Align(
-                          alignment: Alignment.topRight,
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: textype(
-                              text1: 'Forget your password?',
-                              Color: Colors.grey,
-                            ),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: [pageTitle("Welcome back")],
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        pageSubTitle("Please log in to your account ")
+                      ],
+                    ),
+                    const SizedBox(height: 40.0),
+                    Container(
+                      width: 100,
+                      height: 100,
+                      color: AppConst.gray,
+                    ),
+                    const SizedBox(height: 40.0),
+                    CustomTextField(
+                      hint: 'Username, Email address or phone number',
+                      textEditingController: indentifierController,
+                      keyboardType: TextInputType.name,
+                      validator: (value) => value.isNotEmpty,
+                      valid: indentifierValid,
+                    ),
+                    const SizedBox(height: 30.0),
+                    CustomTextField(
+                      hint: 'Password',
+                      textEditingController: passwordController,
+                      keyboardType: TextInputType.name,
+                      obscureText: true,
+                      validator: (value) => value.isNotEmpty,
+                      valid: passWordValid,
+                    ),
+                    const SizedBox(
+                      height: 10.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 15.0, top: 0.0),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: textype(
+                            text1: 'Forget your password?',
+                            Color: Colors.grey,
                           ),
                         ),
                       ),
-                      const SizedBox(
-                        height: 30.0,
-                      ),
-                      SizedBox(
-                        width: width / 2,
-                        child: GestureDetector(
-                          onTap: () {
-                            if (indentifierError || passWordError) return;
+                    ),
+                    const SizedBox(
+                      height: 30.0,
+                    ),
+                    SizedBox(
+                      width: width / 2,
+                      child: GestureDetector(
+                        onTap: () {
+                          if (!passWordValid.value || !indentifierValid.value) return;
 
-                            bloc.add(
-                              AccountLoginEvent(
-                                indentifier: indentifierController.value.text,
-                                password: passwordController.value.text,
+                          bloc.add(
+                            AccountLoginEvent(
+                              indentifier: indentifierController.value.text,
+                              password: passwordController.value.text,
+                            ),
+                          );
+                        },
+                        child: const ButtonGlobo(
+                          text: 'Login',
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: hight / 6,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        textype(text1: 'Don\'t have an account? '),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const IntroFinalPage(),
                               ),
                             );
                           },
-                          child: const ButtonGlobo(
-                            text: 'Login',
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        height: hight / 6,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          textype(text1: 'Don\'t have an account? '),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const IntroFinalPage(),
-                                ),
-                              );
-                            },
-                            child: textype(
-                                text1: 'Signup now!', Color: AppConst.orong),
-                          )
-                        ],
-                      )
-                    ],
-                  ),
+                          child: textype(
+                              text1: 'Signup now!', Color: AppConst.orong),
+                        )
+                      ],
+                    )
+                  ],
                 ),
               ),
             ),

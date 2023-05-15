@@ -6,6 +6,7 @@ import 'package:cp_project/features/registration/presentation/widgets/loading_ov
 import 'package:cp_project/features/registration/presentation/widgets/page_title.dart';
 import 'package:cp_project/injection_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -38,6 +39,8 @@ class _SignupVerificationPage extends State<SignupVerificationPage> {
       listenWhen: (p, c) =>
           c.status == AuthStatus.verification && p.result != c.result,
       listener: (ctx, s) {
+        error = s.result == AuthResult.failure;
+
         if (s.status == AuthStatus.verification &&
             s.result == AuthResult.authenticated) {
           Navigator.push(
@@ -49,7 +52,8 @@ class _SignupVerificationPage extends State<SignupVerificationPage> {
 
           return;
         }
-        if (s.result == AuthResult.failure) {
+
+        if (error) {
           Fluttertoast.showToast(
             msg: s.lastException ?? 'Please check your connection',
             fontSize: 16.0,
@@ -131,48 +135,41 @@ class _SignupVerificationPage extends State<SignupVerificationPage> {
                     ),
                     child: Column(
                       children: [
-                        BlocBuilder<AuthBloc, AuthState>(
-                            bloc: bloc,
-                            builder: (context, state) {
-                              error = state.result == AuthResult.failure;
-
-                              return Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  SizedBox(
-                                    width: 48,
-                                    height: 68,
-                                    child: _textFieldOTP(0, otpController0),
-                                  ),
-                                  SizedBox(
-                                    width: 48,
-                                    height: 68,
-                                    child: _textFieldOTP(1, otpController1),
-                                  ),
-                                  SizedBox(
-                                    width: 48,
-                                    height: 68,
-                                    child: _textFieldOTP(2, otpController2),
-                                  ),
-                                  SizedBox(
-                                    width: 48,
-                                    height: 68,
-                                    child: _textFieldOTP(3, otpController3),
-                                  ),
-                                  SizedBox(
-                                    width: 48,
-                                    height: 68,
-                                    child: _textFieldOTP(4, otpController4),
-                                  ),
-                                  SizedBox(
-                                    width: 48,
-                                    height: 68,
-                                    child: _textFieldOTP(5, otpController5),
-                                  ),
-                                ],
-                              );
-                            }),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            SizedBox(
+                              width: 48,
+                              height: 68,
+                              child: _textFieldOTP(0, otpController0),
+                            ),
+                            SizedBox(
+                              width: 48,
+                              height: 68,
+                              child: _textFieldOTP(1, otpController1),
+                            ),
+                            SizedBox(
+                              width: 48,
+                              height: 68,
+                              child: _textFieldOTP(2, otpController2),
+                            ),
+                            SizedBox(
+                              width: 48,
+                              height: 68,
+                              child: _textFieldOTP(3, otpController3),
+                            ),
+                            SizedBox(
+                              width: 48,
+                              height: 68,
+                              child: _textFieldOTP(4, otpController4),
+                            ),
+                            SizedBox(
+                              width: 48,
+                              height: 68,
+                              child: _textFieldOTP(5, otpController5),
+                            ),
+                          ],
+                        ),
                         const SizedBox(
                           height: 22,
                         ),
@@ -294,24 +291,28 @@ class _SignupVerificationPage extends State<SignupVerificationPage> {
             FocusScope.of(context).previousFocus();
           }
         },
-        showCursor: false,
         readOnly: false,
         textAlign: TextAlign.center,
         textAlignVertical: TextAlignVertical.center,
         style: const TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
         keyboardType: TextInputType.number,
-        maxLength: 1,
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+          LengthLimitingTextInputFormatter(1),
+        ],
         decoration: InputDecoration(
           counter: const Offstage(),
           enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(
-                width: 2,
-                color: error ? Colors.red : Colors.black12,
-              ),
-              borderRadius: BorderRadius.circular(12)),
+            borderSide: BorderSide(
+              width: 2,
+              color: error ? Colors.red : Colors.black12,
+            ),
+            borderRadius: BorderRadius.circular(12),
+          ),
           focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(width: 2, color: AppConst.orong),
-              borderRadius: BorderRadius.circular(12)),
+            borderSide: const BorderSide(width: 2, color: AppConst.orong),
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
     );

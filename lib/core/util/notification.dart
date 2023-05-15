@@ -33,7 +33,7 @@ class Notificaion {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    final messaging = FirebaseMessaging.instance;
 
     try {
       final app = locator<App>();

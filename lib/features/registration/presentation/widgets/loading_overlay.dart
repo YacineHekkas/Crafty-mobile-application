@@ -19,7 +19,7 @@ class LoadingOverlay extends StatelessWidget {
         child,
         if (isLoading)
           const ModalBarrier(
-            color: Colors.black38,
+            color: Colors.black54,
             dismissible: false,
           ),
         if (isLoading)

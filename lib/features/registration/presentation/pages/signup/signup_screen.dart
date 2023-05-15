@@ -31,11 +31,11 @@ class _SignupScreen extends State<SignupScreen> {
   final userNameController = TextEditingController();
   final phoneController = TextEditingController();
 
-  bool firstNameError = false;
-  bool lastNameError = false;
-  bool userError = false;
-  bool stateError = false;
-  bool districtError = false;
+  final firstNameValid = ValueNotifier<bool>(false);
+  final lastNameValid = ValueNotifier<bool>(false);
+  final userValid = ValueNotifier<bool>(false);
+  var stateValid = false;
+  var districtValid = false;
 
   late var gender = bloc.state.data.gender?.replaceRange(
           0, 1, bloc.state.data.gender!.characters.first.toUpperCase()) ??
@@ -64,14 +64,6 @@ class _SignupScreen extends State<SignupScreen> {
     }
   }
 
-  void validate() => setState(() {
-        firstNameError = !isNameValid(firstNameController.value.text);
-        lastNameError = !isNameValid(lastNameController.value.text);
-        userError = !isNameValid(userNameController.value.text);
-        districtError = district == "District";
-        stateError = state == "State";
-      });
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,178 +86,97 @@ class _SignupScreen extends State<SignupScreen> {
           physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: Form(
-              onChanged: validate,
-              child: Column(
-                children: [
-                  Row(
-                    children: [pageTitle("Getting started")],
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Row(
-                    children: [pageSubTitle("Create your free account")],
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    width: 2200,
-                    height: 60,
-                    color: AppConst.gray,
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                          width: _width / 2.4,
-                          child: CustomTextField(
-                            hint: 'First name',
-                            textEditingController: firstNameController,
-                            keyboardType: TextInputType.name,
-                            obscureText: false,
-                            isThereError: firstNameError,
-                          )),
-                      SizedBox(
-                          width: _width / 2.4,
-                          child: CustomTextField(
-                            hint: 'Last name',
-                            textEditingController: lastNameController,
-                            keyboardType: TextInputType.name,
-                            obscureText: false,
-                            isThereError: lastNameError,
-                          )),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  SizedBox(
-                    width: _width / 1.15,
-                    child: CustomTextField(
-                      hint: 'User name',
-                      textEditingController: userNameController,
-                      keyboardType: TextInputType.name,
-                      obscureText: false,
-                      isThereError: userError,
+            child: Column(
+              children: [
+                Row(
+                  children: [pageTitle("Getting started")],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  children: [pageSubTitle("Create your free account")],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  width: 2200,
+                  height: 60,
+                  color: AppConst.gray,
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    SizedBox(
+                      width: _width / 2.4,
+                      child: CustomTextField(
+                        hint: 'First name',
+                        textEditingController: firstNameController,
+                        keyboardType: TextInputType.name,
+                        validator: isNameValid,
+                        valid: firstNameValid,
+                      ),
                     ),
-                  ),
-                  const SizedBox(
-                    height: 35,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      const Text(
-                        "Gender : ",
-                        style: TextStyle(
-                          color: AppConst.darkBlue,
-                          fontSize: 24,
-                          fontFamily: AppConst.font,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 0.9,
-                        ),
+                    SizedBox(
+                      width: _width / 2.4,
+                      child: CustomTextField(
+                        hint: 'Last name',
+                        textEditingController: lastNameController,
+                        keyboardType: TextInputType.name,
+                        validator: isNameValid,
+                        valid: lastNameValid,
                       ),
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                          isExpanded: true,
-                          hint: Text(
-                            gender,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontFamily: AppConst.font,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          items: items
-                              .map(
-                                (item) => DropdownMenuItem<String>(
-                                  value: item,
-                                  child: Text(
-                                    item,
-                                    style: const TextStyle(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              )
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              gender = value!;
-
-                              validate();
-                            });
-                          },
-                          buttonStyleData: ButtonStyleData(
-                            height: 50,
-                            width: _width / 2,
-                            padding: const EdgeInsets.only(left: 14, right: 14),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
-                            ),
-                            elevation: 1,
-                          ),
-                          iconStyleData: const IconStyleData(
-                            icon: Icon(
-                              Icons.keyboard_arrow_down_outlined,
-                            ),
-                            iconSize: 24,
-                            iconEnabledColor: Colors.black87,
-                            iconDisabledColor: Colors.grey,
-                          ),
-                          dropdownStyleData: DropdownStyleData(
-                            maxHeight: 200,
-                            width: 200,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Colors.white,
-                            ),
-                            elevation: 8,
-                            offset: const Offset(-20, 0),
-                            scrollbarTheme: ScrollbarThemeData(
-                              radius: const Radius.circular(40),
-                              thickness: MaterialStateProperty.all<double>(6),
-                              thumbVisibility:
-                                  MaterialStateProperty.all<bool>(true),
-                            ),
-                          ),
-                          menuItemStyleData: const MenuItemStyleData(
-                            height: 40,
-                            padding: EdgeInsets.only(left: 14, right: 14),
-                          ),
-                        ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                SizedBox(
+                  width: _width / 1.15,
+                  child: CustomTextField(
+                    hint: 'User name',
+                    textEditingController: userNameController,
+                    keyboardType: TextInputType.name,
+                    validator: isNameValid,
+                    valid: userValid,
+                  ),
+                ),
+                const SizedBox(
+                  height: 35,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    const Text(
+                      "Gender : ",
+                      style: TextStyle(
+                        color: AppConst.darkBlue,
+                        fontSize: 24,
+                        fontFamily: AppConst.font,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 0.9,
                       ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 35,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                          isExpanded: true,
-                          hint: Text(
-                            state,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontFamily: AppConst.font,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                    ),
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        isExpanded: true,
+                        hint: Text(
+                          gender,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontFamily: AppConst.font,
+                            fontWeight: FontWeight.bold,
                           ),
-                          items: States.map((item) => DropdownMenuItem<String>(
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        items: items
+                            .map(
+                              (item) => DropdownMenuItem<String>(
                                 value: item,
                                 child: Text(
                                   item,
@@ -276,217 +187,295 @@ class _SignupScreen extends State<SignupScreen> {
                                   ),
                                   overflow: TextOverflow.ellipsis,
                                 ),
-                              )).toList(),
-                          onChanged: (value) {
-                            districts = List.from(District.where((e) =>
-                                    e['id'] == States.indexOf(value!) + 1)
-                                .map((e) => e['name']));
-
-                            setState(() {
-                              state = value!;
-                            });
-
-                            validate();
-                          },
-                          buttonStyleData: ButtonStyleData(
-                            height: 50,
-                            width: _width / 2.4,
-                            padding: const EdgeInsets.only(left: 14, right: 14),
-                            decoration: BoxDecoration(
-                              border: stateError
-                                  ? Border.all(
-                                      color: Colors.red,
-                                      width: 1.0,
-                                    )
-                                  : null,
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
-                            ),
-                            elevation: 1,
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            gender = value!;
+                          });
+                        },
+                        buttonStyleData: ButtonStyleData(
+                          height: 50,
+                          width: _width / 2,
+                          padding: const EdgeInsets.only(left: 14, right: 14),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
                           ),
-                          iconStyleData: IconStyleData(
-                            icon: Icon(
-                              Icons.keyboard_arrow_down_outlined,
-                              color: stateError ? Colors.red : Colors.black87,
-                            ),
-                            iconSize: 24,
-                            iconEnabledColor: Colors.black87,
-                            iconDisabledColor: Colors.grey,
+                          elevation: 1,
+                        ),
+                        iconStyleData: const IconStyleData(
+                          icon: Icon(
+                            Icons.keyboard_arrow_down_outlined,
                           ),
-                          dropdownStyleData: DropdownStyleData(
-                            maxHeight: 200,
-                            width: 200,
-                            padding: null,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              color: Colors.white,
-                            ),
-                            elevation: 8,
-                            offset: const Offset(-20, 0),
-                            scrollbarTheme: ScrollbarThemeData(
-                              radius: const Radius.circular(40),
-                              thickness: MaterialStateProperty.all<double>(6),
-                              thumbVisibility:
-                                  MaterialStateProperty.all<bool>(true),
-                            ),
+                          iconSize: 24,
+                          iconEnabledColor: Colors.black87,
+                          iconDisabledColor: Colors.grey,
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 200,
+                          width: 200,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(15),
+                            color: Colors.white,
                           ),
-                          menuItemStyleData: const MenuItemStyleData(
-                            height: 40,
-                            padding: EdgeInsets.only(left: 14, right: 14),
+                          elevation: 8,
+                          offset: const Offset(-20, 0),
+                          scrollbarTheme: ScrollbarThemeData(
+                            radius: const Radius.circular(40),
+                            thickness: MaterialStateProperty.all<double>(6),
+                            thumbVisibility:
+                                MaterialStateProperty.all<bool>(true),
                           ),
                         ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                          padding: EdgeInsets.only(left: 14, right: 14),
+                        ),
                       ),
-                      DropdownButtonHideUnderline(
-                        child: DropdownButton2(
-                          isExpanded: true,
-                          hint: Text(
-                            district,
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontFamily: AppConst.font,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 35,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        isExpanded: true,
+                        hint: Text(
+                          state,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontFamily: AppConst.font,
+                            fontWeight: FontWeight.bold,
                           ),
-                          items: districts
-                              .map((item) => DropdownMenuItem<String>(
-                                    value: item,
-                                    child: Text(
-                                      item,
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.black,
-                                      ),
-                                      overflow: TextOverflow.ellipsis,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        items: States.map((item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            )).toList(),
+                        onChanged: (value) {
+                          districts = List.from(
+                            District.where((e) =>
+                                e['id'] == States.indexOf(value!) + 1).map(
+                              (e) => e['name'],
+                            ),
+                          );
+
+                          setState(() {
+                            state = value!;
+                            stateValid = state != "State";
+                          });
+                        },
+                        buttonStyleData: ButtonStyleData(
+                          height: 50,
+                          width: _width / 2.4,
+                          padding: const EdgeInsets.only(left: 14, right: 14),
+                          decoration: BoxDecoration(
+                            border: !stateValid
+                                ? Border.all(
+                                    color: Colors.red,
+                                    width: 1.0,
+                                  )
+                                : null,
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                          ),
+                          elevation: 1,
+                        ),
+                        iconStyleData: IconStyleData(
+                          icon: Icon(
+                            Icons.keyboard_arrow_down_outlined,
+                            color: !stateValid ? Colors.red : Colors.black87,
+                          ),
+                          iconSize: 24,
+                          iconEnabledColor: Colors.black87,
+                          iconDisabledColor: Colors.grey,
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 200,
+                          width: 200,
+                          padding: null,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            color: Colors.white,
+                          ),
+                          elevation: 8,
+                          offset: const Offset(-20, 0),
+                          scrollbarTheme: ScrollbarThemeData(
+                            radius: const Radius.circular(40),
+                            thickness: MaterialStateProperty.all<double>(6),
+                            thumbVisibility:
+                                MaterialStateProperty.all<bool>(true),
+                          ),
+                        ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                          padding: EdgeInsets.only(left: 14, right: 14),
+                        ),
+                      ),
+                    ),
+                    DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                        isExpanded: true,
+                        hint: Text(
+                          district,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontFamily: AppConst.font,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        items: districts
+                            .map((item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
                                     ),
-                                  ))
-                              .toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              district = value!;
-                            });
-
-                            validate();
-                          },
-                          buttonStyleData: ButtonStyleData(
-                            height: 50,
-                            width: _width / 2.4,
-                            padding: const EdgeInsets.only(left: 14, right: 14),
-                            decoration: BoxDecoration(
-                              border: districtError
-                                  ? Border.all(
-                                      color: Colors.red,
-                                      width: 1.0,
-                                    )
-                                  : null,
-                              borderRadius: BorderRadius.circular(20),
-                              color: Colors.white,
-                            ),
-                            elevation: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ))
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            district = value!;
+                            districtValid = district != "District";
+                          });
+                        },
+                        buttonStyleData: ButtonStyleData(
+                          height: 50,
+                          width: _width / 2.4,
+                          padding: const EdgeInsets.only(left: 14, right: 14),
+                          decoration: BoxDecoration(
+                            border: !districtValid
+                                ? Border.all(
+                                    color: Colors.red,
+                                    width: 1.0,
+                                  )
+                                : null,
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
                           ),
-                          iconStyleData: IconStyleData(
-                            icon: Icon(
-                              Icons.keyboard_arrow_down_outlined,
-                              color:
-                                  districtError ? Colors.red : Colors.black87,
-                            ),
-                            iconSize: 24,
-                            iconEnabledColor: Colors.black87,
-                            iconDisabledColor: Colors.grey,
+                          elevation: 1,
+                        ),
+                        iconStyleData: IconStyleData(
+                          icon: Icon(
+                            Icons.keyboard_arrow_down_outlined,
+                            color: !districtValid ? Colors.red : Colors.black87,
                           ),
-                          dropdownStyleData: DropdownStyleData(
-                            maxHeight: 200,
-                            width: 200,
-                            padding: null,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(14),
-                              color: Colors.white,
-                            ),
-                            elevation: 8,
-                            offset: const Offset(-20, 0),
-                            scrollbarTheme: ScrollbarThemeData(
-                              radius: const Radius.circular(40),
-                              thickness: MaterialStateProperty.all<double>(6),
-                              thumbVisibility:
-                                  MaterialStateProperty.all<bool>(true),
-                            ),
+                          iconSize: 24,
+                          iconEnabledColor: Colors.black87,
+                          iconDisabledColor: Colors.grey,
+                        ),
+                        dropdownStyleData: DropdownStyleData(
+                          maxHeight: 200,
+                          width: 200,
+                          padding: null,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            color: Colors.white,
                           ),
-                          menuItemStyleData: const MenuItemStyleData(
-                            height: 40,
-                            padding: EdgeInsets.only(left: 14, right: 14),
+                          elevation: 8,
+                          offset: const Offset(-20, 0),
+                          scrollbarTheme: ScrollbarThemeData(
+                            radius: const Radius.circular(40),
+                            thickness: MaterialStateProperty.all<double>(6),
+                            thumbVisibility:
+                                MaterialStateProperty.all<bool>(true),
                           ),
                         ),
+                        menuItemStyleData: const MenuItemStyleData(
+                          height: 40,
+                          padding: EdgeInsets.only(left: 14, right: 14),
+                        ),
                       ),
-                    ],
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: _height / 17,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    if (firstNameValid.value &&
+                        lastNameValid.value &&
+                        userValid.value &&
+                        districtValid &&
+                        stateValid) {
+                      final districtJson = District.firstWhere(
+                        (e) => e['name'] == district,
+                      );
+
+                      bloc.add(
+                        UpdateRegistrationDataEvent(
+                          step: 1,
+                          firstName: firstNameController.value.text,
+                          lastName: lastNameController.value.text,
+                          username: userNameController.value.text,
+                          gender: gender,
+                          location: Location(
+                            state: state,
+                            district: district,
+                            coordinates: [
+                              districtJson['latitude'],
+                              districtJson['longitude']
+                            ],
+                          ),
+                        ),
+                      );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SignupNextPage(),
+                        ),
+                      );
+                    }
+                  },
+                  child: const ButtonGlobo(
+                    text: "Next",
                   ),
-                  SizedBox(
-                    height: _height / 17,
-                  ),
+                ),
+                SizedBox(
+                  height: _height / 17,
+                ),
+                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  textype(
+                      text1: 'Already have an account? ',
+                      Color: AppConst.darkBlue),
                   GestureDetector(
                     onTap: () {
-                      if (!firstNameError &&
-                          !lastNameError &&
-                          !userError &&
-                          !districtError &&
-                          !stateError) {
-                        final districtJson = District.firstWhere(
-                          (e) => e['name'] == district,
-                        );
-
-                        bloc.add(
-                          UpdateRegistrationDataEvent(
-                            step: 1,
-                            firstName: firstNameController.value.text,
-                            lastName: lastNameController.value.text,
-                            username: userNameController.value.text,
-                            gender: gender,
-                            location: Location(
-                              state: state,
-                              district: district,
-                              coordinates: [
-                                districtJson['latitude'],
-                                districtJson['longitude']
-                              ],
-                            ),
-                          ),
-                        );
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const SignupNextPage(),
-                          ),
-                        );
-                      }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),
+                        ),
+                      );
                     },
-                    child: const ButtonGlobo(
-                      text: "Next",
+                    child: textype(
+                      text1: 'Login',
+                      Color: AppConst.orong,
                     ),
-                  ),
-                  SizedBox(
-                    height: _height / 17,
-                  ),
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    textype(
-                        text1: 'Already have an account? ',
-                        Color: AppConst.darkBlue),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const LoginScreen(),
-                          ),
-                        );
-                      },
-                      child: textype(
-                        text1: 'Login',
-                        Color: AppConst.orong,
-                      ),
-                    )
-                  ])
-                ],
-              ),
+                  )
+                ])
+              ],
             ),
           ),
         ),

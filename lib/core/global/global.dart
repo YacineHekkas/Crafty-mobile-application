@@ -213,12 +213,17 @@ class TimeagoChatSettings implements LookupMessages {
   String wordSeparator() => ' ';
 }
 
-class LoginMessages {
-  static const error_messg = 'Unexpected Error, Please try again later.';
-  static const login_successe = 'Logged In Successfully';
-  static const sing_up_successe = 'Sing Up Successfully';
-  static const code_v = 'email verified';
-  static const code_s = 'the code has been sent ';
+class TimeagoChatMessagesSettings extends TimeagoChatSettings {
+  @override
+  String lessThanOneMinute(int seconds) => '';
+  @override
+  String aboutAMinute(int minutes) => '';
+  @override
+  String minutes(int minutes) => '';
+  @override
+  String aboutAnHour(int minutes) => '';
+  @override
+  String hours(int hours) => '';
 }
 
 List<String> States = [
@@ -6824,16 +6829,3 @@ List<Map<String, dynamic>> District = [
     'longitude': 0.6839997,
   },
 ];
-
-class TimeagoChatMessagesSettings extends TimeagoChatSettings {
-  @override
-  String lessThanOneMinute(int seconds) => '';
-  @override
-  String aboutAMinute(int minutes) => '';
-  @override
-  String minutes(int minutes) => '';
-  @override
-  String aboutAnHour(int minutes) => '';
-  @override
-  String hours(int hours) => '';
-}
