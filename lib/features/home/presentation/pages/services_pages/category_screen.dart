@@ -7,6 +7,7 @@ import 'package:cp_project/features/home/presentation/widgets/category_card.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../widgets/row_ship.dart';
 import 'service_details.dart';
@@ -197,12 +198,15 @@ class _CategoryScreenState extends State<CategoryScreen> {
           return CategoryCard(
             serviceInfo: dataValue[index],
             onSelected: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => ServiceDetails(
-                            serviceInfo: dataValue[index],
-                          )));
+              PersistentNavBarNavigator.pushNewScreen(
+                context,
+                screen: ServiceDetails(
+                  serviceInfo: dataValue[index],
+                ),
+                withNavBar: false, // OPTIONAL VALUE. True by default.
+                pageTransitionAnimation: PageTransitionAnimation.cupertino,
+              );
+
             },
           );
         },

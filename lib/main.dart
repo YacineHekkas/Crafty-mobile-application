@@ -1,3 +1,4 @@
+import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/core/util/app.dart';
 import 'package:cp_project/core/util/notification.dart';
 import 'package:cp_project/core/util/server.dart';
@@ -10,6 +11,7 @@ import 'package:cp_project/features/registration/presentation/pages/signup/signu
 import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'features/account/presentation/bloc/user_bloc.dart';
@@ -27,6 +29,10 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: AppConst.darkBlue, // Set the status bar color
+  ));
 
   //Bloc.observer = SimpleBlocObserver();
 
@@ -57,7 +63,11 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
-        debugShowCheckedModeBanner: false,
+
+        theme: ThemeData(
+          primaryColor: Colors.red,
+        ),
+    debugShowCheckedModeBanner: false,
         home: locator<App>().getShowIntro() != null
             ? locator<App>().getUserToken() != null
                 ? blocState.isVerified

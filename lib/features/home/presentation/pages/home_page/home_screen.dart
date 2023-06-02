@@ -9,6 +9,7 @@ import 'package:cp_project/features/home/presentation/widgets/search_bar.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 import '../../widgets/dote.dart';
 
@@ -60,9 +61,15 @@ class HomeScreen extends StatelessWidget {
                               itemCount: AppConst.categories.length,
                               itemBuilder: (context, index) =>GestureDetector(
                                   onTap: () {
+
                                     callData(AppConst.categories[index].name,context);
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) =>
-                                        CategoryScreen(categoryName: AppConst.categories[index].name,)));
+
+                                    PersistentNavBarNavigator.pushNewScreen(
+                                      context,
+                                      screen: CategoryScreen(categoryName: AppConst.categories[index].name,),
+                                      withNavBar: false, // OPTIONAL VALUE. True by default.
+                                      pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                                    );
                                   },
                                   child: CardWidget(categoryName: AppConst.categories[index].name, imgPath:AppConst.categories[index].imgPath ,),
                                 ),

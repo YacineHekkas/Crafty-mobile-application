@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 import '../widgets/row_chip.dart';
 import 'account_info.dart';
 
@@ -25,6 +26,13 @@ class MainAccountScreen extends StatefulWidget {
 class _MainAccountScreenState extends State<MainAccountScreen> {
   UserEntity? userData;
   XFile imageFile = XFile('assets/images/placeholder.webp');
+
+  @override
+  void initState() {
+    super.initState();
+
+    BlocProvider.of<UserBloc>(context).add(GetUserInfoEvent()); //
+  }
 
   Future selectImage() {
     return showDialog(
@@ -187,38 +195,32 @@ class _MainAccountScreenState extends State<MainAccountScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-            backgroundColor: AppConst.bgColor,
-            body: SafeArea(
-              child: BlocBuilder<UserBloc, UserState>(
-                builder: (context, state) {
-                  if (state is DataIsHereState) {
-                    userData = state.userInfo;
-                    return TheUi();
-                  }
-                  if (state is LoadingState) {
-                    return const LoadingWidget();
-                  }
-                  else if (state is SuccessState) {
-                    return EitherSuccessOrError(
-                      etate: true,
-                      message: state.message,
-                    );
-                  }
-                  else if (state is ErrorState) {
-                    return EitherSuccessOrError(
-                      etate: false,
-                      message: state.message,
-                    );
-                  }
-                  else {
-                    return const LoadingWidget();
-                  }
-                },
-              ),
-            )
-    )
-    ;
+        backgroundColor: AppConst.bgColor,
+        body: SafeArea(
+          child: BlocBuilder<UserBloc, UserState>(
+            builder: (context, state) {
+              if (state is DataIsHereState) {
+                userData = state.userInfo;
+                return TheUi();
+              }
+              if (state is LoadingState) {
+                return const LoadingWidget();
+              } else if (state is SuccessState) {
+                return EitherSuccessOrError(
+                  etate: true,
+                  message: state.message,
+                );
+              } else if (state is ErrorState) {
+                return EitherSuccessOrError(
+                  etate: false,
+                  message: state.message,
+                );
+              } else {
+                return const LoadingWidget();
+              }
+            },
+          ),
+        ));
   }
 
   TheUi() {
@@ -438,22 +440,26 @@ class _MainAccountScreenState extends State<MainAccountScreen> {
                 ),
                 userData!.provider
                     ? Container(
-    width: MediaQuery.of(context).size.width,
-    height: MediaQuery.of(context).size.width / 7,
-    decoration: BoxDecoration(
-    color: AppConst.orong,
-    borderRadius: BorderRadius.circular(20)),
-    child: InkWell(
-    onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) =>
-          CreateServiceScreen()
-      )
-      );
-    },
-    child: rowChip('assets/icons/add_square.svg', 'Add service', false),
-    ),
-    //const SizedBox(height: 8),
-    )
+                        width: MediaQuery.of(context).size.width,
+                        height: MediaQuery.of(context).size.width / 7,
+                        decoration: BoxDecoration(
+                            color: AppConst.orong,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: InkWell(
+                          onTap: () {
+                            PersistentNavBarNavigator.pushNewScreen(
+                              context,
+                              screen: CreateServiceScreen(),
+                              withNavBar: false, // OPTIONAL VALUE. True by default.
+                              pageTransitionAnimation: PageTransitionAnimation.cupertino,
+                            );
+
+                          },
+                          child: rowChip('assets/icons/add_square.svg',
+                              'Add service', false),
+                        ),
+                        //const SizedBox(height: 8),
+                      )
                     : Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.width / 7,

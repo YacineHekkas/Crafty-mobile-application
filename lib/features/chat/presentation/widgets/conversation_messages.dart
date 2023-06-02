@@ -361,8 +361,8 @@ class _ConversationMessagesState extends State<ConversationMessages> {
               padding: const EdgeInsets.only(top: 12),
               child: ClipRRect(
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(45),
-                  topRight: Radius.circular(45),
+                  topLeft: Radius.circular(15),
+                  topRight: Radius.circular(15),
                 ),
                 child: Container(
                   color: Colors.white,

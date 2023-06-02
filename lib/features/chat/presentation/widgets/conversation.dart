@@ -6,6 +6,7 @@ import 'package:cp_project/features/chat/presentation/widgets/conversation_messa
 import 'package:cp_project/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class Conversation extends StatelessWidget {
   static const stats = [MessageStatus.typing, MessageStatus.none];
@@ -37,17 +38,18 @@ class Conversation extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (_) => ConversationMessages(
-              id: id,
-              receiver: receiver,
-              name: name,
-              avatar: avatar,
-              isOnline: isOnline,
-              lastOnline: lastOnline,
-            ),
-          ),
+        PersistentNavBarNavigator.pushNewScreen(
+          context,
+          screen: ConversationMessages(
+            id: id,
+            receiver: receiver,
+            name: name,
+            avatar: avatar,
+            isOnline: isOnline,
+            lastOnline: lastOnline,
+          ) ,
+          withNavBar: false, // OPTIONAL VALUE. True by default.
+          pageTransitionAnimation: PageTransitionAnimation.cupertino,
         );
       },
       child: Container(

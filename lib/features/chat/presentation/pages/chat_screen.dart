@@ -80,56 +80,27 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       backgroundColor: AppConst.darkBlue,
       appBar: AppBar(
+        title: Text(
+          'Conversations',
+          style: TextStyle(
+              fontSize: 28,
+              fontFamily: 'Kumbh_Sans',
+              color: Colors.white,
+              fontWeight: FontWeight.bold),
+        ),
         automaticallyImplyLeading: false,
         surfaceTintColor: Colors.transparent,
         shadowColor: Colors.transparent,
         backgroundColor: AppConst.darkBlue,
-        flexibleSpace: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Conversations',
-                  style: TextStyle(
-                      fontSize: 32,
-                      fontFamily: 'Kumbh_Sans',
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30),
-                      color: Colors.green[50],
-                    ),
-                    child: const Text(
-                      'Provider',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontFamily: 'Kumbh_Sans',
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
+
       ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(top: 12),
           child: ClipRRect(
             borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(25),
-              topRight: Radius.circular(25),
+              topLeft: Radius.circular(15),
+              topRight: Radius.circular(15),
             ),
             child: RefreshIndicator(
               onRefresh: () async {
