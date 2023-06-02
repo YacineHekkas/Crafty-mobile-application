@@ -61,4 +61,5 @@ flutter:
   fonts:
     - family: Kumbh_Sans
       fonts:
+        - asset: assets/fonts/icons/fontello.ttf
         - asset: assets/fonts/KumbhSans.ttf

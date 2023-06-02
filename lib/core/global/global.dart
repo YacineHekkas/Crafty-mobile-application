@@ -4,9 +4,10 @@ import 'package:timeago/timeago.dart';
 
 class Category {
   final String name;
+  final String imgPath;
   final List<String> subcategories;
 
-  Category({required this.name, required this.subcategories}) {
+  Category({required this.imgPath,  required this.name, required this.subcategories}) {
     subcategories.insert(0, 'All');
   }
 }
@@ -21,14 +22,7 @@ class AppConst {
   static const Color textColor = Color(0xff4F4F4F);
 
   static List<Category> categories = [
-    Category(
-      name: 'Plumbing',
-      subcategories: ['Drain cleaning', 'Pipe repair', 'Fixture installation'],
-    ),
-    Category(
-      name: 'HVAC',
-      subcategories: ['Air conditioning', 'Heating', 'Ventilation'],
-    ),
+
     Category(
       name: 'Electrical',
       subcategories: [
@@ -37,6 +31,8 @@ class AppConst {
         'Panel upgrades',
         'Generator installation',
       ],
+      imgPath: 'assets/images/category_images/elctrcien.jpg',
+
     ),
     Category(
       name: 'Carpentry',
@@ -46,6 +42,19 @@ class AppConst {
         'Deck building',
         'Furniture assembly',
       ],
+      imgPath: 'assets/images/category_images/carpenter.png',
+
+    ),
+    Category(
+      name: 'Plumbing',
+      subcategories: ['Drain cleaning', 'Pipe repair', 'Fixture installation'],
+      imgPath: 'assets/images/category_images/plumbing3.png',
+    ),
+    Category(
+      name: 'HVAC',
+      subcategories: ['Air conditioning', 'Heating', 'Ventilation'],
+      imgPath: 'assets/images/category_images/HVAC.png',
+
     ),
     Category(
       name: 'Painting',
@@ -54,6 +63,8 @@ class AppConst {
         'Exterior painting',
         'Drywall repair'
       ],
+      imgPath: 'assets/images/category_images/painter.jpg',
+
     ),
     Category(
       name: 'Flooring',
@@ -62,17 +73,25 @@ class AppConst {
         'Hardwood installation',
         'Carpet installation',
       ],
+      imgPath: 'assets/images/category_images/flooring.jpg',
+
     ),
     Category(
       name: 'Roofing',
       subcategories: ['Roof repair', 'Roof replacement', 'Gutter installation'],
+      imgPath: 'assets/images/category_images/roofling.jpg',
+
     ),
     Category(
       name: 'Landscaping',
+      imgPath: 'assets/images/category_images/landscaping.png',
+
       subcategories: ['Lawn care', 'Tree trimming', 'Hardscaping'],
     ),
     Category(
       name: 'Cleaning',
+      imgPath: 'assets/images/category_images/cleaning.png',
+
       subcategories: [
         'Residential cleaning',
         'Commercial cleaning',
@@ -81,10 +100,14 @@ class AppConst {
     ),
     Category(
       name: 'Pest Control',
+      imgPath: 'assets/images/category_images/pest_control.jpg',
+
       subcategories: ['Insect control', 'Rodent control', 'Wildlife removal'],
     ),
     Category(
       name: 'Appliance Repair',
+      imgPath: 'assets/images/category_images/appliance_repair.png',
+
       subcategories: [
         'Refrigerator repair',
         'Dishwasher repair',
@@ -94,14 +117,20 @@ class AppConst {
     ),
     Category(
       name: 'Locksmith',
+      imgPath: 'assets/images/category_images/locksmith.png',
+
       subcategories: ['Lock repair', 'Lock installation', 'Key duplication'],
     ),
     Category(
       name: 'Masonry',
+      imgPath: 'assets/images/category_images/masonry.png',
+
       subcategories: ['Brickwork', 'Stone work', 'Concrete repair'],
     ),
     Category(
       name: 'Welding',
+      imgPath: 'assets/images/category_images/welder.png',
+
       subcategories: [
         'Metal fabrication',
         'Repair welding',
@@ -110,6 +139,8 @@ class AppConst {
     ),
     Category(
       name: 'Data/Telecom',
+      imgPath: 'assets/images/category_images/data_telecom.png',
+
       subcategories: [
         'Network installation',
         'Phone system setup',
@@ -118,6 +149,8 @@ class AppConst {
     ),
     Category(
       name: 'Security',
+      imgPath: 'assets/images/category_images/security.png',
+
       subcategories: [
         'Alarm system installation',
         'CCTV installation',

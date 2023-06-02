@@ -51,10 +51,12 @@ class HomeScreen extends StatelessWidget {
                               ),// text
                             ],
                           ),
-                          SizedBox(
-                            height: 210,
+                          space,
+                          Container(
+                            height: MediaQuery.of(context).size.height/4,
                             child:
                             ListView.builder(
+                              physics: BouncingScrollPhysics(),
                               itemCount: AppConst.categories.length,
                               itemBuilder: (context, index) =>GestureDetector(
                                   onTap: () {
@@ -62,10 +64,10 @@ class HomeScreen extends StatelessWidget {
                                     Navigator.push(context, MaterialPageRoute(builder: (context) =>
                                         CategoryScreen(categoryName: AppConst.categories[index].name,)));
                                   },
-                                  child: CardWidget(categoryName: AppConst.categories[index].name, imgPath: 'assets/images/img1.png',),
+                                  child: CardWidget(categoryName: AppConst.categories[index].name, imgPath:AppConst.categories[index].imgPath ,),
                                 ),
                               scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.all(8),
+                              padding: const EdgeInsets.all(10),
                             ),
                           ),
                           space,

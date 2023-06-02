@@ -6,6 +6,7 @@ import 'package:cp_project/features/account/presentation/bloc/user_bloc.dart';
 import 'package:cp_project/features/account/presentation/pages/report_problem.dart';
 import 'package:cp_project/features/account/presentation/pages/settings_screen.dart';
 import 'package:cp_project/features/account/presentation/widgets/title.dart';
+import 'package:cp_project/features/home/presentation/pages/add_service_pages/add_service_page.dart';
 import 'package:cp_project/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -185,32 +186,39 @@ class _MainAccountScreenState extends State<MainAccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
+
             backgroundColor: AppConst.bgColor,
-            body: BlocBuilder<UserBloc, UserState>(
-              builder: (context, state) {
-                if (state is DataIsHereState) {
-                  userData = state.userInfo;
-                  return TheUi();
-                }
-                if (state is LoadingState) {
-                  return const LoadingWidget();
-                } else if (state is SuccessState) {
-                  return EitherSuccessOrError(
-                    etate: true,
-                    message: state.message,
-                  );
-                } else if (state is ErrorState) {
-                  return EitherSuccessOrError(
-                    etate: false,
-                    message: state.message,
-                  );
-                } else {
-                  return const LoadingWidget();
-                }
-              },
-            )));
+            body: SafeArea(
+              child: BlocBuilder<UserBloc, UserState>(
+                builder: (context, state) {
+                  if (state is DataIsHereState) {
+                    userData = state.userInfo;
+                    return TheUi();
+                  }
+                  if (state is LoadingState) {
+                    return const LoadingWidget();
+                  }
+                  else if (state is SuccessState) {
+                    return EitherSuccessOrError(
+                      etate: true,
+                      message: state.message,
+                    );
+                  }
+                  else if (state is ErrorState) {
+                    return EitherSuccessOrError(
+                      etate: false,
+                      message: state.message,
+                    );
+                  }
+                  else {
+                    return const LoadingWidget();
+                  }
+                },
+              ),
+            )
+    )
+    ;
   }
 
   TheUi() {
@@ -220,6 +228,7 @@ class _MainAccountScreenState extends State<MainAccountScreen> {
       physics: const BouncingScrollPhysics(),
       slivers: [
         SliverAppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: AppConst.darkBlue,
           elevation: 0.0,
           stretch: true,
@@ -428,9 +437,23 @@ class _MainAccountScreenState extends State<MainAccountScreen> {
                   height: MediaQuery.of(context).size.height / 50,
                 ),
                 userData!.provider
-                    ? const SizedBox(
-                        height: 20,
-                      )
+                    ? Container(
+    width: MediaQuery.of(context).size.width,
+    height: MediaQuery.of(context).size.width / 7,
+    decoration: BoxDecoration(
+    color: AppConst.orong,
+    borderRadius: BorderRadius.circular(20)),
+    child: InkWell(
+    onTap: () {
+      Navigator.push(context, MaterialPageRoute(builder: (context) =>
+          CreateServiceScreen()
+      )
+      );
+    },
+    child: rowChip('assets/icons/add_square.svg', 'Add service', false),
+    ),
+    //const SizedBox(height: 8),
+    )
                     : Container(
                         width: MediaQuery.of(context).size.width,
                         height: MediaQuery.of(context).size.width / 7,

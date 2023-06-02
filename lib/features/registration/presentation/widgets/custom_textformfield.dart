@@ -56,9 +56,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
         controller: widget.textEditingController,
         keyboardType: widget.keyboardType,
         cursorColor: AppConst.orong,
+
         inputFormatters: [
           LengthLimitingTextInputFormatter(widget.maxLength),
         ],
+        obscureText: obscure,
         decoration: InputDecoration(
           prefix: widget.prefix,
           prefixIcon: widget.prefixIcon,

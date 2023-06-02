@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cp_project/core/global/Screens.dart';
 import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/features/chat/presentation/widgets/conversation_messages.dart';
@@ -73,16 +75,16 @@ class ServiceDetails extends StatelessWidget {
                       leadingWidth: 80.0,
                       // leading: Container(
                       //
-                      //   width: 10,
-                      //   height: 10,
+                      //   width: 8,
+                      //   height: 08,
                       //   margin: const EdgeInsets.only(left: 24.0),
                       //   child: ClipRRect(
-                      //     borderRadius: BorderRadius.circular(56.0),
+                      //     borderRadius: BorderRadius.circular(40.0),
                       //     child: BackdropFilter(
-                      //       filter: ImageFilter.blur(sigmaX: 3.0, sigmaY: 3.0),
+                      //       filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
                       //       child: Container(
-                      //         height: 36.0,
-                      //         width: 36.0,DataBloc
+                      //         height: 25.0,
+                      //         width: 25.0,
                       //         alignment: Alignment.center,
                       //         decoration: BoxDecoration(
                       //           shape: BoxShape.circle,
@@ -112,7 +114,7 @@ class ServiceDetails extends StatelessWidget {
                                   width:
                                       MediaQuery.of(context).size.width * 0.7,
                                   child: Text(
-                                      '${serviceInfo!.user.location.state} ${serviceInfo!.user.location.district}',
+                                      '${serviceInfo!.user.location.state}, ${serviceInfo!.user.location.district}',
                                       maxLines: 2,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(

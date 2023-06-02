@@ -73,10 +73,14 @@ class _CategoryScreenState extends State<CategoryScreen> {
         physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
+              automaticallyImplyLeading: false,
               floating: false,
               backgroundColor: Colors.transparent,
               bottom: PreferredSize(
-                preferredSize: Size(MediaQuery.of(context).size.width, 70),
+                preferredSize: Size(
+                    MediaQuery.of(context).size.width,
+                    MediaQuery.of(context).size.height/9
+                    ),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 15, left: 15),
                   child: Column(
@@ -121,6 +125,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 ),
               )),
           SliverAppBar(
+            automaticallyImplyLeading: false,
             backgroundColor: AppConst.bgColor,
             floating: true,
             bottom: PreferredSize(

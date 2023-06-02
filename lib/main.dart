@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
             ? locator<App>().getUserToken() != null
                 ? blocState.isVerified
                     ? const NavScreen()
-                    : blocState.currentStep == 2 && blocState.token != null
+                    : blocState.currentStep == 2 && blocState.token == null
                         ? const SignupVerificationPage(hasBackArrow: false)
                         : blocState.currentStep == 2 ||
                                 blocState.currentStep == 1

@@ -26,7 +26,7 @@ class CategoryCard extends StatelessWidget {
             onSelected();
           },
           child: Container(
-            height: MediaQuery.of(context).size.height / 6.5,
+            height: MediaQuery.of(context).size.height / 6,
             decoration: BoxDecoration(
               boxShadow: [
                 BoxShadow(
@@ -45,8 +45,9 @@ class CategoryCard extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width/2.9,
+                  height:MediaQuery.of(context).size.height / 6 ,
                   child:ClipRRect(
                     // this to change the shape of the child inside in our case thw img
                     borderRadius: const BorderRadius.only(
@@ -60,97 +61,105 @@ class CategoryCard extends StatelessWidget {
                       fit: BoxFit.fill,
                     ),
                   ) ,
-                )
-                ,
+                ),
                 const SizedBox(
                   width: 8,
                 ),
-                SizedBox(
+                Container(
                   width: MediaQuery.of(context).size.width / 1.7,
+                  height:MediaQuery.of(context).size.height / 6 ,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       //icon rating
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      Row(
+                      Column(
                         children: [
-                          Text(
-                            serviceInfo!.user.name,
-                            style: const TextStyle(
-                                fontFamily: AppConst.font,
-                                color: AppConst.textColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                      ), // name text
-                      const SizedBox(
-                        height: 8,
-                      ),
-                      SizedBox(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child:
-                            Text(
-                              textAlign:TextAlign.start,
-                              serviceInfo!.description,
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  fontFamily: AppConst.font,
-                                  color: AppConst.textColor,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 15,
-                      ),
-                      const Spacer(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width /3,
-                            child: Text(
-                              '${serviceInfo!.user.location.state}, ${serviceInfo!.user.location.district}', // i need to handel location somewher
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                  color: AppConst.textColor,
-                                  fontFamily: AppConst.font),
-                            ),
+                          const SizedBox(
+                            height: 5,
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                  '(${serviceInfo!.user.rateCount})',
-                                  style: const TextStyle(
-                                    color: AppConst.textColor,
-                                  ),
-                              ),
-                              const Icon(
-                                Icons.star_rate_rounded,
-                                color: AppConst.orong,
-                              ),
-                              Text(
-                                '${serviceInfo!.user.rate} ',
-                                style: const TextStyle(
-                                    color: AppConst.orong,
+                                serviceInfo!.user.name,
+                                style: const TextStyle
+                                  (
                                     fontFamily: AppConst.font,
+                                    color: AppConst.textColor,
+                                    fontSize: 18,
                                     fontWeight: FontWeight.w600),
                               ),
                             ],
+                          ), // name text
+                          const SizedBox(
+                            height: 8,
+                          ),
+                          Container(
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child:
+                              Text(
+                                textAlign:TextAlign.start,
+                                serviceInfo!.description,
+                                maxLines: 3,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                    fontFamily: AppConst.font,
+                                    color: AppConst.textColor,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        height: 10,
-                      )
+
+
+                      Column(
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                SizedBox(
+                                  width: MediaQuery.of(context).size.width /3,
+                                  child: Text(
+                                    '${serviceInfo!.user.location.state}, ${serviceInfo!.user.location.district}', // i need to handel location somewher
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        color: AppConst.textColor,
+                                        fontFamily: AppConst.font),
+                                  ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                        '(${serviceInfo!.user.rateCount})',
+                                        style: const TextStyle(
+                                          color: AppConst.textColor,
+                                        ),
+                                    ),
+                                    const Icon(
+                                      Icons.star_rate_rounded,
+                                      color: AppConst.orong,
+                                    ),
+                                    Text(
+                                      '${serviceInfo!.user.rate} ',
+                                      style: const TextStyle(
+                                          color: AppConst.orong,
+                                          fontFamily: AppConst.font,
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          SizedBox(
+                            height: 4,
+                          )
+                        ],
+                      ),
+
                     ],
                   ),
                 )

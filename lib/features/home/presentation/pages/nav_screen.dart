@@ -4,6 +4,7 @@ import 'package:cp_project/features/chat/presentation/pages/chat_screen.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import '../../../account/presentation/pages/mainAccountScreen.dart';
 import 'add_service_pages/add_service_page.dart';
@@ -27,10 +28,10 @@ class _NavScreenState extends State<NavScreen> {
           children: [
             [
               const HomeScreen(),
-              const CreateServiceScreen(),
               const ChatScreen(),
               const MainAccountScreen(),
-            ][index],
+            ]
+            [index],
             Padding(
               padding: const EdgeInsets.only(bottom: 10, left: 5, right: 5),
               child: Align(
@@ -60,37 +61,22 @@ class _NavScreenState extends State<NavScreen> {
                         activeColor: Colors.white,
                         onTabChange: (val) {
                           // here go some logic of the bloc
-                          if (val == 1) {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    const CreateServiceScreen(),
-                              ),
-                            );
-
-                            return;
-                          } else if (val == 3) {
+                          if (val == 2) {
                             BlocProvider.of<UserBloc>(context)
                                 .add(GetUserInfoEvent());
                           }
-
                           setState(() {
                             index = val;
                           });
                         },
                         selectedIndex: index,
-                        tabs: const [
+                        tabs:  [
                           GButton(
-                            icon: Icons.home,
+                            icon: Icons.home_filled,
                             text: 'Home',
                           ),
                           GButton(
-                            icon: Icons.add_circle_outline_outlined,
-                            text: 'Publish',
-                          ),
-                          GButton(
-                            icon: Icons.message,
+                            icon: Icons.message_rounded,
                             text: 'Chat',
                           ),
                           GButton(

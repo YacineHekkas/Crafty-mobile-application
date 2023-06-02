@@ -46,7 +46,7 @@ class _SignupVerificationPage extends State<SignupVerificationPage> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => const NavScreen(),
+              builder: (context) => NavScreen(),
             ),
           );
 

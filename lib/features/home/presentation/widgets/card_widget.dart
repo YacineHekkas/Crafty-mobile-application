@@ -13,26 +13,27 @@ class CardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  Padding(
-        padding: EdgeInsets.only(top: 10,right: 20),
+        padding: const EdgeInsets.only(right: 20),
         child: Container(
           decoration: BoxDecoration(
-            color:AppConst.gray,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 5.0,
-                spreadRadius: 1.0,
-
-              ),
-              const BoxShadow(
-                color: Colors.white,
-
-              )
-            ],
-            borderRadius: BorderRadius.circular(10)),
-        width: 170,
-        height: 200,
-        child: Stack(
+            color:Color(0xfff1f1f1f1),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  offset: Offset(4, 0), // Shadow offset from left side
+                  blurRadius: 2,
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  offset: Offset(0, 4), // Shadow offset from right side
+                  blurRadius: 2,
+                ),
+              ],
+            borderRadius: BorderRadius.circular(10)
+          ),
+        width: MediaQuery.of(context).size.width/2.2,
+        height: MediaQuery.of(context).size.width/4.8,
+        child: Column(
           children: [
             Align(
               alignment: Alignment.topCenter,
@@ -43,20 +44,23 @@ class CardWidget extends StatelessWidget {
                 child: Image.asset(
                   imgPath,
                   width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 6,
+                  height: MediaQuery.of(context).size.height / 6.5,
                   fit: BoxFit.cover,
                 ),
               ),
-            ),//photo
+            ),
             Align(
-              alignment: const Alignment(-0.5, 0.82),
-              child: Text(
-                categoryName,
-                style: const TextStyle(
-                    color: Colors.black87,
-                    fontSize: 18,
-                    fontFamily: AppConst.font,
-                    fontWeight: FontWeight.w600),
+              alignment: Alignment.bottomLeft,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8.0,top: 8),
+                child: Text(
+                  categoryName,
+                  style: const TextStyle(
+                      color: Colors.black87,
+                      fontSize: 18,
+                      fontFamily: AppConst.font,
+                      fontWeight: FontWeight.w600),
+                ),
               ),
             )//text
           ],
