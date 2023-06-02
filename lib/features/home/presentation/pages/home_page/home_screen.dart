@@ -62,7 +62,7 @@ class HomeScreen extends StatelessWidget {
                               itemBuilder: (context, index) =>GestureDetector(
                                   onTap: () {
 
-                                    callData(AppConst.categories[index].name,context);
+                                   // callData(AppConst.categories[index].name,context);
 
                                     PersistentNavBarNavigator.pushNewScreen(
                                       context,
@@ -70,6 +70,7 @@ class HomeScreen extends StatelessWidget {
                                       withNavBar: false, // OPTIONAL VALUE. True by default.
                                       pageTransitionAnimation: PageTransitionAnimation.cupertino,
                                     );
+
                                   },
                                   child: CardWidget(categoryName: AppConst.categories[index].name, imgPath:AppConst.categories[index].imgPath ,),
                                 ),

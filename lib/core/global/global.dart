@@ -162,7 +162,7 @@ class AppConst {
   static const String appName = 'Yeffker';
   static const String font = 'Kumbh_Sans';
   static const String feedCardText =
-      'Explore the best of work,\nif you know you know    .';
+      ' Unlock the Expertise You Need \n in the Palm of Your Hand!';
 }
 
 class PageConst {

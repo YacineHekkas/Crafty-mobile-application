@@ -1,6 +1,7 @@
 import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:cp_project/core/global/Screens.dart';
 import 'package:cp_project/core/global/global.dart';
+import 'package:cp_project/features/favorite/presentation/pages/favorite_screen.dart';
 import 'package:cp_project/features/home/domain/entities/service_entitie.dart';
 import 'package:cp_project/features/home/presentation/bloc/get_data_bloc.dart';
 import 'package:cp_project/features/home/presentation/widgets/category_card.dart';
@@ -21,6 +22,8 @@ class CategoryScreen extends StatefulWidget {
   State<CategoryScreen> createState() => _CategoryScreenState();
 }
 
+
+
 class _CategoryScreenState extends State<CategoryScreen> {
   late List<ServiceEntity>? allDataList;
   late List<ServiceEntity>? searchList;
@@ -30,18 +33,21 @@ class _CategoryScreenState extends State<CategoryScreen> {
   @override
   void initState() {
     super.initState();
+    print('gg from inti');
+    BlocProvider.of<DataBloc>(context).add(
+        CallServerEvent(subCategory: '', category: widget.categoryName, searchingValue: '', isSearching: false)
+    );
   }
 
-  @override
-  void dispose() {
-    textSearchController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   textSearchController.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-        child: Scaffold(
+    return Scaffold(
       backgroundColor: AppConst.bgColor,
       appBar: AppBar(
         backgroundColor: AppConst.darkBlue,
@@ -187,7 +193,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
           )
         ],
       ),
-    ));
+    );
   }
 
   SliverList _dataList(List<dynamic> dataValue) {
@@ -206,7 +212,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 withNavBar: false, // OPTIONAL VALUE. True by default.
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,
               );
+            },
+            addToFavorite: (bool selected) {
 
+              setState(() {
+                if (!selected ){
+                  FavoriteScreen.dataValue.add(dataValue[index]);
+                }else{
+                  FavoriteScreen.dataValue.remove(dataValue[index]);
+                }
+                print(
+                    FavoriteScreen.dataValue
+                );
+              });
+              return !selected;
             },
           );
         },

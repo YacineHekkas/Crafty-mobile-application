@@ -1,13 +1,11 @@
 import 'package:cp_project/core/global/global.dart';
-import 'package:cp_project/core/util/app.dart';
-import 'package:cp_project/features/account/presentation/bloc/user_bloc.dart';
 import 'package:cp_project/features/chat/presentation/pages/chat_screen.dart';
+import 'package:cp_project/features/favorite/presentation/pages/favorite_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
+
 import '../../../account/presentation/pages/mainAccountScreen.dart';
 import 'home_page/home_screen.dart';
 
@@ -21,12 +19,12 @@ class NavScreen extends StatefulWidget {
 class _NavScreenState extends State<NavScreen> {
   int index = 0;
 
-  PersistentTabController _controller = PersistentTabController(initialIndex: 0);
+  final PersistentTabController _controller = PersistentTabController(initialIndex: 0);
   List<Widget> _buildScreens() {
     return [
       const HomeScreen(),
       const ChatScreen(),
-      const Placeholder(),
+       FavoriteScreen(),
       const MainAccountScreen(),
     ];
   }

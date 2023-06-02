@@ -14,6 +14,12 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
+
+  }
   TextEditingController textController = TextEditingController();
   bool isSelected = false;
   @override
@@ -63,9 +69,10 @@ class _SearchScreenState extends State<SearchScreen> {
                     children: [
                       InkWell(
                         onTap: (){
-                          isSelected = !isSelected;
                           setState(() {
-
+                            if(isSelected){
+                              isSelected = !isSelected;
+                            }
                           });
                         },
                         child:Container(
@@ -97,9 +104,11 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                       InkWell(
                         onTap: (){
-                          isSelected = !isSelected;
-                          setState(() {
 
+                          setState(() {
+                            if(!isSelected) {
+                              isSelected = !isSelected;
+                            }
                           });
                         },
                         child:Container(
@@ -144,17 +153,20 @@ class _SearchScreenState extends State<SearchScreen> {
               BlocBuilder<DataBloc, GetDataState>(builder: (context, state) {//TODO manage state error and chow some UI
                 if (state is LoadingState) {
                   return  SliverToBoxAdapter(child: Text('Searching for ${textController.text} ...',style: txtStyle,),);
-                } else if (state is DataIsHereState) {
-
+                }
+                else if (state is DataIsHereState)
+                {
                   return _dataList(state.servicedata);
-                } else {
+                }
+                else {
                   return const SliverToBoxAdapter(
                     child: Placeholder(),
                   );
                 }
               }),
             )
-      ]),
+      ]
+      ),
     ));
   }
   SliverList _dataList(List<dynamic> dataValue) {
@@ -172,6 +184,9 @@ class _SearchScreenState extends State<SearchScreen> {
                         serviceInfo: dataValue[index],
                       )));
             },
+            addToFavorite: (bool selected) {
+
+          },
           );
         },
       ),
@@ -185,11 +200,5 @@ class _SearchScreenState extends State<SearchScreen> {
   letterSpacing: 1.2,
   );
 
-  // void getdata() async {
-  //   dynamic tempo = await BlocProvider.of<DataBloc>(context)
-  //       .getServicesUseCase("", '','a',true);
-  //   tempo.fold(
-  //           (l) => print('-----------------ggbloc--->$l'),
-  //           (r) =>  r);
-  // }
+
 }

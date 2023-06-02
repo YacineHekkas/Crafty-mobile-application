@@ -5,17 +5,23 @@ import 'package:flutter/material.dart';
 
 import '../../../../injection_container.dart';
 
-class CategoryCard extends StatelessWidget {
+class CategoryCard extends StatefulWidget {
   final Function() onSelected;
-
+  final Function( bool selected) addToFavorite;
   final ServiceEntity? serviceInfo;
   // im gonna add all of this in user entity and use it directly
 
 
-  const CategoryCard(
+   CategoryCard(
       {Key? key,
-      required this.onSelected, required this.serviceInfo})
+      required this.onSelected, required this.serviceInfo, required this.addToFavorite})
       : super(key: key);
+
+  @override
+  State<CategoryCard> createState() => _CategoryCardState();
+}
+
+class _CategoryCardState extends State<CategoryCard> {
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +29,7 @@ class CategoryCard extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 10),
         child: InkWell(
           onTap: () {
-            onSelected();
+            widget.onSelected();
           },
           child: Container(
             height: MediaQuery.of(context).size.height / 6,
@@ -53,8 +59,8 @@ class CategoryCard extends StatelessWidget {
                     borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(10),
                         bottomLeft: Radius.circular(10)),
-                    child: Image.network(serviceInfo!.images.displayImage.url.contains('http') ? serviceInfo!.images.displayImage.url :
-                    "https://crafty-server.azurewebsites.net/api/download/${serviceInfo!.images.displayImage.url}",
+                    child: Image.network(widget.serviceInfo!.images.displayImage.url.contains('http') ? widget.serviceInfo!.images.displayImage.url :
+                    "https://crafty-server.azurewebsites.net/api/download/${widget.serviceInfo!.images.displayImage.url}",
                       headers: {
                         'Authorization': 'bb ${locator<App>().getUserToken()}'
                       },
@@ -65,7 +71,7 @@ class CategoryCard extends StatelessWidget {
                 const SizedBox(
                   width: 8,
                 ),
-                Container(
+                SizedBox(
                   width: MediaQuery.of(context).size.width / 1.7,
                   height:MediaQuery.of(context).size.height / 6 ,
                   child: Column(
@@ -78,9 +84,10 @@ class CategoryCard extends StatelessWidget {
                             height: 5,
                           ),
                           Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                serviceInfo!.user.name,
+                                widget.serviceInfo!.user.name,
                                 style: const TextStyle
                                   (
                                     fontFamily: AppConst.font,
@@ -88,6 +95,21 @@ class CategoryCard extends StatelessWidget {
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600),
                               ),
+                              InkWell(
+                                onTap: (){
+                                  setState(() {
+                                    widget.serviceInfo!.isItInFavorite = widget.addToFavorite(widget.serviceInfo!.isItInFavorite);
+                                  });
+                                },
+                                child: !widget.serviceInfo!.isItInFavorite? const Icon(
+                                  Icons.favorite_border,
+                                  color: Colors.grey,
+                                ):const Icon(
+                                  Icons.favorite,
+                                  color: AppConst.orong,
+                                ),
+                              )
+
                             ],
                           ), // name text
                           const SizedBox(
@@ -99,7 +121,7 @@ class CategoryCard extends StatelessWidget {
                               child:
                               Text(
                                 textAlign:TextAlign.start,
-                                serviceInfo!.description,
+                                widget.serviceInfo!.description,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
@@ -112,8 +134,6 @@ class CategoryCard extends StatelessWidget {
                           ),
                         ],
                       ),
-
-
                       Column(
                         children: [
                           Row(
@@ -122,7 +142,7 @@ class CategoryCard extends StatelessWidget {
                                 SizedBox(
                                   width: MediaQuery.of(context).size.width /3,
                                   child: Text(
-                                    '${serviceInfo!.user.location.state}, ${serviceInfo!.user.location.district}', // i need to handel location somewher
+                                    '${widget.serviceInfo!.user.location.state}, ${widget.serviceInfo!.user.location.district}', // i need to handel location somewher
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(
@@ -134,7 +154,7 @@ class CategoryCard extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Text(
-                                        '(${serviceInfo!.user.rateCount})',
+                                        '(${widget.serviceInfo!.user.rateCount})',
                                         style: const TextStyle(
                                           color: AppConst.textColor,
                                         ),
@@ -144,7 +164,7 @@ class CategoryCard extends StatelessWidget {
                                       color: AppConst.orong,
                                     ),
                                     Text(
-                                      '${serviceInfo!.user.rate} ',
+                                      '${widget.serviceInfo!.user.rate} ',
                                       style: const TextStyle(
                                           color: AppConst.orong,
                                           fontFamily: AppConst.font,
@@ -159,7 +179,6 @@ class CategoryCard extends StatelessWidget {
                           )
                         ],
                       ),
-
                     ],
                   ),
                 )

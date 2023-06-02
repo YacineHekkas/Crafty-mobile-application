@@ -3,7 +3,6 @@ import 'package:cp_project/features/registration/presentation/bloc/auth_bloc.dar
 import 'package:cp_project/features/registration/presentation/pages/introduction/intro_final_page.dart';
 import 'package:cp_project/features/registration/presentation/pages/signup/signup_verification_page.dart';
 import 'package:cp_project/features/registration/presentation/widgets/custom_textformfield.dart';
-import 'package:cp_project/features/registration/presentation/widgets/functions.dart';
 import 'package:cp_project/features/registration/presentation/widgets/loading_overlay.dart';
 import 'package:cp_project/features/registration/presentation/widgets/page_title.dart';
 import 'package:cp_project/injection_container.dart';
@@ -12,6 +11,7 @@ import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/features/registration/presentation/widgets/buttonGlobo.dart';
 import 'package:cp_project/features/registration/presentation/widgets/textype.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -86,9 +86,7 @@ class _LoginScreen extends State<LoginScreen> {
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
+
                     Row(
                       children: [pageTitle("Welcome back")],
                     ),
@@ -102,13 +100,16 @@ class _LoginScreen extends State<LoginScreen> {
                     ),
                     const SizedBox(height: 40.0),
                     Container(
-                      width: 100,
-                      height: 100,
-                      color: AppConst.gray,
+                      width: 150,
+                      height: 150,
+                      child: SvgPicture.asset(
+                        "assets/images/loginpic.svg",
+
+                      ),
                     ),
                     const SizedBox(height: 40.0),
                     CustomTextField(
-                      hint: 'Username, Email address or phone number',
+                      hint: 'Username or Email address',
                       textEditingController: indentifierController,
                       keyboardType: TextInputType.name,
                       validator: (value) => value.isNotEmpty,
@@ -161,7 +162,7 @@ class _LoginScreen extends State<LoginScreen> {
                       ),
                     ),
                     SizedBox(
-                      height: hight / 6,
+                      height: 60,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -177,7 +178,7 @@ class _LoginScreen extends State<LoginScreen> {
                             );
                           },
                           child: textype(
-                              text1: 'Signup now!', Color: AppConst.orong),
+                              text1: 'Sign up', Color: AppConst.orong),
                         )
                       ],
                     )

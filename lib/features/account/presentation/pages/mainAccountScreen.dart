@@ -396,7 +396,7 @@ class _MainAccountScreenState extends State<MainAccountScreen> {
                                         pageName: 'Report',
                                       )));
                         },
-                        child: rowChip('assets/icons/', 'Support', true),
+                        child: rowChip('assets/icons/support.svg', 'Support', true),
                       ),
                       const SizedBox(height: 4),
                       Divider(
@@ -409,7 +409,7 @@ class _MainAccountScreenState extends State<MainAccountScreen> {
                       InkWell(
                         onTap: () {},
                         child: rowChip(
-                            'assets/icons/', 'Community and legal', true),
+                            'assets/icons/community.svg', 'Community and legal', true),
                       ),
                       const SizedBox(height: 4),
                       Divider(
@@ -429,7 +429,7 @@ class _MainAccountScreenState extends State<MainAccountScreen> {
                                         pageName: 'Feedback',
                                       )));
                         },
-                        child: rowChip('assets/icons/', 'Feedback', true),
+                        child: rowChip('assets/icons/feedback.svg', 'Feedback', true),
                       ),
                       const SizedBox(height: 10),
                     ],

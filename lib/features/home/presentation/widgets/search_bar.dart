@@ -1,6 +1,7 @@
 import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/features/home/presentation/pages/search_page/search_page.dart';
 import 'package:flutter/material.dart';
+import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
 
 class searchBar extends StatelessWidget {
 
@@ -10,9 +11,13 @@ class searchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: (){
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const SearchScreen())
+        PersistentNavBarNavigator.pushNewScreen(
+          context,
+          screen:SearchScreen() ,
+          withNavBar: false, // OPTIONAL VALUE. True by default.
+          pageTransitionAnimation: PageTransitionAnimation.cupertino,
         );
+
       },
       child:Container(
         width: MediaQuery.of(context).size.width/1.1,

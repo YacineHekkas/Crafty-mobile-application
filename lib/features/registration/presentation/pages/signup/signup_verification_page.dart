@@ -104,7 +104,7 @@ class _SignupVerificationPage extends State<SignupVerificationPage> {
                       shape: BoxShape.circle,
                     ),
                     child: Image.asset(
-                      'assets/images/illustration-3.png',
+                      'assets/images/verification.png',
                     ),
                   ),
                   const SizedBox(

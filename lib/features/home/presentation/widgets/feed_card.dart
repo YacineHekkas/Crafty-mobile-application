@@ -50,12 +50,13 @@ class feedCard extends StatelessWidget {
 
               child: const Text(
                 AppConst.feedCardText,
-                textAlign: TextAlign.center,
+                textAlign: TextAlign.start,
                 style: TextStyle(
                   fontFamily: AppConst.font,
                   color: AppConst.bgColor,
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
+
                 ),
               ),
             ),

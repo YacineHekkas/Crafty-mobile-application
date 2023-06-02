@@ -13,6 +13,7 @@ class ServiceEntity{
     required this.reviews,
     required this.hasReviewd,
     required this.user,
+    this.isItInFavorite = false
   });
    final String id;
    final String author;
@@ -24,4 +25,5 @@ class ServiceEntity{
    final Reviews reviews;
    final bool hasReviewd;
    final User user;
+   bool isItInFavorite;
 }

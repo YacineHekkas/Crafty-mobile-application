@@ -191,7 +191,7 @@ class _SignupNextPage extends State<SignupNextPage> {
                         }
                       },
                       child: const ButtonGlobo(
-                        text: 'Signup',
+                        text: 'Sign up',
                       ),
                     ),
                   ],
