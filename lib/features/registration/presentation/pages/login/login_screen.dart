@@ -1,3 +1,6 @@
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
+import 'package:cp_project/core/util/app.gr.dart';
 import 'package:cp_project/features/home/presentation/pages/nav_screen.dart';
 import 'package:cp_project/features/registration/presentation/bloc/auth_bloc.dart';
 import 'package:cp_project/features/registration/presentation/pages/introduction/intro_final_page.dart';
@@ -8,12 +11,13 @@ import 'package:cp_project/features/registration/presentation/widgets/page_title
 import 'package:cp_project/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:cp_project/core/global/global.dart';
-import 'package:cp_project/features/registration/presentation/widgets/buttonGlobo.dart';
+import 'package:cp_project/features/registration/presentation/widgets/darkbluebutton.dart';
 import 'package:cp_project/features/registration/presentation/widgets/textype.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+@RoutePage()
 class LoginScreen extends StatefulWidget {
   final bool hasBackArrow;
 
@@ -43,14 +47,11 @@ class _LoginScreen extends State<LoginScreen> {
       listener: (ctx, s) {
         if (s.status == AuthStatus.login &&
             s.result == AuthResult.authenticated) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => s.isVerified
-                  ? const NavScreen()
-                  : const SignupVerificationPage(),
-            ),
-          );
+          if (s.isVerified) {
+            context.replaceRoute(const NavRoute());
+          } else {
+            context.replaceRoute(SignupVerificationRoute());
+          }
 
           return;
         }
@@ -145,9 +146,10 @@ class _LoginScreen extends State<LoginScreen> {
                     ),
                     SizedBox(
                       width: width / 2,
-                      child: GestureDetector(
-                        onTap: () {
-                          if (!passWordValid.value || !indentifierValid.value) return;
+                      child: DarkBlueButton(
+                        onPressed: () {
+                          if (!passWordValid.value || !indentifierValid.value)
+                            return;
 
                           bloc.add(
                             AccountLoginEvent(
@@ -156,9 +158,7 @@ class _LoginScreen extends State<LoginScreen> {
                             ),
                           );
                         },
-                        child: const ButtonGlobo(
-                          text: 'Login',
-                        ),
+                        text: 'Login',
                       ),
                     ),
                     SizedBox(

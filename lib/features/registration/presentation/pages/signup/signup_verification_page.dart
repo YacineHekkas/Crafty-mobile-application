@@ -1,4 +1,7 @@
+import 'package:auto_route/annotations.dart';
+import 'package:auto_route/auto_route.dart';
 import 'package:cp_project/core/global/global.dart';
+import 'package:cp_project/core/util/app.gr.dart';
 import 'package:cp_project/features/home/presentation/pages/nav_screen.dart';
 import 'package:cp_project/features/registration/data/data_sources/remote_data_source/auth_source.dart';
 import 'package:cp_project/features/registration/presentation/bloc/auth_bloc.dart';
@@ -10,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+@RoutePage()
 class SignupVerificationPage extends StatefulWidget {
   final bool hasBackArrow;
 
@@ -43,12 +47,7 @@ class _SignupVerificationPage extends State<SignupVerificationPage> {
 
         if (s.status == AuthStatus.verification &&
             s.result == AuthResult.authenticated) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NavScreen(),
-            ),
-          );
+          context.router.replaceAll([const NavRoute()]);
 
           return;
         }

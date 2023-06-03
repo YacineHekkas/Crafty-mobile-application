@@ -158,12 +158,6 @@ class MessageWidgetState extends State<MessageWidget> {
         result: ChatResult.success,
         id: id,
       ));
-      /*bloc.add(FetchMessages(
-        widget.conversation,
-        page: bloc.state.messagesPageInfo.page,
-        forceRefresh: true,
-        forceNetworkFetch: true,
-      ));*/
     }
   }
 

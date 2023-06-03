@@ -1,8 +1,26 @@
+import 'package:auto_route/auto_route.dart';
+import 'package:cp_project/core/util/notification.dart';
 import 'package:cp_project/core/util/server.dart';
 import 'package:cp_project/injection_container.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'app.gr.dart';
+
+@AutoRouterConfig()
+class AppRouter extends $AppRouter {
+  @override
+  List<AutoRoute> get routes => [
+        AutoRoute(page: IntroRoute.page),
+        AutoRoute(page: LoginRoute.page),
+        AutoRoute(page: SignupRoute.page),
+        AutoRoute(page: SignupNextRoute.page),
+        AutoRoute(page: SignupVerificationRoute.page),
+        AutoRoute(page: ConversationMessages.page),
+        AutoRoute(page: NavRoute.page)
+      ];
+}
 
 class App {
   final server = locator<Server>();
@@ -30,15 +48,11 @@ class App {
   bool? getProvider() => _prefs.getBool('provider');
 
   Future<bool> setUserToken(String token) async {
-    final fcm = _prefs.getString('fcmToken');
-
     if (!await _prefs.setString('token', token)) {
       return false;
     }
 
-    if (fcm != null) {
-      await server.postFCMToken(fcm);
-    }
+    await Notificaion.regenrateFcmToken();
 
     server.connect();
     return true;
@@ -48,7 +62,8 @@ class App {
 
   Future<bool> setFCMToken(String fcmToken) async {
     final token = _prefs.getString('fcmToken');
-    if (getUserToken() == null || token != null && token.compareTo(fcmToken) == 0) {
+    if (getUserToken() == null ||
+        token != null && token.compareTo(fcmToken) == 0) {
       return true;
     }
 

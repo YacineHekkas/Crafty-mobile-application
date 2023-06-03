@@ -1,10 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/core/util/app.dart';
+import 'package:cp_project/core/util/app.gr.dart';
 import 'package:cp_project/features/registration/presentation/pages/login/login_screen.dart';
 import 'package:cp_project/features/registration/presentation/bloc/auth_bloc.dart';
 import 'package:cp_project/features/registration/presentation/pages/signup/signup_screen.dart';
 import 'package:cp_project/injection_container.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class IntroFinalPage extends StatelessWidget {
   const IntroFinalPage({super.key});
@@ -102,18 +105,13 @@ class IntroFinalPage extends StatelessWidget {
             // continue as guest Container
             alignment: const Alignment(0, 0.95),
             child: GestureDetector(
-              onTap: () async {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const LoginScreen(),
-                  ),
-                );
+              onTap: ()  {
+          context.router.push( LoginRoute());
 
                 final app = locator<App>();
 
                 if (app.getShowIntro() == null) {
-                  await app.setShowIntro();
+                   app.setShowIntro();
                 }
               },
               child: const Text(
@@ -143,7 +141,6 @@ class IntroFinalPage extends StatelessWidget {
 
         locator<AuthBloc>().add(
           UpdateRegistrationDataEvent(
-            step: 0,
             provider: txtdesc != "Looking for Services",
           ),
         );

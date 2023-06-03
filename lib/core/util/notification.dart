@@ -7,6 +7,8 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Notificaion {
+  static final messaging = FirebaseMessaging.instance;
+
   static final flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -28,12 +30,16 @@ class Notificaion {
   static const initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid, iOS: initializationSettingsIOS);
 
+  static Future<String?> regenrateFcmToken() async {
+    await messaging.deleteToken();
+
+    return await messaging.getToken();
+  }
+
   static Future<void> setupNotificaion() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-
-    final messaging = FirebaseMessaging.instance;
 
     try {
       final app = locator<App>();
@@ -41,14 +47,14 @@ class Notificaion {
 
       messaging.onTokenRefresh.listen(app.setFCMToken);
 
+      // TODO: check this
       if (ts == null ||
           DateTime.now().difference(DateTime.parse(ts)).inHours > 3) {
-        // TODO: this should be in weeks as the docs say...
-        await messaging.deleteToken();
 
         app.setFCMTokenTimestamp();
       }
-      await messaging.getToken();
+
+     regenrateFcmToken();
     } catch (_) {}
 
     // TODO: check premissions

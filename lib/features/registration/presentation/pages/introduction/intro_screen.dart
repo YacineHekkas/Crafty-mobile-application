@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:cp_project/features/registration/presentation/pages/introduction/intro_final_page.dart';
 import 'package:flutter/material.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
@@ -5,6 +6,7 @@ import 'package:cp_project/features/registration/presentation/pages/introduction
 import 'package:cp_project/features/registration/presentation/pages/introduction/intro_second_page.dart';
 import 'package:cp_project/features/registration/presentation/pages/introduction/intro_third_page.dart';
 
+@RoutePage()
 class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
 

@@ -1,3 +1,4 @@
+import 'package:auto_route/annotations.dart';
 import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/features/registration/presentation/bloc/auth_bloc.dart';
 import 'package:cp_project/features/registration/presentation/pages/signup/signup_verification_page.dart';
@@ -7,11 +8,12 @@ import 'package:cp_project/injection_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:cp_project/features/registration/presentation/widgets/buttonGlobo.dart';
+import 'package:cp_project/features/registration/presentation/widgets/darkbluebutton.dart';
 import 'package:cp_project/features/registration/presentation/widgets/custom_textformfield.dart';
 import 'package:cp_project/features/registration/presentation/widgets/page_title.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+@RoutePage()
 class SignupNextPage extends StatefulWidget {
   final bool hasBackArrow;
 
@@ -172,15 +174,15 @@ class _SignupNextPage extends State<SignupNextPage> {
                     SizedBox(
                       height: height / 10,
                     ),
-                    GestureDetector(
-                      onTap: () {
+                    DarkBlueButton(
+                      onPressed: () {
                         if (emailValid.value &&
                             passWordValid.value &&
                             phoneValid.value &&
                             repeatedPassWordValid.value) {
                           bloc.add(
                             UpdateRegistrationDataEvent(
-                              step: 2,
+                              step: 1,
                               email: emailController.value.text,
                               password: passwordController.value.text,
                               phone: phoneController.value.text,
@@ -190,9 +192,7 @@ class _SignupNextPage extends State<SignupNextPage> {
                           bloc.add(const AccountRegisterEvent());
                         }
                       },
-                      child: const ButtonGlobo(
-                        text: 'Sign up',
-                      ),
+                        text: 'Sign Up',
                     ),
                   ],
                 ),

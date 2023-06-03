@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:auto_route/annotations.dart';
 import 'package:cp_project/core/global/Screens.dart';
 import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/features/chat/data/datasources/remote_data_source/chat_source.dart';
@@ -17,6 +18,7 @@ import 'package:insta_assets_picker/insta_assets_picker.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:uuid/uuid.dart';
 
+@RoutePage()
 class ConversationMessages extends StatefulWidget {
   final String id;
   final String receiver;

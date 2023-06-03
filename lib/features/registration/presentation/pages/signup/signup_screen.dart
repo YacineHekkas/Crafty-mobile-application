@@ -1,7 +1,8 @@
+import 'package:auto_route/annotations.dart';
 import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/features/registration/presentation/bloc/auth_bloc.dart';
 import 'package:cp_project/features/registration/presentation/pages/login/login_screen.dart';
-import 'package:cp_project/features/registration/presentation/widgets/buttonGlobo.dart';
+import 'package:cp_project/features/registration/presentation/widgets/darkbluebutton.dart';
 import 'package:cp_project/features/registration/presentation/widgets/custom_textformfield.dart';
 import 'package:cp_project/features/registration/presentation/widgets/functions.dart';
 import 'package:cp_project/features/registration/presentation/widgets/page_title.dart';
@@ -12,6 +13,7 @@ import 'package:flutter/material.dart';
 
 import 'package:cp_project/features/registration/presentation/pages/signup/signup_next_page.dart';
 
+@RoutePage()
 class SignupScreen extends StatefulWidget {
   final bool hasBackArrow;
 
@@ -61,6 +63,14 @@ class _SignupScreen extends State<SignupScreen> {
     }
     if (bloc.state.data.username != null) {
       userNameController.text = bloc.state.data.username!;
+    }
+
+    if (state != "State") {
+      districts = List.from(
+        District.where((e) => e['id'] == States.indexOf(state) + 1).map(
+          (e) => e['name'],
+        ),
+      );
     }
   }
 
@@ -413,8 +423,8 @@ class _SignupScreen extends State<SignupScreen> {
                 SizedBox(
                   height: _height / 17,
                 ),
-                GestureDetector(
-                  onTap: () {
+                DarkBlueButton(
+                  onPressed: () {
                     if (firstNameValid.value &&
                         lastNameValid.value &&
                         userValid.value &&
@@ -426,7 +436,7 @@ class _SignupScreen extends State<SignupScreen> {
 
                       bloc.add(
                         UpdateRegistrationDataEvent(
-                          step: 1,
+                          step: 0,
                           firstName: firstNameController.value.text,
                           lastName: lastNameController.value.text,
                           username: userNameController.value.text,
@@ -449,9 +459,7 @@ class _SignupScreen extends State<SignupScreen> {
                       );
                     }
                   },
-                  child: const ButtonGlobo(
                     text: "Next",
-                  ),
                 ),
                 SizedBox(
                   height: _height / 17,

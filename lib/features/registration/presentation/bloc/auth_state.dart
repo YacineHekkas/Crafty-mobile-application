@@ -133,13 +133,11 @@ class AuthState extends Equatable {
     this.isConnected = true,
     this.isVerified = false,
     this.lastException,
-    this.token,
-  }) : assert(status != AuthResult.authenticated || token == null);
+  });
 
   final AuthStatus status;
   final AuthResult result;
   final int currentStep;
-  final String? token;
 
   final Registration data;
   final bool isVerified;
@@ -152,7 +150,6 @@ class AuthState extends Equatable {
     AuthResult? result,
     int? currentStep,
     Registration? data,
-    String? token,
     String? lastException,
     bool? isVerified,
     bool? isConnected,
@@ -162,7 +159,6 @@ class AuthState extends Equatable {
         result: result ?? this.result,
         currentStep: currentStep != null ? currentStep > this.currentStep ? currentStep : this.currentStep : this.currentStep,
         data: data ?? this.data,
-        token: token ?? this.token,
         lastException: lastException ?? this.lastException,
         isConnected: isConnected ?? this.isConnected,
         isVerified: isVerified ?? this.isVerified,
@@ -173,7 +169,6 @@ class AuthState extends Equatable {
         result: AuthResult.values[json['result']],
         currentStep: json['currentStep'],
         isVerified: json['verified'] ?? false,
-        token: json['token'],
         data: Registration.fromJson(json['data']),
       );
 
@@ -182,10 +177,9 @@ class AuthState extends Equatable {
         'result': result.index,
         'currentStep': currentStep,
         'verified': isVerified,
-        'token': token,
         'data': data.toJson(),
       };
 
   @override
-  List<Object?> get props => [status, result, data, token, currentStep, lastException, isVerified, isConnected];
+  List<Object?> get props => [status, result, data, currentStep, lastException, isVerified, isConnected];
 }

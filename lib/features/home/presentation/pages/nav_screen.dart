@@ -1,14 +1,15 @@
+import 'package:auto_route/annotations.dart';
 import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/features/chat/presentation/pages/chat_screen.dart';
 import 'package:cp_project/features/favorite/presentation/pages/favorite_screen.dart';
 import 'package:persistent_bottom_nav_bar/persistent_tab_view.dart';
-
 
 import 'package:flutter/material.dart';
 
 import '../../../account/presentation/pages/mainAccountScreen.dart';
 import 'home_page/home_screen.dart';
 
+@RoutePage()
 class NavScreen extends StatefulWidget {
   const NavScreen({Key? key}) : super(key: key);
 

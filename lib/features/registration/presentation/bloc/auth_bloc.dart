@@ -10,7 +10,7 @@ part 'auth_state.dart';
 class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
   final data = locator<AuthSource>();
 
-  AuthBloc() : super(AuthState()) {
+  AuthBloc() : super(const AuthState()) {
     on<AuthEvent>((event, emit) {
       if (event is UpdateRegistrationDataEvent || event is AuthEventAddable) {
         return;
@@ -72,7 +72,7 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
         status: AuthStatus.login,
         result: AuthResult.authenticated,
         isVerified: verified,
-        token: res,
+        currentStep: -1,
       ));
     } catch (e, s) {
       print(e);
@@ -100,14 +100,13 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
       assert(state.data.provider != null);
       assert(state.data.location != null);
 
-      final res = await data.accountRegister(state.data);
+      await data.accountRegister(state.data);
 
       emit(
         state.copyWith(
           status: AuthStatus.verification,
           result: AuthResult.success,
           isVerified: false,
-          token: res,
         ),
       );
     } catch (e, s) {
@@ -127,7 +126,7 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
   Future<void> _onAccountVerification(
       AccountVerificationEvent event, Emitter<AuthState> emit) async {
     try {
-      final res = await data.verifyCode(event.code);
+      await data.verifyCode(event.code);
 
       emit(
         state.copyWith(
