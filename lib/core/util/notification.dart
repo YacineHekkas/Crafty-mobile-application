@@ -54,7 +54,7 @@ class Notificaion {
         app.setFCMTokenTimestamp();
       }
 
-     regenrateFcmToken();
+     await regenrateFcmToken();
     } catch (_) {}
 
     // TODO: check premissions

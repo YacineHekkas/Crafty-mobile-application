@@ -213,20 +213,20 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 pageTransitionAnimation: PageTransitionAnimation.cupertino,
               );
             },
-            addToFavorite: (bool selected) {
+            // addToFavorite: (bool selected) {
 
-              setState(() {
-                if (!selected ){
-                  FavoriteScreen.dataValue.add(dataValue[index]);
-                }else{
-                  FavoriteScreen.dataValue.remove(dataValue[index]);
-                }
-                print(
-                    FavoriteScreen.dataValue
-                );
-              });
-              return !selected;
-            },
+            //   setState(() {
+            //     if (!selected ){
+            //       FavoriteScreen.dataValue.add(dataValue[index]);
+            //     }else{
+            //       FavoriteScreen.dataValue.remove(dataValue[index]);
+            //     }
+            //     print(
+            //         FavoriteScreen.dataValue
+            //     );
+            //   });
+            //   return !selected;
+            // },
           );
         },
       ),

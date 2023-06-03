@@ -60,7 +60,6 @@ flutter:
     - assets/icons/
     - assets/images/chat/
     - assets/animation/
-    - assets/images/category_images
 
   fonts:
     - family: Kumbh_Sans

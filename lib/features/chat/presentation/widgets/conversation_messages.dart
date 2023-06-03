@@ -417,12 +417,12 @@ class _ConversationMessagesState extends State<ConversationMessages> {
                             c.status == ChatStatus.fetchMessages &&
                             c.result == ChatResult.success,
                         builder: (context, state) => Expanded(
-                          child: Stack(
-                            alignment: Alignment.topCenter,
-                            children: [
-                              if (state.result == ChatResult.pending)
-                                const LoadingWidget()
-                              else
+                          child: state.result == ChatResult.pending ?
+                            const LoadingWidget()
+                          :
+                            Stack(
+                              alignment: Alignment.topCenter,
+                              children: [
                                 ListView.builder(
                                   controller: scroll,
                                   shrinkWrap: true,
@@ -438,7 +438,7 @@ class _ConversationMessagesState extends State<ConversationMessages> {
                                     } else {
                                       --index;
                                     }
-
+                                
                                     if (index == messages.length) {
                                       return state.result ==
                                                   ChatResult.success &&
@@ -450,7 +450,7 @@ class _ConversationMessagesState extends State<ConversationMessages> {
                                             )
                                           : null;
                                     }
-
+                                
                                     DateTime? nextDate = index > 0
                                         ? messages[index - 1].createdAt
                                         : null;
@@ -523,8 +523,8 @@ class _ConversationMessagesState extends State<ConversationMessages> {
                                   },
                                   itemCount: messages.length + 2,
                                 ),
-                            ],
-                          ),
+                              ],
+                            ),
                         ),
                       ),
                       Container(

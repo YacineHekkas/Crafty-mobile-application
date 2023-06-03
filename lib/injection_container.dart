@@ -10,6 +10,7 @@ import 'package:cp_project/features/account/presentation/bloc/user_bloc.dart';
 import 'package:cp_project/features/chat/data/datasources/remote_data_source/chat_source.dart';
 import 'package:cp_project/features/chat/data/datasources/remote_data_source/chat_source_impl.dart';
 import 'package:cp_project/features/chat/presentation/bloc/chat_bloc.dart';
+import 'package:cp_project/features/favorite/presentation/pages/favorite_screen.dart';
 import 'package:cp_project/features/home/data/data_sources/remot_data_source/data_source.dart';
 import 'package:cp_project/features/home/data/data_sources/remot_data_source/data_source_impl.dart';
 import 'package:cp_project/features/home/data/repositories/get_data_repo_impl.dart';
@@ -90,4 +91,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton<ChatSource>(
       () => ChatSourceImpl(server: locator()));
   locator.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl());
+
+  // widgits
+  locator.registerLazySingleton(() => FavoriteScreen());
 }

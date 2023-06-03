@@ -1,5 +1,6 @@
 import 'package:cp_project/core/global/global.dart';
 import 'package:cp_project/core/util/app.dart';
+import 'package:cp_project/features/favorite/presentation/pages/favorite_screen.dart';
 import 'package:cp_project/features/home/domain/entities/service_entitie.dart';
 import 'package:flutter/material.dart';
 
@@ -7,14 +8,14 @@ import '../../../../injection_container.dart';
 
 class CategoryCard extends StatefulWidget {
   final Function() onSelected;
-  final Function( bool selected) addToFavorite;
+  //final Function( bool selected) addToFavorite;
   final ServiceEntity? serviceInfo;
   // im gonna add all of this in user entity and use it directly
 
-
-   CategoryCard(
+  CategoryCard(
       {Key? key,
-      required this.onSelected, required this.serviceInfo, required this.addToFavorite})
+      required this.onSelected,
+      required this.serviceInfo}) //required this.addToFavorite})
       : super(key: key);
 
   @override
@@ -22,6 +23,10 @@ class CategoryCard extends StatefulWidget {
 }
 
 class _CategoryCardState extends State<CategoryCard> {
+  late var isItInFavorite = locator<FavoriteScreen>()
+      .dataValue
+      .value
+      .any((e) => e.id == widget.serviceInfo?.id);
 
   @override
   Widget build(BuildContext context) {
@@ -52,28 +57,31 @@ class _CategoryCardState extends State<CategoryCard> {
             child: Row(
               children: [
                 SizedBox(
-                  width: MediaQuery.of(context).size.width/2.9,
-                  height:MediaQuery.of(context).size.height / 6 ,
-                  child:ClipRRect(
+                  width: MediaQuery.of(context).size.width / 2.9,
+                  height: MediaQuery.of(context).size.height / 6,
+                  child: ClipRRect(
                     // this to change the shape of the child inside in our case thw img
                     borderRadius: const BorderRadius.only(
                         topLeft: Radius.circular(10),
                         bottomLeft: Radius.circular(10)),
-                    child: Image.network(widget.serviceInfo!.images.displayImage.url.contains('http') ? widget.serviceInfo!.images.displayImage.url :
-                    "https://crafty-server.azurewebsites.net/api/download/${widget.serviceInfo!.images.displayImage.url}",
+                    child: Image.network(
+                      widget.serviceInfo!.images.displayImage.url
+                              .contains('http')
+                          ? widget.serviceInfo!.images.displayImage.url
+                          : "https://crafty-server.azurewebsites.net/api/download/${widget.serviceInfo!.images.displayImage.url}",
                       headers: {
                         'Authorization': 'bb ${locator<App>().getUserToken()}'
                       },
                       fit: BoxFit.fill,
                     ),
-                  ) ,
+                  ),
                 ),
                 const SizedBox(
                   width: 8,
                 ),
                 SizedBox(
                   width: MediaQuery.of(context).size.width / 1.7,
-                  height:MediaQuery.of(context).size.height / 6 ,
+                  height: MediaQuery.of(context).size.height / 6,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -88,28 +96,46 @@ class _CategoryCardState extends State<CategoryCard> {
                             children: [
                               Text(
                                 widget.serviceInfo!.user.name,
-                                style: const TextStyle
-                                  (
+                                style: const TextStyle(
                                     fontFamily: AppConst.font,
                                     color: AppConst.textColor,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600),
                               ),
                               InkWell(
-                                onTap: (){
+                                onTap: () {
+                                  if (!isItInFavorite) {
+                                    final data = List<ServiceEntity>.from(
+                                        locator<FavoriteScreen>()
+                                            .dataValue
+                                            .value)
+                                      ..add(widget.serviceInfo!);
+                                    locator<FavoriteScreen>().dataValue.value =
+                                        data;
+                                  } else {
+                                    final data = List<ServiceEntity>.from(
+                                        locator<FavoriteScreen>()
+                                            .dataValue
+                                            .value)
+                                      ..remove(widget.serviceInfo!);
+
+                                    locator<FavoriteScreen>().dataValue.value =
+                                        data;
+                                  }
                                   setState(() {
-                                    widget.serviceInfo!.isItInFavorite = widget.addToFavorite(widget.serviceInfo!.isItInFavorite);
+                                    isItInFavorite = !isItInFavorite;
                                   });
                                 },
-                                child: !widget.serviceInfo!.isItInFavorite? const Icon(
-                                  Icons.favorite_border,
-                                  color: Colors.grey,
-                                ):const Icon(
-                                  Icons.favorite,
-                                  color: AppConst.orong,
-                                ),
+                                child: !isItInFavorite
+                                    ? const Icon(
+                                        Icons.favorite_border,
+                                        color: Colors.grey,
+                                      )
+                                    : const Icon(
+                                        Icons.favorite,
+                                        color: AppConst.orong,
+                                      ),
                               )
-
                             ],
                           ), // name text
                           const SizedBox(
@@ -118,9 +144,8 @@ class _CategoryCardState extends State<CategoryCard> {
                           Container(
                             child: Align(
                               alignment: Alignment.centerLeft,
-                              child:
-                              Text(
-                                textAlign:TextAlign.start,
+                              child: Text(
+                                textAlign: TextAlign.start,
                                 widget.serviceInfo!.description,
                                 maxLines: 3,
                                 overflow: TextOverflow.ellipsis,
@@ -137,43 +162,43 @@ class _CategoryCardState extends State<CategoryCard> {
                       Column(
                         children: [
                           Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                SizedBox(
-                                  width: MediaQuery.of(context).size.width /3,
-                                  child: Text(
-                                    '${widget.serviceInfo!.user.location.state}, ${widget.serviceInfo!.user.location.district}', // i need to handel location somewher
-                                    maxLines: 1,
-                                    overflow: TextOverflow.ellipsis,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width / 3,
+                                child: Text(
+                                  '${widget.serviceInfo!.user.location.state}, ${widget.serviceInfo!.user.location.district}', // i need to handel location somewher
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                      color: AppConst.textColor,
+                                      fontFamily: AppConst.font),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    '(${widget.serviceInfo!.user.rateCount})',
                                     style: const TextStyle(
-                                        color: AppConst.textColor,
-                                        fontFamily: AppConst.font),
+                                      color: AppConst.textColor,
+                                    ),
                                   ),
-                                ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                        '(${widget.serviceInfo!.user.rateCount})',
-                                        style: const TextStyle(
-                                          color: AppConst.textColor,
-                                        ),
-                                    ),
-                                    const Icon(
-                                      Icons.star_rate_rounded,
-                                      color: AppConst.orong,
-                                    ),
-                                    Text(
-                                      '${widget.serviceInfo!.user.rate} ',
-                                      style: const TextStyle(
-                                          color: AppConst.orong,
-                                          fontFamily: AppConst.font,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                  const Icon(
+                                    Icons.star_rate_rounded,
+                                    color: AppConst.orong,
+                                  ),
+                                  Text(
+                                    '${widget.serviceInfo!.user.rate} ',
+                                    style: const TextStyle(
+                                        color: AppConst.orong,
+                                        fontFamily: AppConst.font,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                           SizedBox(
                             height: 4,
                           )

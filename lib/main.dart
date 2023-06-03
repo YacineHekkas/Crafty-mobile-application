@@ -45,11 +45,10 @@ class MyApp extends StatelessWidget {
   MyApp({super.key});
 
   final _appRouter = AppRouter();
+  final blocState = locator<AuthBloc>().state;
 
   @override
   Widget build(BuildContext context) {
-    final blocState = locator<AuthBloc>().state;
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -62,28 +61,34 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         routerDelegate: _appRouter.delegate(
           deepLinkBuilder: (deepLink) => DeepLink(
-            [
-              if (locator<App>().getShowIntro() != null)
-                if (locator<App>().getUserToken() != null)
-                  if (!blocState.isVerified || blocState.currentStep == 2)
-                    SignupVerificationRoute(hasBackArrow: false)
-                  else if (blocState.isVerified)
-                    const NavRoute()
-                else if (blocState.currentStep != -1)
-                  if (blocState.currentStep == 1)
-                    SignupNextRoute(hasBackArrow: false)
-                  else
-                    SignupRoute(hasBackArrow: false)
-                else
-                  LoginRoute(hasBackArrow: false)
-              else
-                const IntroRoute(),
-            ],
+            [getInitialRoute()],
           ),
         ),
         routeInformationParser: _appRouter.defaultRouteParser(),
         debugShowCheckedModeBanner: false,
       ),
     );
+  }
+
+  PageRouteInfo<dynamic> getInitialRoute() {
+    if (locator<App>().getShowIntro() != null) {
+      if (locator<App>().getUserToken() != null) {
+        if (!blocState.isVerified || blocState.currentStep == 2) {
+          return SignupVerificationRoute(hasBackArrow: false);
+        } else if (blocState.isVerified) {
+          return const NavRoute();
+        } else if (blocState.currentStep != -1) {
+          if (blocState.currentStep == 1) {
+            return SignupNextRoute(hasBackArrow: false);
+          } else {
+            return SignupRoute(hasBackArrow: false);
+          }
+        }
+      }
+    } else {
+      return const IntroRoute();
+    }
+
+    return LoginRoute(hasBackArrow: false);
   }
 }

@@ -184,9 +184,6 @@ class _SearchScreenState extends State<SearchScreen> {
                         serviceInfo: dataValue[index],
                       )));
             },
-            addToFavorite: (bool selected) {
-
-          },
           );
         },
       ),
